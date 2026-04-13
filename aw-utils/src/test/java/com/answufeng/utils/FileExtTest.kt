@@ -8,24 +8,19 @@ import java.io.ByteArrayInputStream
 import java.io.File
 import java.nio.file.Files
 
-/**
- * FileExt 文件扩展函数的单元测试（纯 JVM）。
- */
 class FileExtTest {
 
     private lateinit var tempDir: File
 
     @Before
     fun setup() {
-        tempDir = Files.createTempDirectory("brick_file_ext_test_").toFile()
+        tempDir = Files.createTempDirectory("aw_file_ext_test_").toFile()
     }
 
     @After
     fun tearDown() {
         tempDir.deleteRecursively()
     }
-
-    // ==================== friendlySize ====================
 
     @Test
     fun `friendlySize bytes`() {
@@ -45,7 +40,11 @@ class FileExtTest {
         assertEquals("3.0 MB", f.friendlySize())
     }
 
-    // ==================== extensionName ====================
+    @Test
+    fun `friendlySize zero bytes`() {
+        val f = File(tempDir, "empty.bin").apply { writeBytes(ByteArray(0)) }
+        assertEquals("0 B", f.friendlySize())
+    }
 
     @Test
     fun `extensionName returns lowercase`() {
@@ -57,7 +56,10 @@ class FileExtTest {
         assertEquals("", File("Makefile").extensionName)
     }
 
-    // ==================== safeDeleteRecursively ====================
+    @Test
+    fun `extensionName multiple dots`() {
+        assertEquals("gz", File("archive.tar.gz").extensionName)
+    }
 
     @Test
     fun `safeDeleteRecursively deletes directory tree`() {
@@ -74,7 +76,11 @@ class FileExtTest {
         assertFalse(f.exists())
     }
 
-    // ==================== ensureParentDir ====================
+    @Test
+    fun `safeDeleteRecursively non-existent file returns false`() {
+        val f = File(tempDir, "nonexistent.txt")
+        assertFalse(f.safeDeleteRecursively())
+    }
 
     @Test
     fun `ensureParentDir creates parent directories`() {
@@ -89,23 +95,17 @@ class FileExtTest {
         assertSame(f, f.ensureParentDir())
     }
 
-    // ==================== md5 / sha256 ====================
-
     @Test
     fun `md5 returns correct hash`() {
         val f = File(tempDir, "hash.txt").apply { writeText("hello") }
-        // Known MD5 of "hello"
         assertEquals("5d41402abc4b2a76b9719d911017c592", f.md5())
     }
 
     @Test
     fun `sha256 returns correct hash`() {
         val f = File(tempDir, "hash.txt").apply { writeText("hello") }
-        // Known SHA-256 of "hello"
         assertEquals("2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824", f.sha256())
     }
-
-    // ==================== totalSize ====================
 
     @Test
     fun `totalSize of file`() {
@@ -115,13 +115,16 @@ class FileExtTest {
 
     @Test
     fun `totalSize of directory sums all files`() {
-        File(tempDir, "a.txt").writeText("123")     // 3
+        File(tempDir, "a.txt").writeText("123")
         File(tempDir, "sub").mkdir()
-        File(tempDir, "sub/b.txt").writeText("4567") // 4
+        File(tempDir, "sub/b.txt").writeText("4567")
         assertEquals(7L, tempDir.totalSize())
     }
 
-    // ==================== writeToFile ====================
+    @Test
+    fun `totalSize of empty directory`() {
+        assertEquals(0L, tempDir.totalSize())
+    }
 
     @Test
     fun `writeToFile creates file from InputStream`() {
@@ -130,8 +133,6 @@ class FileExtTest {
         assertTrue(target.exists())
         assertEquals("stream content", target.readText())
     }
-
-    // ==================== readTextOrNull ====================
 
     @Test
     fun `readTextOrNull returns content for existing file`() {

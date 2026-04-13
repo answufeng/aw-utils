@@ -3,15 +3,7 @@ package com.answufeng.utils
 import org.junit.Assert.*
 import org.junit.Test
 
-/**
- * StringExt 扩展函数的单元测试。
- *
- * 注意：这些测试验证纯 Kotlin 逻辑，不依赖 Android 框架。
- * Android 相关的扩展（如 Context 相关）需要 instrumented test。
- */
 class StringExtTest {
-
-    // ==================== isPhoneNumber ====================
 
     @Test
     fun `valid phone numbers`() {
@@ -19,19 +11,18 @@ class StringExtTest {
         assertTrue("15912345678".isPhoneNumber())
         assertTrue("18612345678".isPhoneNumber())
         assertTrue("17012345678".isPhoneNumber())
+        assertTrue("19912345678".isPhoneNumber())
     }
 
     @Test
     fun `invalid phone numbers`() {
         assertFalse("".isPhoneNumber())
-        assertFalse("1381234567".isPhoneNumber())     // 10 digits
-        assertFalse("138123456789".isPhoneNumber())   // 12 digits
-        assertFalse("12345678901".isPhoneNumber())    // starts with 12
-        assertFalse("abc12345678".isPhoneNumber())    // contains letters
-        assertFalse("038 1234 5678".isPhoneNumber())  // starts with 0
+        assertFalse("1381234567".isPhoneNumber())
+        assertFalse("138123456789".isPhoneNumber())
+        assertFalse("12345678901".isPhoneNumber())
+        assertFalse("abc12345678".isPhoneNumber())
+        assertFalse("038 1234 5678".isPhoneNumber())
     }
-
-    // ==================== isEmail ====================
 
     @Test
     fun `valid emails`() {
@@ -48,7 +39,19 @@ class StringExtTest {
         assertFalse("user@".isEmail())
     }
 
-    // ==================== maskPhone ====================
+    @Test
+    fun `valid id cards`() {
+        assertTrue("110101199001011234".isIdCard())
+        assertTrue("11010119900101123X".isIdCard())
+        assertTrue("11010119900101123x".isIdCard())
+    }
+
+    @Test
+    fun `invalid id cards`() {
+        assertFalse("".isIdCard())
+        assertFalse("11010119900101123".isIdCard())
+        assertFalse("1101011990010112345".isIdCard())
+    }
 
     @Test
     fun `maskPhone hides middle digits`() {
@@ -61,11 +64,33 @@ class StringExtTest {
         assertEquals("1234567", "1234567".maskPhone())
     }
 
-    // ==================== md5 ====================
+    @Test
+    fun `maskIdCard hides middle digits`() {
+        assertEquals("1101**********1234", "110101199001011234".maskIdCard())
+    }
+
+    @Test
+    fun `maskIdCard returns original for short strings`() {
+        assertEquals("1234567", "1234567".maskIdCard())
+    }
+
+    @Test
+    fun `maskEmail hides local part`() {
+        assertEquals("h****@example.com", "hello@example.com".maskEmail())
+    }
+
+    @Test
+    fun `maskEmail returns original for short local part`() {
+        assertEquals("a@b.com", "a@b.com".maskEmail())
+    }
+
+    @Test
+    fun `maskEmail returns original for no at sign`() {
+        assertEquals("noemail", "noemail".maskEmail())
+    }
 
     @Test
     fun `md5 produces correct hash`() {
-        // Well-known MD5 of "hello"
         assertEquals("5d41402abc4b2a76b9719d911017c592", "hello".md5())
     }
 
@@ -74,11 +99,8 @@ class StringExtTest {
         assertEquals("d41d8cd98f00b204e9800998ecf8427e", "".md5())
     }
 
-    // ==================== sha256 ====================
-
     @Test
     fun `sha256 produces correct hash`() {
-        // Well-known SHA-256 of "hello"
         assertEquals(
             "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
             "hello".sha256()
@@ -92,8 +114,6 @@ class StringExtTest {
             "".sha256()
         )
     }
-
-    // ==================== isUrl ====================
 
     @Test
     fun `valid urls`() {
@@ -110,7 +130,12 @@ class StringExtTest {
         assertFalse("example.com".isUrl())
     }
 
-    // ==================== orDefault ====================
+    @Test
+    fun `isDigitsOnly`() {
+        assertTrue("12345".isDigitsOnly())
+        assertTrue("".isDigitsOnly())
+        assertFalse("12a45".isDigitsOnly())
+    }
 
     @Test
     fun `orDefault returns value when not blank`() {
@@ -124,11 +149,35 @@ class StringExtTest {
         assertEquals("default", "   ".orDefault("default"))
     }
 
-    // ==================== ellipsize ====================
+    @Test
+    fun `orDefault default value`() {
+        assertEquals("", (null as String?).orDefault())
+    }
 
     @Test
     fun `ellipsize truncates long strings`() {
         assertEquals("Hello…", "Hello World".ellipsize(5))
         assertEquals("Hi", "Hi".ellipsize(5))
+    }
+
+    @Test
+    fun `ellipsize with custom suffix`() {
+        assertEquals("Hello...", "Hello World".ellipsize(5, "..."))
+    }
+
+    @Test
+    fun `isNotNullOrBlank`() {
+        assertTrue("hello".isNotNullOrBlank())
+        assertFalse((null as String?).isNotNullOrBlank())
+        assertFalse("".isNotNullOrBlank())
+        assertFalse("   ".isNotNullOrBlank())
+    }
+
+    @Test
+    fun `isNotNullOrEmpty`() {
+        assertTrue("hello".isNotNullOrEmpty())
+        assertFalse((null as String?).isNotNullOrEmpty())
+        assertFalse("".isNotNullOrEmpty())
+        assertTrue("   ".isNotNullOrEmpty())
     }
 }

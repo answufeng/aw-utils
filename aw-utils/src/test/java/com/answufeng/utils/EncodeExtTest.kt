@@ -3,15 +3,7 @@ package com.answufeng.utils
 import org.junit.Assert.*
 import org.junit.Test
 
-/**
- * EncodeExt 编解码扩展函数的单元测试。
- *
- * 注意：Base64 测试依赖 android.util.Base64，需在 instrumented test 中运行。
- * 这里只测试纯 JVM 的 Hex 编解码。
- */
 class EncodeExtTest {
-
-    // ==================== Hex ====================
 
     @Test
     fun `toHexString produces correct output`() {
@@ -21,6 +13,11 @@ class EncodeExtTest {
     @Test
     fun `toHexString of empty array`() {
         assertEquals("", byteArrayOf().toHexString())
+    }
+
+    @Test
+    fun `toHexString of single byte`() {
+        assertEquals("00", byteArrayOf(0x00).toHexString())
     }
 
     @Test
@@ -43,9 +40,14 @@ class EncodeExtTest {
 
     @Test
     fun `hex roundtrip`() {
-        val original = "Hello Brick".toByteArray()
+        val original = "Hello aw-utils".toByteArray()
         val hex = original.toHexString()
         val decoded = hex.hexToByteArray()
         assertArrayEquals(original, decoded)
+    }
+
+    @Test
+    fun `toHexString is lowercase`() {
+        assertEquals("0a", byteArrayOf(0x0A).toHexString())
     }
 }

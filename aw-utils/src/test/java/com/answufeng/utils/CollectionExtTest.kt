@@ -3,12 +3,7 @@ package com.answufeng.utils
 import org.junit.Assert.*
 import org.junit.Test
 
-/**
- * CollectionExt 扩展函数的单元测试。
- */
 class CollectionExtTest {
-
-    // ==================== ifNotEmpty ====================
 
     @Test
     fun `ifNotEmpty fires for non-empty list`() {
@@ -32,7 +27,12 @@ class CollectionExtTest {
         assertFalse(fired)
     }
 
-    // ==================== safeJoinToString ====================
+    @Test
+    fun `ifNotEmpty passes collection to action`() {
+        var received: Collection<Int>? = null
+        listOf(1, 2, 3).ifNotEmpty { received = it }
+        assertEquals(listOf(1, 2, 3), received!!.toList())
+    }
 
     @Test
     fun `safeJoinToString joins elements`() {

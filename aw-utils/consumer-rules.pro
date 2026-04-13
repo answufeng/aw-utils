@@ -1,1 +1,1 @@
-# brick-utils consumer ProGuard rules
+# aw-utils consumer ProGuard rules

@@ -3,16 +3,20 @@ package com.answufeng.utils
 import org.junit.Assert.*
 import org.junit.Test
 
-/**
- * DateExt 扩展函数的单元测试。
- */
 class DateExtTest {
 
     @Test
     fun `formatDate produces correct format`() {
-        // 使用已知时间戳验证格式化
         val formatted = System.currentTimeMillis().formatDate("yyyy")
         assertEquals("2026", formatted)
+    }
+
+    @Test
+    fun `formatDate default pattern includes time`() {
+        val formatted = System.currentTimeMillis().formatDate()
+        assertTrue(formatted.contains(" "))
+        assertTrue(formatted.contains("-"))
+        assertTrue(formatted.contains(":"))
     }
 
     @Test
@@ -60,11 +64,39 @@ class DateExtTest {
     }
 
     @Test
-    fun `toFriendlyTime shows correct labels`() {
+    fun `toFriendlyTime shows gang gang for recent`() {
         val now = System.currentTimeMillis()
         assertEquals("刚刚", (now - 30_000L).toFriendlyTime())
+    }
+
+    @Test
+    fun `toFriendlyTime shows minutes ago`() {
+        val now = System.currentTimeMillis()
         assertTrue((now - 5 * 60_000L).toFriendlyTime().contains("分钟前"))
+    }
+
+    @Test
+    fun `toFriendlyTime shows hours ago`() {
+        val now = System.currentTimeMillis()
         assertTrue((now - 3 * 3_600_000L).toFriendlyTime().contains("小时前"))
-        assertEquals("昨天", (now - 30 * 3_600_000L).toFriendlyTime())
+    }
+
+    @Test
+    fun `toFriendlyTime shows yesterday`() {
+        val now = System.currentTimeMillis()
+        val result = (now - 30 * 3_600_000L).toFriendlyTime()
+        assertTrue(result.startsWith("昨天"))
+    }
+
+    @Test
+    fun `toFriendlyTime shows date for future`() {
+        val future = System.currentTimeMillis() + 172_800_000L
+        val result = future.toFriendlyTime()
+        assertTrue(result.contains("-"))
+    }
+
+    @Test
+    fun `currentTimeMillis returns positive value`() {
+        assertTrue(currentTimeMillis() > 0)
     }
 }

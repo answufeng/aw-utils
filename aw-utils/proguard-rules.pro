@@ -1,2 +1,2 @@
-# brick-utils ProGuard rules (release build)
+# aw-utils ProGuard rules (release build)
 # Consumer-facing rules are in consumer-rules.pro
