@@ -43,4 +43,4 @@ dependencies {
     testImplementation(libs.junit)
 }
 
-apply(from = "${rootDir}/gradle/publish.gradle")
+apply(from = "${rootDir}/gradle/publish.gradle.kts")

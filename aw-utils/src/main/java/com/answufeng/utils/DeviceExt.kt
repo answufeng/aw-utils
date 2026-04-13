@@ -1,19 +1,36 @@
+@file:Suppress("unused")
+
 package com.answufeng.utils
 
 import android.os.Build
 
+/**
+ * 设备品牌（如 "Xiaomi"、"Huawei"、"samsung"）。
+ */
 val deviceBrand: String get() = Build.BRAND
 
+/**
+ * 设备型号（如 "Mi 14"、"SM-S928B"）。
+ */
 val deviceModel: String get() = Build.MODEL
 
+/**
+ * 设备制造商（如 "Xiaomi"、"samsung"）。
+ */
 val deviceManufacturer: String get() = Build.MANUFACTURER
 
+/**
+ * Android 版本号（如 "14"）。
+ */
 val osVersion: String get() = Build.VERSION.RELEASE
 
+/**
+ * Android SDK 版本号（如 34）。
+ */
 val sdkVersion: Int get() = Build.VERSION.SDK_INT
 
 /**
- * 获取完整的设备信息摘要（适合日志和错误上报）
+ * 获取完整的设备信息摘要（适合日志和错误上报）。
  *
  * ```kotlin
  * AwLog.i("Device", deviceSummary())
