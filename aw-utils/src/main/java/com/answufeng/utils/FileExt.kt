@@ -19,21 +19,31 @@ fun File.friendlySize(): String {
     }
 }
 
-/**
- * 文件扩展名（小写），如 `"jpg"`、`"png"`。
- */
+/** 文件扩展名（小写），如 `"jpg"`、`"png"`。 */
 val File.extensionName: String get() = extension.lowercase()
 
 /**
  * 安全递归删除文件或目录。
  *
+ * 若遇到符号链接目录，仅删除链接本身而不跟随，防止意外删除链接目标。
+ *
  * @return 是否删除成功
  */
 fun File.safeDeleteRecursively(): Boolean {
     return if (isDirectory) {
-        (listFiles()?.all { it.safeDeleteRecursively() } ?: true) && delete()
+        if (isSymlink()) delete() else {
+            listFiles()?.all { it.safeDeleteRecursively() } ?: true && delete()
+        }
     } else {
         delete()
+    }
+}
+
+private fun File.isSymlink(): Boolean {
+    return try {
+        java.nio.file.Files.isSymbolicLink(toPath())
+    } catch (_: Exception) {
+        false
     }
 }
 
@@ -59,14 +69,10 @@ private fun File.digest(algorithm: String): String {
     return messageDigest.digest().toHexString()
 }
 
-/**
- * 计算文件的 MD5 摘要（32 位小写十六进制）。
- */
+/** 计算文件的 MD5 摘要（32 位小写十六进制）。 */
 fun File.md5(): String = digest("MD5")
 
-/**
- * 计算文件的 SHA-256 摘要（64 位小写十六进制）。
- */
+/** 计算文件的 SHA-256 摘要（64 位小写十六进制）。 */
 fun File.sha256(): String = digest("SHA-256")
 
 /**

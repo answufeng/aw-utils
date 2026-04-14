@@ -1,5 +1,6 @@
 package com.answufeng.utils
 
+import java.nio.charset.Charset
 import java.security.MessageDigest
 
 private val PHONE_REGEX = Regex("^1[3-9]\\d{9}$")
@@ -68,45 +69,57 @@ fun String.maskEmail(): String {
 
 /**
  * 计算字符串的 MD5 摘要（32 位小写十六进制）。
+ *
+ * @param charset 字符编码，默认 UTF-8
  */
-fun String.md5(): String {
-    val bytes = MessageDigest.getInstance("MD5").digest(toByteArray())
+fun String.md5(charset: Charset = Charsets.UTF_8): String {
+    val bytes = MessageDigest.getInstance("MD5").digest(toByteArray(charset))
     return bytes.toHexString()
 }
 
 /**
  * 计算字符串的 SHA-256 摘要（64 位小写十六进制）。
+ *
+ * @param charset 字符编码，默认 UTF-8
  */
-fun String.sha256(): String {
-    val bytes = MessageDigest.getInstance("SHA-256").digest(toByteArray())
+fun String.sha256(charset: Charset = Charsets.UTF_8): String {
+    val bytes = MessageDigest.getInstance("SHA-256").digest(toByteArray(charset))
     return bytes.toHexString()
 }
 
-/**
- * 若字符串为 null 或空白，返回默认值。
- *
- * @param default 默认值，默认为空字符串
- */
+@Deprecated(
+    message = "Use Elvis operator ?: instead, e.g. str ?: default",
+    level = DeprecationLevel.WARNING
+)
 fun String?.orDefault(default: String = ""): String {
     return if (isNullOrBlank()) default else this
 }
 
+@Deprecated(
+    message = "Use truncate() to avoid confusion with TextUtils.ellipsize()",
+    replaceWith = ReplaceWith("truncate(maxLength, suffix)")
+)
+fun String.ellipsize(maxLength: Int, suffix: String = "…"): String = truncate(maxLength, suffix)
+
 /**
  * 截断超长字符串并添加后缀。
  *
- * @param maxLength 最大保留长度
+ * @param maxLength 最大保留长度，必须 >= 0
  * @param suffix 截断后缀，默认为 `"…"`
  */
-fun String.ellipsize(maxLength: Int, suffix: String = "…"): String {
+fun String.truncate(maxLength: Int, suffix: String = "…"): String {
+    require(maxLength >= 0) { "maxLength must be >= 0, got $maxLength" }
     return if (length <= maxLength) this else take(maxLength) + suffix
 }
 
-/**
- * 判断字符串是否非 null 且非空白。
- */
+@Deprecated(
+    message = "Use !isNullOrBlank() directly — this extension adds no value over the stdlib",
+    level = DeprecationLevel.WARNING
+)
 fun String?.isNotNullOrBlank(): Boolean = !isNullOrBlank()
 
-/**
- * 判断字符串是否非 null 且非空。
- */
+@Deprecated(
+    message = "Use !isNullOrEmpty() directly — this extension adds no value over the stdlib",
+    level = DeprecationLevel.WARNING
+)
 fun String?.isNotNullOrEmpty(): Boolean = !isNullOrEmpty()

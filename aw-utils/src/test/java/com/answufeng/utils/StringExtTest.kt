@@ -137,11 +137,13 @@ class StringExtTest {
         assertFalse("12a45".isDigitsOnly())
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `orDefault returns value when not blank`() {
         assertEquals("hello", "hello".orDefault("default"))
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `orDefault returns default when null or blank`() {
         assertEquals("default", (null as String?).orDefault("default"))
@@ -149,22 +151,35 @@ class StringExtTest {
         assertEquals("default", "   ".orDefault("default"))
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `orDefault default value`() {
         assertEquals("", (null as String?).orDefault())
     }
 
     @Test
-    fun `ellipsize truncates long strings`() {
-        assertEquals("Hello…", "Hello World".ellipsize(5))
-        assertEquals("Hi", "Hi".ellipsize(5))
+    fun `truncate truncates long strings`() {
+        assertEquals("Hello…", "Hello World".truncate(5))
+        assertEquals("Hi", "Hi".truncate(5))
     }
 
     @Test
-    fun `ellipsize with custom suffix`() {
-        assertEquals("Hello...", "Hello World".ellipsize(5, "..."))
+    fun `truncate with custom suffix`() {
+        assertEquals("Hello...", "Hello World".truncate(5, "..."))
     }
 
+    @Test(expected = IllegalArgumentException::class)
+    fun `truncate rejects negative maxLength`() {
+        "test".truncate(-1)
+    }
+
+    @Suppress("DEPRECATION")
+    @Test
+    fun `ellipsize delegates to truncate`() {
+        assertEquals("Hello…", "Hello World".ellipsize(5))
+    }
+
+    @Suppress("DEPRECATION")
     @Test
     fun `isNotNullOrBlank`() {
         assertTrue("hello".isNotNullOrBlank())
@@ -173,6 +188,7 @@ class StringExtTest {
         assertFalse("   ".isNotNullOrBlank())
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `isNotNullOrEmpty`() {
         assertTrue("hello".isNotNullOrEmpty())

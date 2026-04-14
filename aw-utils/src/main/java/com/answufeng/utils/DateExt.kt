@@ -5,13 +5,20 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-private val threadLocalFormatters = object : ThreadLocal<MutableMap<String, SimpleDateFormat>>() {
-    override fun initialValue(): MutableMap<String, SimpleDateFormat> = mutableMapOf()
+private const val FORMATTER_CACHE_MAX_SIZE = 8
+
+private val threadLocalFormatters = object : ThreadLocal<LinkedHashMap<String, SimpleDateFormat>>() {
+    override fun initialValue(): LinkedHashMap<String, SimpleDateFormat> =
+        object : LinkedHashMap<String, SimpleDateFormat>(8, 0.75f, true) {
+            override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, SimpleDateFormat>): Boolean {
+                return size > FORMATTER_CACHE_MAX_SIZE
+            }
+        }
 }
 
 private fun getFormatter(pattern: String): SimpleDateFormat {
     val cache = threadLocalFormatters.get()!!
-    return cache.getOrPut(pattern) { SimpleDateFormat(pattern, Locale.getDefault()) }
+    return cache.getOrPut(pattern) { SimpleDateFormat(pattern, Locale.US) }
 }
 
 /**
@@ -49,6 +56,10 @@ fun String.parseDate(pattern: String = "yyyy-MM-dd HH:mm:ss"): Date? {
 /**
  * 获取当前时间戳（毫秒）。
  */
+@Deprecated(
+    message = "Use System.currentTimeMillis() directly — this wrapper adds no value",
+    level = DeprecationLevel.WARNING
+)
 fun currentTimeMillis(): Long = System.currentTimeMillis()
 
 /**
@@ -92,6 +103,7 @@ fun Long.isSameDay(other: Long): Boolean {
  * - 今年 → "MM-dd HH:mm"
  * - 更早 → "yyyy-MM-dd"
  */
+@AwExperimentalApi
 fun Long.toFriendlyTime(): String {
     val now = System.currentTimeMillis()
     val diff = now - this

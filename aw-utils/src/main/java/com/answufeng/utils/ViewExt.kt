@@ -2,13 +2,21 @@ package com.answufeng.utils
 
 import android.view.View
 
+@Deprecated(
+    message = "Use debounceClick() for clearer semantics",
+    replaceWith = ReplaceWith("debounceClick(interval, onClick)")
+)
+fun View.onClick(interval: Long = 500L, onClick: (View) -> Unit) {
+    debounceClick(interval, onClick)
+}
+
 /**
  * 设置防抖点击监听器。
  *
- * @param interval 防抖间隔（毫秒），默认 500ms
+ * @param interval 防抖间隔（毫秒），默认 500ms，必须 > 0
  * @param onClick 点击回调
  */
-fun View.onClick(interval: Long = 500L, onClick: (View) -> Unit) {
+inline fun View.debounceClick(interval: Long = 500L, crossinline onClick: (View) -> Unit) {
     require(interval > 0L) { "Debounce interval must be > 0ms, got $interval" }
     var lastClickTime = 0L
     setOnClickListener { v ->
@@ -50,13 +58,21 @@ fun setVisible(vararg views: View, visible: Boolean, goneIfFalse: Boolean = true
     views.forEach { it.setVisible(visible, goneIfFalse) }
 }
 
+@Deprecated(
+    message = "Use postDelay() to avoid shadowing View.postDelayed()",
+    replaceWith = ReplaceWith("postDelay(delayMillis, action)")
+)
+fun View.postDelayed(delayMillis: Long, action: () -> Unit) {
+    postDelay(delayMillis, action)
+}
+
 /**
  * 延迟执行操作（基于 View.postDelayed）。
  *
  * @param delayMillis 延迟时间（毫秒）
  * @param action 要执行的操作
  */
-fun View.postDelayed(delayMillis: Long, action: () -> Unit) {
+fun View.postDelay(delayMillis: Long, action: () -> Unit) {
     postDelayed(action, delayMillis)
 }
 

@@ -12,14 +12,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-/**
- * 网络类型枚举。
- */
+/** 网络类型枚举。 */
 enum class NetworkType {
     WIFI,
     CELLULAR,
     ETHERNET,
     NONE
+}
+
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+private fun Context.getActiveNetworkCapabilities(): NetworkCapabilities? {
+    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = cm.activeNetwork ?: return null
+    return cm.getNetworkCapabilities(network)
 }
 
 /**
@@ -29,9 +34,7 @@ enum class NetworkType {
  */
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 fun Context.isNetworkAvailable(): Boolean {
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val network = cm.activeNetwork ?: return false
-    val caps = cm.getNetworkCapabilities(network) ?: return false
+    val caps = getActiveNetworkCapabilities() ?: return false
     return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
             caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 }
@@ -43,9 +46,7 @@ fun Context.isNetworkAvailable(): Boolean {
  */
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 fun Context.isWifiConnected(): Boolean {
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val network = cm.activeNetwork ?: return false
-    val caps = cm.getNetworkCapabilities(network) ?: return false
+    val caps = getActiveNetworkCapabilities() ?: return false
     return caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
 }
 
@@ -56,9 +57,7 @@ fun Context.isWifiConnected(): Boolean {
  */
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 fun Context.isMobileDataConnected(): Boolean {
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val network = cm.activeNetwork ?: return false
-    val caps = cm.getNetworkCapabilities(network) ?: return false
+    val caps = getActiveNetworkCapabilities() ?: return false
     return caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
 }
 
@@ -71,9 +70,7 @@ fun Context.isMobileDataConnected(): Boolean {
  */
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 fun Context.getNetworkType(): NetworkType {
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val network = cm.activeNetwork ?: return NetworkType.NONE
-    val caps = cm.getNetworkCapabilities(network) ?: return NetworkType.NONE
+    val caps = getActiveNetworkCapabilities() ?: return NetworkType.NONE
     return when {
         caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> NetworkType.WIFI
         caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> NetworkType.CELLULAR
@@ -82,13 +79,6 @@ fun Context.getNetworkType(): NetworkType {
     }
 }
 
-/**
- * 获取当前网络类型名称。
- *
- * 需要 `ACCESS_NETWORK_STATE` 权限。
- *
- * @deprecated 使用 [getNetworkType] 替代
- */
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 @Deprecated("Use getNetworkType() instead", ReplaceWith("getNetworkType().name"))
 fun Context.getNetworkTypeName(): String = getNetworkType().name
@@ -110,6 +100,7 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
  * ```
  */
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+@AwExperimentalApi
 fun Context.observeNetworkState(): Flow<Boolean> = callbackFlow {
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetworks = mutableSetOf<Network>()

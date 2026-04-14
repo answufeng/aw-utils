@@ -3,6 +3,7 @@ package com.answufeng.utils
 import org.junit.Assert.*
 import org.junit.Test
 
+@OptIn(AwExperimentalApi::class)
 class DateExtTest {
 
     @Test
@@ -95,6 +96,7 @@ class DateExtTest {
         assertTrue(result.contains("-"))
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `currentTimeMillis returns positive value`() {
         assertTrue(currentTimeMillis() > 0)

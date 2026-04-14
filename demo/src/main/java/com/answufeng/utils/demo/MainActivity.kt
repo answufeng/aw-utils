@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.answufeng.utils.*
 
+@OptIn(AwExperimentalApi::class)
 class MainActivity : AppCompatActivity() {
 
     private lateinit var tvLog: TextView
@@ -37,9 +38,7 @@ class MainActivity : AppCompatActivity() {
 
             log("md5: ${"hello".md5()}")
             log("sha256: ${"hello".sha256().take(16)}...")
-            log("orDefault: ${null.orDefault("默认值")}")
-            log("ellipsize: ${"Hello World".ellipsize(5)}")
-            log("isNotNullOrBlank: ${null.isNotNullOrBlank()}")
+            log("truncate: ${"Hello World".truncate(5)}")
         })
 
         container.addView(button("Date Extensions") {
@@ -64,12 +63,12 @@ class MainActivity : AppCompatActivity() {
         })
 
         container.addView(button("Device Info") {
-            log("Brand: $deviceBrand")
-            log("Model: $deviceModel")
-            log("Manufacturer: $deviceManufacturer")
-            log("OS: $osVersion")
-            log("SDK: $sdkVersion")
-            log("Summary: ${deviceSummary()}")
+            log("Brand: ${this@MainActivity.deviceBrand}")
+            log("Model: ${this@MainActivity.deviceModel}")
+            log("Manufacturer: ${this@MainActivity.deviceManufacturer}")
+            log("OS: ${this@MainActivity.osVersion}")
+            log("SDK: ${this@MainActivity.sdkVersion}")
+            log("Summary: ${this@MainActivity.deviceSummary()}")
         })
 
         container.addView(button("Network Check") {
@@ -85,12 +84,13 @@ class MainActivity : AppCompatActivity() {
             log("navigationBarHeight: $navigationBarHeight px")
             log("100dp = ${100.dp}px")
             log("14sp = ${14.sp}px")
+            log("100dpToPx = ${100.dpToPx(this@MainActivity)}px")
         })
 
         container.addView(button("Encode Extensions") {
             val base64 = "hello".encodeBase64()
             log("Base64 encode: $base64")
-            log("Base64 decode: ${base64.decodeBase64String()}")
+            log("Base64 decode: ${base64.decodeBase64ToString()}")
 
             val hex = byteArrayOf(0x01, 0x02, 0xFF.toByte()).toHexString()
             log("Hex encode: $hex")
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
     private fun button(text: String, onClick: () -> Unit): Button {
         return Button(this).apply {
             this.text = text
-            onClick(interval = 300L) { onClick() }
+            debounceClick(interval = 300L) { onClick() }
         }
     }
 

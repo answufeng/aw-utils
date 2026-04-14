@@ -56,19 +56,43 @@ fun Activity.finishWithResult(resultCode: Int, data: Intent? = null) {
 }
 
 /**
- * 获取 Activity Intent 中的 Extra 值，类型不匹配时返回 null。
+ * 获取 Activity Intent 中的 Extra 值，不存在或类型不匹配时返回 null。
+ *
+ * 对于基本类型（Int、Long、Boolean 等），使用 `containsKey` 判断是否存在，
+ * 避免不存在时返回默认值 0/false 而非 null 的问题。
  */
-@Suppress("DEPRECATION")
 inline fun <reified T> Activity.extraOrNull(key: String): T? {
-    return intent?.extras?.get(key) as? T
+    val extras = intent?.extras ?: return null
+    @Suppress("DEPRECATION")
+    return when (T::class) {
+        String::class -> extras.getString(key) as? T
+        Int::class -> if (extras.containsKey(key)) extras.getInt(key) as? T else null
+        Long::class -> if (extras.containsKey(key)) extras.getLong(key) as? T else null
+        Boolean::class -> if (extras.containsKey(key)) extras.getBoolean(key) as? T else null
+        Float::class -> if (extras.containsKey(key)) extras.getFloat(key) as? T else null
+        Double::class -> if (extras.containsKey(key)) extras.getDouble(key) as? T else null
+        else -> extras.get(key) as? T
+    }
 }
 
 /**
- * 获取 Fragment Arguments 中的值，类型不匹配时返回 null。
+ * 获取 Fragment Arguments 中的值，不存在或类型不匹配时返回 null。
+ *
+ * 对于基本类型（Int、Long、Boolean 等），使用 `containsKey` 判断是否存在，
+ * 避免不存在时返回默认值 0/false 而非 null 的问题。
  */
-@Suppress("DEPRECATION")
 inline fun <reified T> Fragment.argumentOrNull(key: String): T? {
-    return arguments?.get(key) as? T
+    val args = arguments ?: return null
+    @Suppress("DEPRECATION")
+    return when (T::class) {
+        String::class -> args.getString(key) as? T
+        Int::class -> if (args.containsKey(key)) args.getInt(key) as? T else null
+        Long::class -> if (args.containsKey(key)) args.getLong(key) as? T else null
+        Boolean::class -> if (args.containsKey(key)) args.getBoolean(key) as? T else null
+        Float::class -> if (args.containsKey(key)) args.getFloat(key) as? T else null
+        Double::class -> if (args.containsKey(key)) args.getDouble(key) as? T else null
+        else -> args.get(key) as? T
+    }
 }
 
 /**

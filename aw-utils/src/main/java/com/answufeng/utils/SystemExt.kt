@@ -8,10 +8,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 
 /**
  * 复制文本到剪贴板。
@@ -34,48 +36,46 @@ fun Context.getClipboardText(): String? {
     return clipboard.primaryClip?.getItemAt(0)?.text?.toString()
 }
 
-/**
- * 弹出软键盘。
- */
+/** 弹出软键盘。 */
 fun EditText.showKeyboard() {
     requestFocus()
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
 }
 
-/**
- * 隐藏软键盘。
- */
-fun Activity.hideKeyboard() {
-    val view = currentFocus ?: window.decorView
-    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(view.windowToken, 0)
+/** 隐藏软键盘（使用 View 的 windowToken）。 */
+fun View.hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-/**
- * 显示短 Toast。
- */
+/** 隐藏软键盘（使用当前焦点 View 或 decorView）。 */
+fun Activity.hideKeyboard() {
+    val view = currentFocus ?: window.decorView
+    view.hideKeyboard()
+}
+
+/** 隐藏软键盘（使用 Fragment 的 root view）。 */
+fun Fragment.hideKeyboard() {
+    view?.hideKeyboard()
+}
+
+/** 显示短 Toast。 */
 fun Context.toast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
-/**
- * 显示长 Toast。
- */
+/** 显示长 Toast。 */
 fun Context.toastLong(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
-/**
- * 拨打电话（打开拨号界面）。
- */
+/** 拨打电话（打开拨号界面）。 */
 fun Context.dial(phone: String) {
     startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone")))
 }
 
-/**
- * 打开浏览器。
- */
+/** 打开浏览器。 */
 fun Context.openBrowser(url: String) {
     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }
@@ -94,9 +94,7 @@ fun Context.shareText(text: String, title: String = "分享") {
     startActivity(Intent.createChooser(intent, title))
 }
 
-/**
- * 打开当前应用的设置页。
- */
+/** 打开当前应用的设置页。 */
 fun Context.openAppSettings() {
     val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
         data = Uri.fromParts("package", packageName, null)
@@ -104,16 +102,12 @@ fun Context.openAppSettings() {
     startActivity(intent)
 }
 
-/**
- * 获取应用版本名。
- */
+/** 获取应用版本名。 */
 fun Context.appVersionName(): String {
     return packageManager.getPackageInfo(packageName, 0).versionName ?: ""
 }
 
-/**
- * 获取应用版本号。
- */
+/** 获取应用版本号。 */
 fun Context.appVersionCode(): Long {
     val info = packageManager.getPackageInfo(packageName, 0)
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -124,16 +118,12 @@ fun Context.appVersionCode(): Long {
     }
 }
 
-/**
- * 检查是否拥有指定权限。
- */
+/** 检查是否拥有指定权限。 */
 fun Context.hasPermission(permission: String): Boolean {
     return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 }
 
-/**
- * 检查是否拥有所有指定权限。
- */
+/** 检查是否拥有所有指定权限。 */
 fun Context.isPermissionGranted(vararg permissions: String): Boolean {
     return permissions.all { hasPermission(it) }
 }

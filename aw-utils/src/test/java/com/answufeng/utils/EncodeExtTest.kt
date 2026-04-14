@@ -38,6 +38,11 @@ class EncodeExtTest {
         "0af".hexToByteArray()
     }
 
+    @Test(expected = IllegalArgumentException::class)
+    fun `hexToByteArray throws on invalid hex character`() {
+        "zz".hexToByteArray()
+    }
+
     @Test
     fun `hex roundtrip`() {
         val original = "Hello aw-utils".toByteArray()
