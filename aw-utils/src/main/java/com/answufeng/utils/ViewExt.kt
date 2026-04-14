@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package com.answufeng.utils
 
 import android.view.View
