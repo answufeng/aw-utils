@@ -9,8 +9,15 @@ import java.security.MessageDigest
  *
  * 如 `1536` → `"1.5 KB"`，`1073741824` → `"1.00 GB"`。
  */
-fun File.friendlySize(): String {
-    val size = length().toDouble()
+fun File.friendlySize(): String = length().toFriendlySize()
+
+/**
+ * 将字节数格式化为友好可读的字符串。
+ *
+ * 如 `1536L` → `"1.5 KB"`，`1073741824L` → `"1.00 GB"`。
+ */
+fun Long.toFriendlySize(): String {
+    val size = toDouble()
     return when {
         size < 1024 -> "%.0f B".format(size)
         size < 1024 * 1024 -> "%.1f KB".format(size / 1024)

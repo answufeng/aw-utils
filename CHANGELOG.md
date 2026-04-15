@@ -2,6 +2,22 @@
 
 ## 1.1.0 (Unreleased)
 
+### 新增模块
+
+- **RegexExt**: IP 地址、中文、用户名、密码强度（强/中/弱）、中文姓名、车牌号、MAC 地址校验
+- **AppExt**: 应用安装检测、Debug 判断、前台判断、系统应用判断、启动应用、获取图标/名称、签名 SHA-1、应用详情设置页
+- **IntentExt**: 发送邮件、发送短信、打开相机、选择图片、打开地图、打开应用市场、系统设置/WiFi/位置/蓝牙设置页、安装 APK
+- **ScreenExt**: 平板判断、横竖屏判断、窗口亮度获取/设置/重置、屏幕常亮
+- **SpanExt**: 颜色/背景色/加粗/斜体/下划线/删除线/字体大小/上标/下标/可点击 Span，DSL 构建器，TextView 可点击链接模式
+- **VibrateExt**: 短振/自定义时长/模式振动/取消振动（兼容 API 31+ VibratorManager）
+- **RandomExt**: 随机字母数字/数字/字母字符串、随机整数/长整数、随机颜色、列表随机元素/多个不重复元素
+- **ProcessExt**: 主线程判断、UI 线程执行（自动判断线程）、延迟 UI 线程执行
+- **KeyboardExt**: 键盘可见性判断、键盘可见性变化监听（返回取消函数）
+
+### 新增函数
+
+- **FileExt**: `Long.toFriendlySize()` 字节数格式化（`File.friendlySize()` 委托至此）
+
 ### 正确性修复
 
 - **StringExt**: `md5()` / `sha256()` 增加 `charset` 参数（默认 UTF-8），修复跨平台哈希不一致问题
@@ -40,17 +56,3 @@
 ## 1.0.0
 
 Initial release.
-
-- StringExt：手机号/邮箱/身份证/URL 校验、脱敏、MD5/SHA-256、orDefault、ellipsize
-- DateExt：格式化、解析、友好时间、日期比较（isToday/isYesterday/isSameDay）
-- FileExt：大小格式化、MD5/SHA-256、安全删除、流写入、totalSize、readTextOrNull
-- NetworkExt：网络状态判断、Flow 状态监听、NetworkType 枚举
-- DeviceExt：品牌、型号、系统版本、设备摘要
-- ContextExt：dp/sp 转换、屏幕尺寸、状态栏/导航栏高度
-- EncodeExt：Base64、Hex 编解码
-- SystemExt：剪贴板、键盘、Toast、应用信息、权限检查、系统 Intent
-- ViewExt：防抖点击、可见性控制、toggleVisibility
-- ActivityExt：泛型启动、安全参数获取（extraOrNull/extraOrDefault）
-- CollectionExt：ifNotEmpty、safeJoinToString
-- AwLog：轻量日志工具（推荐迁移至 aw-log）
-- SpDelegate：SharedPreferences 属性委托（推荐迁移至 aw-store）

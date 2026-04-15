@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="false"
-        android:label="aw-utils Demo"
+        android:label="🛠️ 工具库演示"
         android:theme="@style/Theme.MaterialComponents.Light.DarkActionBar">
         <activity
             android:name=".MainActivity"
