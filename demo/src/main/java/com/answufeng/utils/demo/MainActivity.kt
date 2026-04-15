@@ -2,148 +2,132 @@ package com.answufeng.utils.demo
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.answufeng.utils.*
-import com.google.android.material.card.MaterialCardView
+import com.google.android.material.progressindicator.LinearProgressIndicator
 
 @OptIn(AwExperimentalApi::class)
 class MainActivity : AppCompatActivity() {
 
     private lateinit var tvLog: TextView
     private lateinit var logScrollView: ScrollView
+    private lateinit var progressIndicator: LinearProgressIndicator
+    
+    // 按钮引用
+    private lateinit var btnString: Button
+    private lateinit var btnRegex: Button
+    private lateinit var btnDate: Button
+    private lateinit var btnRandom: Button
+    private lateinit var btnFile: Button
+    private lateinit var btnEncode: Button
+    private lateinit var btnDevice: Button
+    private lateinit var btnScreen: Button
+    private lateinit var btnApp: Button
+    private lateinit var btnNetwork: Button
+    private lateinit var btnIntent: Button
+    private lateinit var btnContext: Button
+    private lateinit var btnSystem: Button
+    private lateinit var btnCollection: Button
+    private lateinit var btnSpan: Button
+    private lateinit var btnVibrate: Button
+    private lateinit var btnProcess: Button
+    private lateinit var btnClearLog: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // 主布局
-        val mainLayout = findViewById<LinearLayout>(R.id.mainLayout)
-
-        // 标题
-        mainLayout.addView(TextView(this).apply {
-            text = "🛠️ aw-utils 功能演示"
-            textSize = 20f
-            setPadding(0, 0, 0, 20)
-        })
-
-        // 文本处理卡片
-        val textCard = createCard("文本处理")
-        val textLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        textLayout.addView(createButton("📝 字符串扩展", ::testStringExtensions))
-        textLayout.addView(createButton("🔍 正则扩展", ::testRegexExtensions))
-        textLayout.addView(createButton("🎨 富文本扩展", ::testSpanExtensions))
-        textCard.addView(textLayout)
-        mainLayout.addView(textCard)
-
-        // 日期时间卡片
-        val dateCard = createCard("日期时间")
-        val dateLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        dateLayout.addView(createButton("📅 日期扩展", ::testDateExtensions))
-        dateCard.addView(dateLayout)
-        mainLayout.addView(dateCard)
-
-        // 安全加密卡片
-        val securityCard = createCard("安全加密")
-        val securityLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        securityLayout.addView(createButton("🔒 编码扩展", ::testEncodeExtensions))
-        securityCard.addView(securityLayout)
-        mainLayout.addView(securityCard)
-
-        // 设备信息卡片
-        val deviceCard = createCard("设备信息")
-        val deviceLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        deviceLayout.addView(createButton("📱 设备信息", ::showDeviceInfo))
-        deviceLayout.addView(createButton("🖥️ 屏幕扩展", ::testScreenExtensions))
-        deviceLayout.addView(createButton("📳 振动扩展", ::testVibrateExtensions))
-        deviceCard.addView(deviceLayout)
-        mainLayout.addView(deviceCard)
-
-        // 应用功能卡片
-        val appCard = createCard("应用功能")
-        val appLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        appLayout.addView(createButton("📦 应用扩展", ::testAppExtensions))
-        appLayout.addView(createButton("📶 网络状态", ::checkNetwork))
-        appLayout.addView(createButton("🔗 意图扩展", ::testIntentExtensions))
-        appLayout.addView(createButton("⚙️ 系统扩展", ::testSystemExtensions))
-        appCard.addView(appLayout)
-        mainLayout.addView(appCard)
-
-        // 工具功能卡片
-        val utilsCard = createCard("工具功能")
-        val utilsLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        utilsLayout.addView(createButton("📁 文件扩展", ::testFileExtensions))
-        utilsLayout.addView(createButton("🎲 随机扩展", ::testRandomExtensions))
-        utilsLayout.addView(createButton("📏 上下文扩展", ::testContextExtensions))
-        utilsLayout.addView(createButton("📋 集合扩展", ::testCollectionExtensions))
-        utilsLayout.addView(createButton("🔄 进程扩展", ::testProcessExtensions))
-        utilsCard.addView(utilsLayout)
-        mainLayout.addView(utilsCard)
-
-        // 管理功能卡片
-        val manageCard = createCard("管理功能")
-        val manageLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        manageLayout.addView(createButton("🗑️ 清除日志", ::clearLog))
-        manageCard.addView(manageLayout)
-        mainLayout.addView(manageCard)
-
-        // 日志区域
-        mainLayout.addView(TextView(this).apply {
-            text = "操作日志："
-            textSize = 16f
-            setPadding(0, 20, 0, 10)
-        })
-
-        logScrollView = findViewById(R.id.logScrollView)
-        tvLog = findViewById(R.id.tvLog)
-
+        // 初始化视图
+        initViews()
+        setupClickListeners()
+        
         // 显示初始信息
-        log("✅ 工具库初始化完成")
+        log("✅ aw-utils 工具库初始化完成")
         log("📊 点击按钮测试各项功能")
+        log("🎨 已应用 Material Design 3 主题")
     }
 
-    private fun createCard(title: String): MaterialCardView {
-        return MaterialCardView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 0, 0, 16)
-            }
-            setPadding(20, 20, 20, 20)
+    private fun initViews() {
+        tvLog = findViewById(R.id.tvLog)
+        logScrollView = findViewById(R.id.logScrollView)
+        
+        // 初始化所有按钮
+        btnString = findViewById(R.id.btnString)
+        btnRegex = findViewById(R.id.btnRegex)
+        btnDate = findViewById(R.id.btnDate)
+        btnRandom = findViewById(R.id.btnRandom)
+        btnFile = findViewById(R.id.btnFile)
+        btnEncode = findViewById(R.id.btnEncode)
+        btnDevice = findViewById(R.id.btnDevice)
+        btnScreen = findViewById(R.id.btnScreen)
+        btnApp = findViewById(R.id.btnApp)
+        btnNetwork = findViewById(R.id.btnNetwork)
+        btnIntent = findViewById(R.id.btnIntent)
+        btnContext = findViewById(R.id.btnContext)
+        btnSystem = findViewById(R.id.btnSystem)
+        btnCollection = findViewById(R.id.btnCollection)
+        btnSpan = findViewById(R.id.btnSpan)
+        btnVibrate = findViewById(R.id.btnVibrate)
+        btnProcess = findViewById(R.id.btnProcess)
+        btnClearLog = findViewById(R.id.btnClearLog)
+    }
 
-            addView(TextView(this@MainActivity).apply {
-                text = title
-                textSize = 16f
-                setPadding(0, 0, 0, 12)
-            })
+    private fun setupClickListeners() {
+        btnString.setOnClickListener { withLoading { testStringExtensions() } }
+        btnRegex.setOnClickListener { withLoading { testRegexExtensions() } }
+        btnDate.setOnClickListener { withLoading { testDateExtensions() } }
+        btnRandom.setOnClickListener { withLoading { testRandomExtensions() } }
+        btnFile.setOnClickListener { withLoading { testFileExtensions() } }
+        btnEncode.setOnClickListener { withLoading { testEncodeExtensions() } }
+        btnDevice.setOnClickListener { withLoading { showDeviceInfo() } }
+        btnScreen.setOnClickListener { withLoading { testScreenExtensions() } }
+        btnApp.setOnClickListener { withLoading { testAppExtensions() } }
+        btnNetwork.setOnClickListener { withLoading { checkNetwork() } }
+        btnIntent.setOnClickListener { withLoading { testIntentExtensions() } }
+        btnContext.setOnClickListener { withLoading { testContextExtensions() } }
+        btnSystem.setOnClickListener { withLoading { testSystemExtensions() } }
+        btnCollection.setOnClickListener { withLoading { testCollectionExtensions() } }
+        btnSpan.setOnClickListener { withLoading { testSpanExtensions() } }
+        btnVibrate.setOnClickListener { withLoading { testVibrateExtensions() } }
+        btnProcess.setOnClickListener { withLoading { testProcessExtensions() } }
+        btnClearLog.setOnClickListener { clearLog() }
+    }
+
+    private fun withLoading(block: () -> Unit) {
+        // 显示按钮点击反馈
+        val currentView = currentFocus ?: return
+        currentView.isEnabled = false
+        currentView.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).withEndAction {
+            currentView.animate().scaleX(1f).scaleY(1f).setDuration(100).withEndAction {
+                currentView.isEnabled = true
+            }
         }
-    }
-
-    private fun createButton(text: String, onClick: () -> Unit): Button {
-        return Button(this).apply {
-            this.text = text
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(0, 4, 0, 4)
-            }
-            setOnClickListener { onClick() }
+        
+        // 执行功能测试
+        try {
+            block()
+            toast("✅ 功能测试完成")
+        } catch (e: Exception) {
+            log("❌ 错误: ${e.message}")
+            toast("❌ 测试失败，请查看日志")
         }
     }
 
     private fun log(msg: String) {
-        tvLog.append("$msg\n")
-        logScrollView.post { logScrollView.fullScroll(ScrollView.FOCUS_DOWN) }
-        android.util.Log.d("AwUtilsDemo", msg)
+        runOnUiThread {
+            tvLog.append("$msg\n")
+            logScrollView.post { logScrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+            android.util.Log.d("AwUtilsDemo", msg)
+        }
     }
 
     private fun clearLog() {
-        tvLog.text = "日志已清除\n"
+        tvLog.text = "日志输出：\n"
+        toast("🗑️ 日志已清除")
     }
 
     private fun testStringExtensions() {
