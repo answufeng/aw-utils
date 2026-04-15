@@ -3,10 +3,12 @@ package com.answufeng.utils.demo
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.answufeng.utils.*
+import com.google.android.material.card.MaterialCardView
 
 @OptIn(AwExperimentalApi::class)
 class MainActivity : AppCompatActivity() {
@@ -18,34 +20,126 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tvLog = findViewById(R.id.tvLog)
+        // 主布局
+        val mainLayout = findViewById<LinearLayout>(R.id.mainLayout)
+
+        // 标题
+        mainLayout.addView(TextView(this).apply {
+            text = "🛠️ aw-utils 功能演示"
+            textSize = 20f
+            setPadding(0, 0, 0, 20)
+        })
+
+        // 文本处理卡片
+        val textCard = createCard("文本处理")
+        val textLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        textLayout.addView(createButton("📝 字符串扩展", ::testStringExtensions))
+        textLayout.addView(createButton("🔍 正则扩展", ::testRegexExtensions))
+        textLayout.addView(createButton("🎨 富文本扩展", ::testSpanExtensions))
+        textCard.addView(textLayout)
+        mainLayout.addView(textCard)
+
+        // 日期时间卡片
+        val dateCard = createCard("日期时间")
+        val dateLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        dateLayout.addView(createButton("📅 日期扩展", ::testDateExtensions))
+        dateCard.addView(dateLayout)
+        mainLayout.addView(dateCard)
+
+        // 安全加密卡片
+        val securityCard = createCard("安全加密")
+        val securityLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        securityLayout.addView(createButton("🔒 编码扩展", ::testEncodeExtensions))
+        securityCard.addView(securityLayout)
+        mainLayout.addView(securityCard)
+
+        // 设备信息卡片
+        val deviceCard = createCard("设备信息")
+        val deviceLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        deviceLayout.addView(createButton("📱 设备信息", ::showDeviceInfo))
+        deviceLayout.addView(createButton("🖥️ 屏幕扩展", ::testScreenExtensions))
+        deviceLayout.addView(createButton("📳 振动扩展", ::testVibrateExtensions))
+        deviceCard.addView(deviceLayout)
+        mainLayout.addView(deviceCard)
+
+        // 应用功能卡片
+        val appCard = createCard("应用功能")
+        val appLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        appLayout.addView(createButton("📦 应用扩展", ::testAppExtensions))
+        appLayout.addView(createButton("📶 网络状态", ::checkNetwork))
+        appLayout.addView(createButton("🔗 意图扩展", ::testIntentExtensions))
+        appLayout.addView(createButton("⚙️ 系统扩展", ::testSystemExtensions))
+        appCard.addView(appLayout)
+        mainLayout.addView(appCard)
+
+        // 工具功能卡片
+        val utilsCard = createCard("工具功能")
+        val utilsLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        utilsLayout.addView(createButton("📁 文件扩展", ::testFileExtensions))
+        utilsLayout.addView(createButton("🎲 随机扩展", ::testRandomExtensions))
+        utilsLayout.addView(createButton("📏 上下文扩展", ::testContextExtensions))
+        utilsLayout.addView(createButton("📋 集合扩展", ::testCollectionExtensions))
+        utilsLayout.addView(createButton("🔄 进程扩展", ::testProcessExtensions))
+        utilsCard.addView(utilsLayout)
+        mainLayout.addView(utilsCard)
+
+        // 管理功能卡片
+        val manageCard = createCard("管理功能")
+        val manageLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        manageLayout.addView(createButton("🗑️ 清除日志", ::clearLog))
+        manageCard.addView(manageLayout)
+        mainLayout.addView(manageCard)
+
+        // 日志区域
+        mainLayout.addView(TextView(this).apply {
+            text = "操作日志："
+            textSize = 16f
+            setPadding(0, 20, 0, 10)
+        })
+
         logScrollView = findViewById(R.id.logScrollView)
+        tvLog = findViewById(R.id.tvLog)
 
-        findViewById<Button>(R.id.btnString).debounceClick(300L) { testStringExtensions() }
-        findViewById<Button>(R.id.btnRegex).debounceClick(300L) { testRegexExtensions() }
-        findViewById<Button>(R.id.btnDate).debounceClick(300L) { testDateExtensions() }
-        findViewById<Button>(R.id.btnRandom).debounceClick(300L) { testRandomExtensions() }
-        findViewById<Button>(R.id.btnFile).debounceClick(300L) { testFileExtensions() }
-        findViewById<Button>(R.id.btnEncode).debounceClick(300L) { testEncodeExtensions() }
-        findViewById<Button>(R.id.btnDevice).debounceClick(300L) { showDeviceInfo() }
-        findViewById<Button>(R.id.btnScreen).debounceClick(300L) { testScreenExtensions() }
-        findViewById<Button>(R.id.btnApp).debounceClick(300L) { testAppExtensions() }
-        findViewById<Button>(R.id.btnNetwork).debounceClick(300L) { checkNetwork() }
-        findViewById<Button>(R.id.btnIntent).debounceClick(300L) { testIntentExtensions() }
-        findViewById<Button>(R.id.btnContext).debounceClick(300L) { testContextExtensions() }
-        findViewById<Button>(R.id.btnSystem).debounceClick(300L) { testSystemExtensions() }
-        findViewById<Button>(R.id.btnCollection).debounceClick(300L) { testCollectionExtensions() }
-        findViewById<Button>(R.id.btnSpan).debounceClick(300L) { testSpanExtensions() }
-        findViewById<Button>(R.id.btnVibrate).debounceClick(300L) { testVibrateExtensions() }
-        findViewById<Button>(R.id.btnProcess).debounceClick(300L) { testProcessExtensions() }
-        findViewById<Button>(R.id.btnClearLog).debounceClick(300L) { clearLog() }
+        // 显示初始信息
+        log("✅ 工具库初始化完成")
+        log("📊 点击按钮测试各项功能")
+    }
 
-        log("✅ 工具库初始化完成，共 ${"abcdefghijklmnopqrstuvwxyz".length} 个模块")
+    private fun createCard(title: String): MaterialCardView {
+        return MaterialCardView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, 16)
+            }
+            setPadding(20, 20, 20, 20)
+
+            addView(TextView(this@MainActivity).apply {
+                text = title
+                textSize = 16f
+                setPadding(0, 0, 0, 12)
+            })
+        }
+    }
+
+    private fun createButton(text: String, onClick: () -> Unit): Button {
+        return Button(this).apply {
+            this.text = text
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 4, 0, 4)
+            }
+            setOnClickListener { onClick() }
+        }
     }
 
     private fun log(msg: String) {
         tvLog.append("$msg\n")
         logScrollView.post { logScrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        android.util.Log.d("AwUtilsDemo", msg)
     }
 
     private fun clearLog() {
@@ -54,25 +148,55 @@ class MainActivity : AppCompatActivity() {
 
     private fun testStringExtensions() {
         log("📝 字符串扩展:")
-        log("  手机号校验: ${"13812345678".isPhoneNumber()}")
-        log("  手机号掩码: ${"13812345678".maskPhone()}")
-        log("  邮箱校验: ${"test@example.com".isEmail()}")
-        log("  身份证校验: ${"110101199001011234".isIdCard()}")
-        log("  MD5: ${"hello".md5()}")
-        log("  SHA256: ${"hello".sha256().take(16)}...")
-        log("  截断: ${"Hello World".truncate(5)}")
+        log("  手机号校验: ${
+            "13812345678".isPhoneNumber()
+        }")
+        log("  手机号掩码: ${
+            "13812345678".maskPhone()
+        }")
+        log("  邮箱校验: ${
+            "test@example.com".isEmail()
+        }")
+        log("  身份证校验: ${
+            "110101199001011234".isIdCard()
+        }")
+        log("  MD5: ${
+            "hello".md5()
+        }")
+        log("  SHA256: ${
+            "hello".sha256().take(16)
+        }...")
+        log("  截断: ${
+            "Hello World".truncate(5)
+        }")
     }
 
     private fun testRegexExtensions() {
         log("🔍 正则扩展:")
-        log("  IP校验: ${"192.168.1.1".isIP()}")
-        log("  中文校验: ${"你好世界".isChinese()}")
-        log("  用户名校验: ${"user123".isUsername()}")
-        log("  强密码: ${"Abc@1234".isStrongPassword()}")
-        log("  中等密码: ${"abc123".isMediumPassword()}")
-        log("  密码强度: ${"Abc@1234".passwordStrength()}")
-        log("  车牌号: ${"京A12345".isCarPlate()}")
-        log("  MAC地址: ${"00:1A:2B:3C:4D:5E".isMacAddress()}")
+        log("  IP校验: ${
+            "192.168.1.1".isIP()
+        }")
+        log("  中文校验: ${
+            "你好世界".isChinese()
+        }")
+        log("  用户名校验: ${
+            "user123".isUsername()
+        }")
+        log("  强密码: ${
+            "Abc@1234".isStrongPassword()
+        }")
+        log("  中等密码: ${
+            "abc123".isMediumPassword()
+        }")
+        log("  密码强度: ${
+            "Abc@1234".passwordStrength()
+        }")
+        log("  车牌号: ${
+            "京A12345".isCarPlate()
+        }")
+        log("  MAC地址: ${
+            "00:1A:2B:3C:4D:5E".isMacAddress()
+        }")
     }
 
     private fun testDateExtensions() {
