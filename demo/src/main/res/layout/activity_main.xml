@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
+    android:background="@color/background"
     android:fillViewport="true">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:text="🛠️ aw-utils 工具库演示"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="?android:attr/colorPrimary"
+            android:textColor="@color/primary"
             android:layout_marginBottom="4dp" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:gravity="center"
             android:text="字符串/日期/文件/设备/网络/编码/应用/意图/屏幕/振动/富文本/正则/随机/进程/键盘"
             android:textSize="12sp"
-            android:textColor="?android:attr/colorOnSurfaceVariant"
+            android:textColor="@color/on_surface_variant"
             android:layout_marginBottom="12dp" />
 
         <com.google.android.material.card.MaterialCardView
@@ -37,7 +37,7 @@
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="?android:attr/colorSurface">
+            app:cardBackgroundColor="@color/surface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,12 +47,12 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:background="?android:attr/colorPrimary"
+                    android:background="@color/primary"
                     android:gravity="center_vertical"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:text="📋 操作日志"
-                    android:textColor="?android:attr/colorOnPrimary"
+                    android:textColor="@color/on_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
                     android:id="@+id/logScrollView"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    android:background="?android:attr/colorSurface">
+                    android:background="@color/surface">
 
                     <TextView
                         android:id="@+id/tvLog"
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:padding="12dp"
                         android:text="日志输出：\n"
-                        android:textColor="?android:attr/colorOnSurface"
+                        android:textColor="@color/on_surface"
                         android:textSize="13sp" />
 
                 </ScrollView>
