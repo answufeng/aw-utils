@@ -1,5 +1,8 @@
+@file:SuppressLint("MissingPermission")
+
 package com.answufeng.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect

@@ -41,9 +41,10 @@ class StringExtTest {
 
     @Test
     fun `valid id cards`() {
-        assertTrue("110101199001011234".isIdCard())
-        assertTrue("11010119900101123X".isIdCard())
-        assertTrue("11010119900101123x".isIdCard())
+        assertTrue("110101199001011237".isIdCard())
+        assertTrue("11010119900101127X".isIdCard())
+        assertTrue("11010119900101127x".isIdCard())
+        assertTrue("440524188001010014".isIdCard())
     }
 
     @Test
@@ -51,6 +52,21 @@ class StringExtTest {
         assertFalse("".isIdCard())
         assertFalse("11010119900101123".isIdCard())
         assertFalse("1101011990010112345".isIdCard())
+        assertFalse("110101199001011234".isIdCard())
+        assertFalse("110101199001011238".isIdCard())
+        assertFalse("00000000000000000X".isIdCard())
+    }
+
+    @Test
+    fun `isChinesePhoneNumber validates number segments`() {
+        assertTrue("13812345678".isChinesePhoneNumber())
+        assertTrue("15012345678".isChinesePhoneNumber())
+        assertTrue("18612345678".isChinesePhoneNumber())
+        assertTrue("17012345678".isChinesePhoneNumber())
+        assertTrue("19912345678".isChinesePhoneNumber())
+        assertTrue("14012345678".isChinesePhoneNumber())
+        assertFalse("12012345678".isChinesePhoneNumber())
+        assertFalse("11012345678".isChinesePhoneNumber())
     }
 
     @Test

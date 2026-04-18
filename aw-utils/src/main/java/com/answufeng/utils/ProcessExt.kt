@@ -25,13 +25,24 @@ fun runOnUiThread(action: () -> Unit) {
 
 /**
  * 延迟在主线程执行操作。
+ *
+ * @param delayMillis 延迟时间（毫秒）
+ * @param action 要执行的操作
+ * @return [Runnable] 可传入 [removeUiThreadCallback] 取消执行
  */
-fun runOnUiThreadDelayed(delayMillis: Long, action: () -> Unit) {
-    mainHandler.postDelayed(action, delayMillis)
+fun runOnUiThreadDelayed(delayMillis: Long, action: () -> Unit): Runnable {
+    val runnable = Runnable { action() }
+    mainHandler.postDelayed(runnable, delayMillis)
+    return runnable
 }
 
 /**
  * 从主线程 Handler 中移除待执行的回调。
+ *
+ * ```kotlin
+ * val task = runOnUiThreadDelayed(300L) { doSomething() }
+ * removeUiThreadCallback(task) // 取消
+ * ```
  */
 fun removeUiThreadCallback(action: Runnable) {
     mainHandler.removeCallbacks(action)

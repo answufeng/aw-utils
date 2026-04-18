@@ -5,9 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
-import android.graphics.RectF
+import android.graphics.BitmapShader
+import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import java.io.File
@@ -53,34 +52,55 @@ fun Bitmap.scaleMaxSize(maxSize: Int): Bitmap {
 
 /**
  * 将 Bitmap 裁剪为圆形。
+ *
+ * 使用 BitmapShader 实现，兼容硬件加速。
+ * 调用方负责在不再需要时回收原始 Bitmap。
  */
 fun Bitmap.toCircle(): Bitmap {
     val size = minOf(width, height)
     val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
-    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = BitmapShader(this@toCircle, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+    }
     val x = (width - size) / 2f
     val y = (height - size) / 2f
-    canvas.drawBitmap(this, x, y, paint)
+    if (x != 0f || y != 0f) {
+        val matrix = Matrix().apply { setTranslate(-x, -y) }
+        paint.shader.setLocalMatrix(matrix)
+    }
+    canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
     return output
 }
 
 /**
  * 将 Bitmap 裁剪为圆角矩形。
  *
+ * 使用 BitmapShader 实现，兼容硬件加速。
+ * 调用方负责在不再需要时回收原始 Bitmap。
+ *
  * @param radius 圆角半径（像素）
  */
 fun Bitmap.toRounded(radius: Float): Bitmap {
     val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = BitmapShader(this@toRounded, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+    }
+    val rect = android.graphics.RectF(0f, 0f, width.toFloat(), height.toFloat())
     canvas.drawRoundRect(rect, radius, radius, paint)
-    paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-    canvas.drawBitmap(this, 0f, 0f, paint)
     return output
+}
+
+/**
+ * 将 Bitmap 旋转指定角度。
+ *
+ * @param degrees 旋转角度（正值为顺时针）
+ * @return 旋转后的新 Bitmap，调用方负责回收原始 Bitmap
+ */
+fun Bitmap.rotate(degrees: Float): Bitmap {
+    val matrix = Matrix().apply { postRotate(degrees) }
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }
 
 /**

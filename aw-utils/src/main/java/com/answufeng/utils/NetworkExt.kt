@@ -11,7 +11,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import java.util.concurrent.ConcurrentHashMap
 
 /** 网络类型枚举。 */
 enum class NetworkType {
@@ -118,7 +117,7 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
 @AwExperimentalApi
 fun Context.observeNetworkState(): Flow<Boolean> = callbackFlow {
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetworks = ConcurrentHashMap.newKeySet<Network>()
+    val activeNetworks = mutableSetOf<Network>()
     val callback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             activeNetworks.add(network)

@@ -63,6 +63,22 @@ open class SpDelegate(private val name: String) {
         sp.edit().remove(key).apply()
     }
 
+    /**
+     * 批量编辑 SharedPreferences，所有操作在同一个事务中提交。
+     *
+     * ```kotlin
+     * AppPrefs.edit {
+     *     putString("token", "new_token")
+     *     putInt("user_id", 123)
+     *     remove("temp_key")
+     * }
+     * ```
+     */
+    fun edit(block: SharedPreferences.Editor.() -> Unit) {
+        ensureInitialized()
+        sp.edit().apply(block).apply()
+    }
+
     fun string(key: String, default: String = "") = object : ReadWriteProperty<Any?, String> {
         override fun getValue(thisRef: Any?, property: KProperty<*>): String {
             ensureInitialized()

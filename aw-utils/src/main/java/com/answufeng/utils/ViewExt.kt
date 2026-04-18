@@ -131,20 +131,38 @@ inline fun View.updateMargin(block: android.graphics.Rect.() -> Unit) {
 
 /**
  * 设置 View 宽度（像素）。
+ *
+ * @throws IllegalStateException 如果 View 尚未添加到父布局（layoutParams 为 null）
  */
 fun View.setWidth(widthPx: Int) {
-    val lp = layoutParams ?: return
+    val lp = layoutParams ?: throw IllegalStateException("View layoutParams is null — view may not be attached to a parent")
     lp.width = widthPx
     layoutParams = lp
 }
 
 /**
  * 设置 View 高度（像素）。
+ *
+ * @throws IllegalStateException 如果 View 尚未添加到父布局（layoutParams 为 null）
  */
 fun View.setHeight(heightPx: Int) {
-    val lp = layoutParams ?: return
+    val lp = layoutParams ?: throw IllegalStateException("View layoutParams is null — view may not be attached to a parent")
     lp.height = heightPx
     layoutParams = lp
+}
+
+/**
+ * 设置 View 宽度（dp，自动转换为像素）。
+ */
+fun View.setWidthDp(widthDp: Int, context: android.content.Context = this.context) {
+    setWidth(widthDp.dpToPx(context))
+}
+
+/**
+ * 设置 View 高度（dp，自动转换为像素）。
+ */
+fun View.setHeightDp(heightDp: Int, context: android.content.Context = this.context) {
+    setHeight(heightDp.dpToPx(context))
 }
 
 /**
@@ -152,4 +170,24 @@ fun View.setHeight(heightPx: Int) {
  */
 fun List<View>.setVisible(visible: Boolean, goneIfFalse: Boolean = true) {
     forEach { it.setVisible(visible, goneIfFalse) }
+}
+
+/** 仅设置 paddingStart，其余方向保持不变。 */
+fun View.setPaddingStart(paddingStart: Int) {
+    setPadding(paddingStart, paddingTop, paddingRight, paddingBottom)
+}
+
+/** 仅设置 paddingTop，其余方向保持不变。 */
+fun View.setPaddingTop(paddingTop: Int) {
+    setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+}
+
+/** 仅设置 paddingRight，其余方向保持不变。 */
+fun View.setPaddingRight(paddingRight: Int) {
+    setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+}
+
+/** 仅设置 paddingBottom，其余方向保持不变。 */
+fun View.setPaddingBottom(paddingBottom: Int) {
+    setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
 }

@@ -128,3 +128,16 @@ val Context.navigationBarHeight: Int
         val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
     }
+
+/** 判断当前是否为深色模式。 */
+val Context.isDarkMode: Boolean
+    get() = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+/** 判断外部存储是否可用（已挂载）。 */
+val Context.isExternalStorageAvailable: Boolean
+    get() = android.os.Environment.getExternalStorageState() == android.os.Environment.MEDIA_MOUNTED
+
+/** 判断外部存储是否可写（已挂载且可读写）。 */
+val Context.isExternalStorageWritable: Boolean
+    get() = android.os.Environment.getExternalStorageState() == android.os.Environment.MEDIA_MOUNTED

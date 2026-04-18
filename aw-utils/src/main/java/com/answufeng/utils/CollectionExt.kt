@@ -9,6 +9,17 @@ package com.answufeng.utils
  */
 inline fun <T> Collection<T>?.ifNotEmpty(action: (Collection<T>) -> Unit) {
     if (!isNullOrEmpty()) action(this!!)
+    }
+
+/**
+ * 集合为空或 null 时执行操作
+ *
+ * ```kotlin
+ * list?.ifEmpty { showEmptyView() }
+ * ```
+ */
+inline fun <T> Collection<T>?.ifEmpty(action: () -> Unit) {
+    if (isNullOrEmpty()) action()
 }
 
 /**

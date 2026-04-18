@@ -9,6 +9,7 @@ import android.text.style.AbsoluteSizeSpan
 import android.text.style.BackgroundColorSpan
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
 import android.text.style.SubscriptSpan
@@ -155,10 +156,12 @@ fun String.spanClickable(
  *     append("!".spanUnderline())
  * }
  * ```
+ *
+ * 返回 [SpannableStringBuilder]，支持后续追加操作。
+ * 如需不可变的 [SpannableString]，可调用 `.toSpannableString()`。
  */
-fun spannable(builder: SpannableStringBuilder.() -> Unit): SpannableString {
-    val sbb = SpannableStringBuilder().apply(builder)
-    return SpannableString(sbb)
+fun spannable(builder: SpannableStringBuilder.() -> Unit): SpannableStringBuilder {
+    return SpannableStringBuilder().apply(builder)
 }
 
 /**
@@ -179,4 +182,30 @@ fun String.spanSizeDp(sizeDp: Int, context: android.content.Context, start: Int 
 fun TextView.enableClickableSpan() {
     movementMethod = LinkMovementMethod.getInstance()
     highlightColor = android.graphics.Color.TRANSPARENT
+}
+
+/**
+ * 创建带图片的 SpannableString。
+ *
+ * 图片将替换指定范围的文字。
+ *
+ * ```kotlin
+ * textView.text = "  分类".spanImage(drawable, 0, 1)
+ * ```
+ *
+ * @param drawable 要显示的图片 Drawable
+ * @param start 图片替换区域起始位置
+ * @param end 图片替换区域结束位置
+ * @param alignment 图片对齐方式，默认基线对齐
+ */
+fun String.spanImage(
+    drawable: android.graphics.drawable.Drawable,
+    start: Int = 0,
+    end: Int = length,
+    alignment: Int = ImageSpan.ALIGN_BASELINE
+): SpannableString {
+    drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+    return SpannableString(this).apply {
+        setSpan(ImageSpan(drawable, alignment), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
 }

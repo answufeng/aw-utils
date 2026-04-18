@@ -140,6 +140,20 @@ class DateExtTest {
     }
 
     @Test
+    fun `addSeconds adds correct milliseconds`() {
+        val now = System.currentTimeMillis()
+        val result = now.addSeconds(45)
+        assertEquals(now + 45_000L, result)
+    }
+
+    @Test
+    fun `addWeeks adds correct milliseconds`() {
+        val now = System.currentTimeMillis()
+        val result = now.addWeeks(2)
+        assertEquals(now + 1_209_600_000L, result)
+    }
+
+    @Test
     fun `startOfDay and endOfDay are same day`() {
         val now = System.currentTimeMillis()
         assertTrue(now.startOfDay().isSameDay(now.endOfDay()))

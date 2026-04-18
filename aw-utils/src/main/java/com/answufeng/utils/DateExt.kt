@@ -16,6 +16,12 @@ private val threadLocalFormatters = object : ThreadLocal<LinkedHashMap<String, S
         }
 }
 
+private fun calendarOf(timeInMillis: Long): Calendar = Calendar.getInstance().apply {
+    this.timeInMillis = timeInMillis
+}
+
+private fun calendarNow(): Calendar = Calendar.getInstance()
+
 private fun getFormatter(pattern: String): SimpleDateFormat {
     val cache = threadLocalFormatters.get()!!
     return cache.getOrPut(pattern) { SimpleDateFormat(pattern, Locale.US) }
@@ -66,8 +72,8 @@ fun currentTimeMillis(): Long = System.currentTimeMillis()
  * 判断时间戳是否为今天。
  */
 fun Long.isToday(): Boolean {
-    val cal1 = Calendar.getInstance().apply { timeInMillis = this@isToday }
-    val cal2 = Calendar.getInstance()
+    val cal1 = calendarOf(this)
+    val cal2 = calendarNow()
     return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
             cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
@@ -76,8 +82,8 @@ fun Long.isToday(): Boolean {
  * 判断时间戳是否为昨天。
  */
 fun Long.isYesterday(): Boolean {
-    val cal1 = Calendar.getInstance().apply { timeInMillis = this@isYesterday }
-    val cal2 = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -1) }
+    val cal1 = calendarOf(this)
+    val cal2 = calendarNow().apply { add(Calendar.DAY_OF_YEAR, -1) }
     return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
             cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
@@ -86,8 +92,8 @@ fun Long.isYesterday(): Boolean {
  * 判断两个时间戳是否为同一天。
  */
 fun Long.isSameDay(other: Long): Boolean {
-    val cal1 = Calendar.getInstance().apply { timeInMillis = this@isSameDay }
-    val cal2 = Calendar.getInstance().apply { timeInMillis = other }
+    val cal1 = calendarOf(this)
+    val cal2 = calendarOf(other)
     return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
             cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
@@ -121,8 +127,8 @@ fun Long.toFriendlyTime(): String {
 }
 
 private fun Long.isThisYear(): Boolean {
-    val cal = Calendar.getInstance().apply { timeInMillis = this@isThisYear }
-    val now = Calendar.getInstance()
+    val cal = calendarOf(this)
+    val now = calendarNow()
     return cal.get(Calendar.YEAR) == now.get(Calendar.YEAR)
 }
 
@@ -130,8 +136,7 @@ private fun Long.isThisYear(): Boolean {
  * 获取当天开始时间戳（00:00:00.000）。
  */
 fun Long.startOfDay(): Long {
-    return Calendar.getInstance().apply {
-        timeInMillis = this@startOfDay
+    return calendarOf(this).apply {
         set(Calendar.HOUR_OF_DAY, 0)
         set(Calendar.MINUTE, 0)
         set(Calendar.SECOND, 0)
@@ -143,8 +148,7 @@ fun Long.startOfDay(): Long {
  * 获取当天结束时间戳（23:59:59.999）。
  */
 fun Long.endOfDay(): Long {
-    return Calendar.getInstance().apply {
-        timeInMillis = this@endOfDay
+    return calendarOf(this).apply {
         set(Calendar.HOUR_OF_DAY, 23)
         set(Calendar.MINUTE, 59)
         set(Calendar.SECOND, 59)
@@ -154,6 +158,9 @@ fun Long.endOfDay(): Long {
 
 /**
  * 在当前时间戳上增加指定天数。
+ *
+ * 注意：使用纯毫秒计算，不处理夏令时（DST）切换。
+ * 如需精确的日历运算，请使用 `Calendar.add()`。
  */
 fun Long.addDays(days: Int): Long {
     return this + days.toLong() * 86_400_000L
@@ -161,6 +168,8 @@ fun Long.addDays(days: Int): Long {
 
 /**
  * 在当前时间戳上增加指定小时数。
+ *
+ * 注意：使用纯毫秒计算，不处理夏令时（DST）切换。
  */
 fun Long.addHours(hours: Int): Long {
     return this + hours.toLong() * 3_600_000L
@@ -171,4 +180,18 @@ fun Long.addHours(hours: Int): Long {
  */
 fun Long.addMinutes(minutes: Int): Long {
     return this + minutes.toLong() * 60_000L
+}
+
+/**
+ * 在当前时间戳上增加指定秒数。
+ */
+fun Long.addSeconds(seconds: Int): Long {
+    return this + seconds.toLong() * 1_000L
+}
+
+/**
+ * 在当前时间戳上增加指定周数。
+ */
+fun Long.addWeeks(weeks: Int): Long {
+    return this + weeks.toLong() * 604_800_000L
 }

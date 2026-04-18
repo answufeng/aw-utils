@@ -10,19 +10,26 @@ import android.widget.EditText
  * 设置文本变化监听（仅回调 afterTextChanged）。
  *
  * ```kotlin
- * editText.onTextChanged { text ->
+ * val watcher = editText.onTextChanged { text ->
  *     viewModel.onInputChanged(text)
  * }
+ * // 移除监听
+ * editText.removeTextChangedListener(watcher)
  * ```
+ *
+ * @param listener 文本变化回调
+ * @return [android.text.TextWatcher] 可用于移除监听
  */
-fun EditText.onTextChanged(listener: (text: String) -> Unit) {
-    addTextChangedListener(object : android.text.TextWatcher {
+fun EditText.onTextChanged(listener: (text: String) -> Unit): android.text.TextWatcher {
+    val watcher = object : android.text.TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: android.text.Editable?) {
             listener(s?.toString() ?: "")
         }
-    })
+    }
+    addTextChangedListener(watcher)
+    return watcher
 }
 
 /**

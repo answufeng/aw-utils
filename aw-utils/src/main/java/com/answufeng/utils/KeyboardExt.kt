@@ -57,3 +57,22 @@ fun Activity.isKeyboardVisible(threshold: Int = 200): Boolean {
 fun Activity.observeKeyboardVisibility(callback: (visible: Boolean) -> Unit): () -> Unit {
     return window.decorView.observeKeyboardVisibility(callback)
 }
+
+/**
+ * 判断当前 Fragment 的软键盘是否可见。
+ *
+ * @param threshold 键盘高度阈值（dp），默认 200dp
+ */
+fun androidx.fragment.app.Fragment.isKeyboardVisible(threshold: Int = 200): Boolean {
+    return view?.isKeyboardVisible(threshold) ?: false
+}
+
+/**
+ * 监听当前 Fragment 的键盘可见性变化。
+ *
+ * @param callback 键盘可见性回调
+ * @return 取消监听的函数
+ */
+fun androidx.fragment.app.Fragment.observeKeyboardVisibility(callback: (visible: Boolean) -> Unit): () -> Unit {
+    return view?.observeKeyboardVisibility(callback) ?: { }
+}

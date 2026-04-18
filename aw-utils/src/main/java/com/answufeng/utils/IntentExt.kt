@@ -11,14 +11,15 @@ import android.provider.MediaStore
  * @param email 收件人邮箱
  * @param subject 邮件主题
  * @param text 邮件正文
+ * @return 是否成功启动邮件应用
  */
-fun Context.sendEmail(email: String, subject: String = "", text: String = "") {
+fun Context.sendEmail(email: String, subject: String = "", text: String = ""): Boolean {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
         data = Uri.parse("mailto:$email")
         putExtra(Intent.EXTRA_SUBJECT, subject)
         putExtra(Intent.EXTRA_TEXT, text)
     }
-    startActivity(Intent.createChooser(intent, "选择邮件应用"))
+    return safeStartActivity(Intent.createChooser(intent, "选择邮件应用"))
 }
 
 /**
@@ -26,13 +27,14 @@ fun Context.sendEmail(email: String, subject: String = "", text: String = "") {
  *
  * @param phoneNumber 手机号
  * @param message 短信内容
+ * @return 是否成功启动短信应用
  */
-fun Context.sendSMS(phoneNumber: String, message: String = "") {
+fun Context.sendSMS(phoneNumber: String, message: String = ""): Boolean {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
         data = Uri.parse("smsto:$phoneNumber")
         putExtra("sms_body", message)
     }
-    startActivity(intent)
+    return safeStartActivity(intent)
 }
 
 /**
@@ -80,24 +82,27 @@ fun android.app.Activity.pickImage(requestCode: Int) {
  * @param latitude 纬度
  * @param longitude 经度
  * @param label 地标名称
+ * @return 是否成功启动地图应用
  */
-fun Context.openMap(latitude: Double, longitude: Double, label: String = "") {
+fun Context.openMap(latitude: Double, longitude: Double, label: String = ""): Boolean {
     val uri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude($label)")
     val intent = Intent(Intent.ACTION_VIEW, uri)
-    startActivity(intent)
+    return safeStartActivity(intent)
 }
 
 /**
  * 打开应用市场（当前应用）。
  *
  * @param packageName 要跳转的应用包名，默认为当前应用
+ * @return 是否成功启动应用市场
  */
-fun Context.openAppMarket(packageName: String = this.packageName) {
+fun Context.openAppMarket(packageName: String = this.packageName): Boolean {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
-    try {
+    return try {
         startActivity(intent)
+        true
     } catch (_: Exception) {
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+        safeStartActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
     }
 }
 
@@ -146,4 +151,56 @@ fun Context.installApk(uri: Uri) {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
     startActivity(intent)
+}
+
+/**
+ * 安全启动 Activity，先检查是否有应用能处理该 Intent。
+ *
+ * @param intent 要启动的 Intent
+ * @return 是否成功启动
+ */
+fun Context.safeStartActivity(intent: Intent): Boolean {
+    return try {
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+            true
+        } else {
+            false
+        }
+    } catch (_: Exception) {
+        false
+    }
+}
+
+/**
+ * 使用第三方应用打开文件。
+ *
+ * @param uri 文件的 content Uri
+ * @param mimeType 文件 MIME 类型，如 `"image/png"`、`"application/pdf"`
+ * @return 是否成功启动
+ */
+fun Context.openFile(uri: Uri, mimeType: String): Boolean {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(uri, mimeType)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    return safeStartActivity(intent)
+}
+
+/**
+ * 分享文件到其他应用。
+ *
+ * @param uri 文件的 content Uri
+ * @param mimeType 文件 MIME 类型
+ * @param title 选择器标题
+ * @return 是否成功启动
+ */
+fun Context.shareFile(uri: Uri, mimeType: String, title: String = "分享到"): Boolean {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = mimeType
+        putExtra(Intent.EXTRA_STREAM, uri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    return safeStartActivity(Intent.createChooser(intent, title))
 }

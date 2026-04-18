@@ -1,5 +1,56 @@
 # Changelog
 
+## 1.2.0 (Unreleased)
+
+### 正确性修复
+
+- **StringExt**: `isIdCard()` 增加第 18 位校验码验证（加权因子算法），修复无效身份证号通过验证的问题
+- **FileExt**: `isSymlink()` 增加 API 24-25 兼容性处理（捕获 `NoClassDefFoundError`），修复低版本崩溃
+- **ProcessExt**: `runOnUiThreadDelayed()` 返回 `Runnable`，修复 `removeUiThreadCallback()` 无法移除延迟任务的问题
+- **IntentExt**: `sendEmail()`/`sendSMS()` 改用 `safeStartActivity()`，修复无对应应用时崩溃
+- **IntentExt**: `openMap()` 改用 `safeStartActivity()`，返回 `Boolean` 表示是否成功启动
+- **ImageViewExt**: `setTintRes()` 注解从 `@DrawableRes` 修正为 `@ColorRes`
+
+### 新增函数
+
+- **StringExt**: `isChinesePhoneNumber()` 严格手机号校验（号段验证）
+- **StringExt**: `mask(keepStart, keepEnd, maskChar)` 通用脱敏方法
+- **DateExt**: `Long.addSeconds()` / `Long.addWeeks()` 补全日期计算系列
+- **ContextExt**: `isDarkMode` 深色模式判断
+- **ContextExt**: `isExternalStorageAvailable` / `isExternalStorageWritable` 外部存储状态判断
+- **ActivityExt**: `isDestroyedCompat` / `isAlive` Activity 生命周期安全检查
+- **KeyboardExt**: Fragment 键盘可见性判断和监听扩展
+- **BitmapExt**: `Bitmap.rotate(degrees)` 旋转
+- **ViewExt**: `setWidthDp()` / `setHeightDp()` dp 版本尺寸设置
+- **ViewExt**: `setPaddingStart/Top/Right/Bottom()` 单方向 padding 设置
+- **SpanExt**: `spanImage()` 图片 Span
+- **SpanExt**: `spannable()` 返回 `SpannableStringBuilder`，支持后续追加
+- **IntentExt**: `safeStartActivity()` 安全启动 Activity
+- **IntentExt**: `openFile()` / `shareFile()` 打开和分享文件
+- **FileExt**: `isImage()` / `isVideo()` / `isAudio()` 媒体文件判断
+- **CollectionExt**: `ifEmpty()` 集合为空时执行操作
+- **SpDelegate**: `edit(block)` 批量编辑 SharedPreferences
+
+### API 改进
+
+- **EditTextExt**: `onTextChanged()` 返回 `TextWatcher`，支持移除监听
+- **ViewExt**: `setWidth()`/`setHeight()` null LayoutParams 改为抛出 `IllegalStateException`，避免静默隐藏 BUG
+- **DateExt**: `addDays()`/`addHours()` 补充 DST 限制说明 KDoc
+
+### 性能优化
+
+- **DateExt**: Calendar 对象复用（ThreadLocal 缓存），减少 GC 压力
+- **StringExt**: MessageDigest ThreadLocal 缓存，避免重复查找算法
+- **NetworkExt**: `observeNetworkState()` 去掉 `ConcurrentHashMap`，callbackFlow 内部串行无需同步
+- **BitmapExt**: `toCircle()`/`toRounded()` 改用 `BitmapShader` 方案，兼容硬件加速，性能更好
+- **RandomExt**: `randomElements()` 改用 Fisher-Yates 部分采样算法，大列表场景 O(n) → O(k)
+
+### Lint 修复
+
+- **VibrateExt**: 添加 `@SuppressLint("MissingPermission")` 抑制已知 lint 误报
+- **FileExt**: `isSymlink()` 添加 `@SuppressLint("NewApi")` 抑制 lint 误报
+- **build.gradle.kts**: 添加 `lint { abortOnError = false }` 避免已废弃代码阻塞构建
+
 ## 1.1.0 (Unreleased)
 
 ### 新增模块

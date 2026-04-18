@@ -29,6 +29,19 @@ fun Long.toFriendlySize(): String {
 /** 文件扩展名（小写），如 `"jpg"`、`"png"`。 */
 val File.extensionName: String get() = extension.lowercase()
 
+private val IMAGE_EXTENSIONS = setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "ico", "tiff", "tif")
+private val VIDEO_EXTENSIONS = setOf("mp4", "3gp", "avi", "flv", "mkv", "mov", "wmv", "webm", "m4v", "ts")
+private val AUDIO_EXTENSIONS = setOf("mp3", "wav", "ogg", "aac", "flac", "mid", "midi", "amr", "m4a", "wma")
+
+/** 判断文件是否为图片（根据扩展名）。 */
+fun File.isImage(): Boolean = extensionName in IMAGE_EXTENSIONS
+
+/** 判断文件是否为视频（根据扩展名）。 */
+fun File.isVideo(): Boolean = extensionName in VIDEO_EXTENSIONS
+
+/** 判断文件是否为音频（根据扩展名）。 */
+fun File.isAudio(): Boolean = extensionName in AUDIO_EXTENSIONS
+
 /**
  * 安全递归删除文件或目录。
  *
@@ -46,9 +59,12 @@ fun File.safeDeleteRecursively(): Boolean {
     }
 }
 
+@android.annotation.SuppressLint("NewApi")
 private fun File.isSymlink(): Boolean {
     return try {
         java.nio.file.Files.isSymbolicLink(toPath())
+    } catch (_: NoClassDefFoundError) {
+        false
     } catch (_: Exception) {
         false
     }

@@ -86,8 +86,19 @@ fun <T> List<T>.randomElement(): T {
 
 /**
  * 从列表中随机选择 n 个不重复的元素。
+ *
+ * 使用 Fisher-Yates 部分采样算法，避免对大列表进行完整 shuffled()。
  */
 fun <T> List<T>.randomElements(n: Int): List<T> {
     require(n in 0..size) { "Cannot pick $n elements from list of size $size" }
-    return shuffled().take(n)
+    if (n == 0) return emptyList()
+    if (n == size) return toList()
+    val result = mutableListOf<T>()
+    val indices = (0 until size).toMutableList()
+    for (i in 0 until n) {
+        val j = Random.nextInt(i, indices.size)
+        result.add(this[indices[j]])
+        indices[j] = indices[i]
+    }
+    return result
 }

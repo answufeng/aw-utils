@@ -108,3 +108,22 @@ inline fun <reified T> Activity.extraOrDefault(key: String, default: T): T {
 inline fun <reified T> Fragment.argumentOrDefault(key: String, default: T): T {
     return argumentOrNull(key) ?: default
 }
+
+/**
+ * 判断 Activity 是否已销毁（API 17+）。
+ *
+ * 在异步回调中使用 Activity 前应先检查此属性，
+ * 避免在 Activity 销毁后执行 UI 操作导致崩溃。
+ */
+val Activity.isDestroyedCompat: Boolean
+    get() = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        isDestroyed
+    } else {
+        false
+    }
+
+/**
+ * 判断 Activity 是否仍然存活（未销毁且未 finishing）。
+ */
+val Activity.isAlive: Boolean
+    get() = !isFinishing && !isDestroyedCompat
