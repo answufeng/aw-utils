@@ -87,7 +87,9 @@ fun String.spanStrikethrough(start: Int = 0, end: Int = length): SpannableString
 /**
  * 创建带字体大小的 SpannableString。
  *
- * @param sizePx 字体大小（像素）
+ * @param sizePx 字体大小（**像素**），如需使用 dp 请用 [spanSizeDp] 或手动转换：`spanSize(24.dpToPx(context))`
+ * @param start 起始位置
+ * @param end 结束位置
  */
 fun String.spanSize(sizePx: Int, start: Int = 0, end: Int = length): SpannableString {
     return SpannableString(this).apply {
@@ -157,6 +159,18 @@ fun String.spanClickable(
 fun spannable(builder: SpannableStringBuilder.() -> Unit): SpannableString {
     val sbb = SpannableStringBuilder().apply(builder)
     return SpannableString(sbb)
+}
+
+/**
+ * 创建带字体大小的 SpannableString（dp 单位）。
+ *
+ * @param sizeDp 字体大小（dp），内部自动转换为像素
+ * @param context Context 用于 dp 转换
+ * @param start 起始位置
+ * @param end 结束位置
+ */
+fun String.spanSizeDp(sizeDp: Int, context: android.content.Context, start: Int = 0, end: Int = length): SpannableString {
+    return spanSize(sizeDp.dpToPx(context), start, end)
 }
 
 /**

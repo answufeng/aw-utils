@@ -39,7 +39,7 @@ val File.extensionName: String get() = extension.lowercase()
 fun File.safeDeleteRecursively(): Boolean {
     return if (isDirectory) {
         if (isSymlink()) delete() else {
-            listFiles()?.all { it.safeDeleteRecursively() } ?: true && delete()
+            (listFiles()?.all { it.safeDeleteRecursively() } ?: true) && delete()
         }
     } else {
         delete()
@@ -67,7 +67,7 @@ fun File.ensureParentDir(): File {
 private fun File.digest(algorithm: String): String {
     val messageDigest = MessageDigest.getInstance(algorithm)
     inputStream().use { stream ->
-        val buffer = ByteArray(8192)
+        val buffer = ByteArray(65536)
         var read: Int
         while (stream.read(buffer).also { read = it } != -1) {
             messageDigest.update(buffer, 0, read)
@@ -117,5 +117,50 @@ fun File.readTextOrNull(charset: java.nio.charset.Charset = Charsets.UTF_8): Str
         readText(charset)
     } catch (_: Exception) {
         null
+    }
+}
+
+/**
+ * 将文件复制到目标路径，自动创建目标父目录。
+ *
+ * @param target 目标文件
+ * @return 是否复制成功
+ */
+fun File.copyTo(target: File): Boolean {
+    return try {
+        target.ensureParentDir()
+        inputStream().use { input ->
+            target.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        true
+    } catch (_: Exception) {
+        false
+    }
+}
+
+/**
+ * 将文件移动到目标路径，自动创建目标父目录。
+ *
+ * 先尝试原子重命名，失败则复制后删除源文件。
+ *
+ * @param target 目标文件
+ * @return 是否移动成功
+ */
+fun File.moveTo(target: File): Boolean {
+    return try {
+        target.ensureParentDir()
+        if (renameTo(target)) {
+            true
+        } else {
+            if (copyTo(target)) {
+                delete()
+            } else {
+                false
+            }
+        }
+    } catch (_: Exception) {
+        false
     }
 }

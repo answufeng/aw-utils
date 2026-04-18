@@ -8,6 +8,8 @@ import android.os.VibratorManager
 
 /**
  * 触发短振动（约 50ms）。
+ *
+ * 需要 `android.permission.VIBRATE` 权限。
  */
 fun Context.vibrate() {
     val vibrator = getVibrator() ?: return
@@ -21,6 +23,8 @@ fun Context.vibrate() {
 
 /**
  * 触发自定义时长振动。
+ *
+ * 需要 `android.permission.VIBRATE` 权限。
  *
  * @param milliseconds 振动时长（毫秒）
  */
@@ -36,6 +40,8 @@ fun Context.vibrate(milliseconds: Long) {
 
 /**
  * 触发模式振动。
+ *
+ * 需要 `android.permission.VIBRATE` 权限。
  *
  * @param pattern 振动模式，偶数索引为静止时长，奇数索引为振动时长
  * @param repeat 重复次数，-1 为不重复

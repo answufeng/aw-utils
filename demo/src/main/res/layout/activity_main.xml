@@ -1,116 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:fillViewport="true">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:gravity="center"
+        android:text="🛠️ aw-utils 工具库演示"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="🛠️ aw-utils 工具库演示"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/primary"
-            android:layout_marginBottom="4dp" />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="scrollable"
+        app:tabGravity="start"
+        app:tabIndicatorColor="@color/primary"
+        app:tabSelectedTextColor="@color/primary"
+        app:tabTextColor="@color/on_surface_variant" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="字符串/日期/文件/设备/网络/编码/应用/意图/屏幕/振动/富文本/正则/随机/进程/键盘"
-            android:textSize="12sp"
-            android:textColor="@color/on_surface_variant"
-            android:layout_marginBottom="12dp" />
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/surface">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:background="@color/primary"
-                    android:gravity="center_vertical"
-                    android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
-                    android:text="📋 操作日志"
-                    android:textColor="@color/on_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <ScrollView
-                    android:id="@+id/logScrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@color/surface">
-
-                    <TextView
-                        android:id="@+id/tvLog"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp"
-                        android:text="日志输出：\n"
-                        android:textColor="@color/on_surface"
-                        android:textSize="13sp" />
-
-                </ScrollView>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <TextView style="@style/DemoSectionTitle" android:text="📝 字符串 &amp; 正则" />
-        <Button android:id="@+id/btnString" style="@style/DemoButton" android:text="字符串扩展(手机号/邮箱/身份证/MD5)" />
-        <Button android:id="@+id/btnRegex" style="@style/DemoButton" android:text="正则扩展(IP/中文/密码强度/车牌号)" />
-
-        <TextView style="@style/DemoSectionTitle" android:text="📅 日期 &amp; 随机" />
-        <Button android:id="@+id/btnDate" style="@style/DemoButton" android:text="日期扩展(格式化/友好时间)" />
-        <Button android:id="@+id/btnRandom" style="@style/DemoButton" android:text="随机扩展(随机字符串/颜色/数字)" />
-
-        <TextView style="@style/DemoSectionTitle" android:text="📁 文件 &amp; 编码" />
-        <Button android:id="@+id/btnFile" style="@style/DemoButton" android:text="文件扩展(大小/MD5/扩展名)" />
-        <Button android:id="@+id/btnEncode" style="@style/DemoButton" android:text="编码扩展(Base64/Hex)" />
-
-        <TextView style="@style/DemoSectionTitle" android:text="📱 设备 &amp; 屏幕 &amp; 应用" />
-        <Button android:id="@+id/btnDevice" style="@style/DemoButton" android:text="设备信息(品牌/型号/系统)" />
-        <Button android:id="@+id/btnScreen" style="@style/DemoButton" android:text="屏幕扩展(平板/横竖屏/亮度)" />
-        <Button android:id="@+id/btnApp" style="@style/DemoButton" android:text="应用扩展(安装/调试/启动/签名)" />
-
-        <TextView style="@style/DemoSectionTitle" android:text="📶 网络 &amp; 意图" />
-        <Button android:id="@+id/btnNetwork" style="@style/DemoButton" android:text="网络状态(WiFi/类型)" />
-        <Button android:id="@+id/btnIntent" style="@style/DemoButton" android:text="意图扩展(邮件/短信/地图/市场)" />
-
-        <TextView style="@style/DemoSectionTitle" android:text="📏 上下文 &amp; 系统 &amp; 集合" />
-        <Button android:id="@+id/btnContext" style="@style/DemoButton" android:text="上下文扩展(屏幕/dp/sp)" />
-        <Button android:id="@+id/btnSystem" style="@style/DemoButton" android:text="系统扩展(剪贴板/版本/Toast)" />
-        <Button android:id="@+id/btnCollection" style="@style/DemoButton" android:text="集合扩展(安全连接/非空回调)" />
-
-        <TextView style="@style/DemoSectionTitle" android:text="🎨 富文本 &amp; 振动 &amp; 进程" />
-        <Button android:id="@+id/btnSpan" style="@style/DemoButton" android:text="富文本扩展(颜色/加粗/下划线/点击)" />
-        <Button android:id="@+id/btnVibrate" style="@style/DemoButton" android:text="振动扩展(短振/自定义)" />
-        <Button android:id="@+id/btnProcess" style="@style/DemoButton" android:text="进程扩展(主线程/UI线程)" />
-
-        <TextView style="@style/DemoSectionTitle" android:text="🔧 管理" />
-        <Button android:id="@+id/btnClearLog" style="@style/DemoButton" android:text="🗑️ 清除日志" />
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

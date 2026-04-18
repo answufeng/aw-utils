@@ -109,10 +109,10 @@ fun Int.pxToDp(context: Context): Float =
 fun Int.pxToSp(context: Context): Float =
     this / context.resources.displayMetrics.scaledDensity
 
-/** 屏幕宽度（px）。 */
+/** 屏幕宽度（px）。多窗口/分屏模式下可能不准确，推荐使用 WindowMetrics API（API 30+）。 */
 val Context.screenWidth: Int get() = resources.displayMetrics.widthPixels
 
-/** 屏幕高度（px）。 */
+/** 屏幕高度（px）。多窗口/分屏模式下可能不准确，推荐使用 WindowMetrics API（API 30+）。 */
 val Context.screenHeight: Int get() = resources.displayMetrics.heightPixels
 
 /** 状态栏高度（px）。 */

@@ -24,6 +24,10 @@ android {
         jvmTarget = "17"
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -43,4 +47,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.constraintlayout)
     implementation(libs.activity.ktx)
+    implementation(libs.fragment.ktx)
+    implementation(libs.viewpager2)
 }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import java.util.concurrent.ConcurrentHashMap
 
 /** 网络类型枚举。 */
 enum class NetworkType {
@@ -79,6 +80,20 @@ fun Context.getNetworkType(): NetworkType {
     }
 }
 
+/**
+ * 判断当前网络是否为指定类型。
+ *
+ * 需要 `ACCESS_NETWORK_STATE` 权限。
+ *
+ * ```kotlin
+ * context.isNetworkType(NetworkType.WIFI)
+ * ```
+ */
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+fun Context.isNetworkType(type: NetworkType): Boolean {
+    return getNetworkType() == type
+}
+
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 @Deprecated("Use getNetworkType() instead", ReplaceWith("getNetworkType().name"))
 fun Context.getNetworkTypeName(): String = getNetworkType().name
@@ -103,7 +118,7 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
 @AwExperimentalApi
 fun Context.observeNetworkState(): Flow<Boolean> = callbackFlow {
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetworks = mutableSetOf<Network>()
+    val activeNetworks = ConcurrentHashMap.newKeySet<Network>()
     val callback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             activeNetworks.add(network)

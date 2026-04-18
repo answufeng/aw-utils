@@ -101,4 +101,47 @@ class DateExtTest {
     fun `currentTimeMillis returns positive value`() {
         assertTrue(currentTimeMillis() > 0)
     }
+
+    @Test
+    fun `startOfDay returns midnight`() {
+        val now = System.currentTimeMillis()
+        val start = now.startOfDay()
+        val formatted = start.formatDate("HH:mm:ss.SSS")
+        assertEquals("00:00:00.000", formatted)
+    }
+
+    @Test
+    fun `endOfDay returns last millisecond`() {
+        val now = System.currentTimeMillis()
+        val end = now.endOfDay()
+        val formatted = end.formatDate("HH:mm:ss.SSS")
+        assertEquals("23:59:59.999", formatted)
+    }
+
+    @Test
+    fun `addDays adds correct milliseconds`() {
+        val now = System.currentTimeMillis()
+        val result = now.addDays(1)
+        assertEquals(now + 86_400_000L, result)
+    }
+
+    @Test
+    fun `addHours adds correct milliseconds`() {
+        val now = System.currentTimeMillis()
+        val result = now.addHours(2)
+        assertEquals(now + 7_200_000L, result)
+    }
+
+    @Test
+    fun `addMinutes adds correct milliseconds`() {
+        val now = System.currentTimeMillis()
+        val result = now.addMinutes(30)
+        assertEquals(now + 1_800_000L, result)
+    }
+
+    @Test
+    fun `startOfDay and endOfDay are same day`() {
+        val now = System.currentTimeMillis()
+        assertTrue(now.startOfDay().isSameDay(now.endOfDay()))
+    }
 }

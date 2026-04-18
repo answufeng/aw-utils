@@ -38,9 +38,16 @@ fun Context.sendSMS(phoneNumber: String, message: String = "") {
 /**
  * 打开相机拍照。
  *
+ * **已废弃**：使用 `startActivityForResult`，API 30 已废弃。
+ * 推荐使用 Activity Result API（`registerForActivityResult`）替代。
+ *
  * @param requestCode 请求码
  * @param imageUri 拍照保存的 Uri
  */
+@Deprecated(
+    message = "Use Activity Result API (registerForActivityResult) instead",
+    level = DeprecationLevel.WARNING
+)
 fun android.app.Activity.openCamera(imageUri: Uri, requestCode: Int) {
     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
         putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
@@ -51,8 +58,15 @@ fun android.app.Activity.openCamera(imageUri: Uri, requestCode: Int) {
 /**
  * 打开相册选择图片。
  *
+ * **已废弃**：使用 `startActivityForResult`，API 30 已废弃。
+ * 推荐使用 Activity Result API（`registerForActivityResult`）替代。
+ *
  * @param requestCode 请求码
  */
+@Deprecated(
+    message = "Use Activity Result API (registerForActivityResult) instead",
+    level = DeprecationLevel.WARNING
+)
 fun android.app.Activity.pickImage(requestCode: Int) {
     val intent = Intent(Intent.ACTION_PICK).apply {
         type = "image/*"
@@ -117,6 +131,11 @@ fun Context.openBluetoothSettings() {
 
 /**
  * 安装 APK 文件。
+ *
+ * 注意：
+ * - Android 7+ 需要使用 FileProvider 提供 content Uri
+ * - Android 8+ 需要声明 `REQUEST_INSTALL_PACKAGES` 权限
+ * - Android 12+ 安装流程需要用户确认
  *
  * @param uri APK 文件的 content Uri
  */

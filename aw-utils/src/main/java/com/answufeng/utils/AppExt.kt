@@ -90,6 +90,10 @@ fun Context.openAppDetailSettings(packageName: String = this.packageName) {
 /**
  * 判断当前应用是否在前台运行。
  *
+ * 注意：Android 10+ `runningAppProcesses` 返回信息受限，
+ * 此方法在高版本系统上可能不可靠。
+ * 推荐使用 `ProcessLifecycleOwner` 方案替代。
+ *
  * 需要 `GET_TASKS` 权限（API 21 以下），API 21+ 使用 ActivityLifecycleCallbacks 更可靠。
  */
 fun Context.isAppForeground(): Boolean {

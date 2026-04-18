@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment
 /**
  * 复制文本到剪贴板。
  *
+ * Android 13+ 系统会自动显示"已复制到剪贴板"提示，
+ * 无需额外处理。
+ *
  * @param text 要复制的文本
  * @param label 剪贴板标签，默认 `"text"`
  */
@@ -28,6 +31,9 @@ fun Context.copyToClipboard(text: String, label: String = "text") {
 
 /**
  * 获取剪贴板中的文本。
+ *
+ * 注意：Android 10+ 后台应用无法读取剪贴板内容，
+ * 仅在应用处于前台时有效。
  *
  * @return 剪贴板文本，无内容时返回 null
  */

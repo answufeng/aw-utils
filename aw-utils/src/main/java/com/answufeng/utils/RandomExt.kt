@@ -6,15 +6,18 @@ import kotlin.random.Random
 private const val ALPHANUMERIC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 private const val NUMERIC = "0123456789"
 private const val LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-private const val UPPER_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-private const val LOWER_LETTERS = "abcdefghijklmnopqrstuvwxyz"
 
 /**
  * 生成指定长度的随机字母数字字符串。
  */
 fun randomString(length: Int): String {
     require(length >= 0) { "Length must be >= 0, got $length" }
-    return (1..length).map { ALPHANUMERIC[Random.nextInt(ALPHANUMERIC.length)] }.joinToString("")
+    if (length == 0) return ""
+    val chars = CharArray(length)
+    for (i in 0 until length) {
+        chars[i] = ALPHANUMERIC[Random.nextInt(ALPHANUMERIC.length)]
+    }
+    return String(chars)
 }
 
 /**
@@ -22,7 +25,12 @@ fun randomString(length: Int): String {
  */
 fun randomNumericString(length: Int): String {
     require(length >= 0) { "Length must be >= 0, got $length" }
-    return (1..length).map { NUMERIC[Random.nextInt(NUMERIC.length)] }.joinToString("")
+    if (length == 0) return ""
+    val chars = CharArray(length)
+    for (i in 0 until length) {
+        chars[i] = NUMERIC[Random.nextInt(NUMERIC.length)]
+    }
+    return String(chars)
 }
 
 /**
@@ -30,7 +38,12 @@ fun randomNumericString(length: Int): String {
  */
 fun randomLetterString(length: Int): String {
     require(length >= 0) { "Length must be >= 0, got $length" }
-    return (1..length).map { LETTERS[Random.nextInt(LETTERS.length)] }.joinToString("")
+    if (length == 0) return ""
+    val chars = CharArray(length)
+    for (i in 0 until length) {
+        chars[i] = LETTERS[Random.nextInt(LETTERS.length)]
+    }
+    return String(chars)
 }
 
 /**
@@ -75,6 +88,6 @@ fun <T> List<T>.randomElement(): T {
  * 从列表中随机选择 n 个不重复的元素。
  */
 fun <T> List<T>.randomElements(n: Int): List<T> {
-    require(n <= size) { "Cannot pick $n elements from list of size $size" }
+    require(n in 0..size) { "Cannot pick $n elements from list of size $size" }
     return shuffled().take(n)
 }

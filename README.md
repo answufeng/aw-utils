@@ -2,16 +2,22 @@
 
 [![](https://jitpack.io/v/answufeng/aw-utils.svg)](https://jitpack.io/#answufeng/aw-utils)
 
-Android 工具扩展库，零业务逻辑，纯 Kotlin 扩展函数，覆盖字符串、日期、文件、网络、设备、编解码、应用、意图、屏幕、振动、富文本、正则、随机、进程、键盘等常用场景。
+Android 工具扩展库，零业务逻辑，纯 Kotlin 扩展函数，覆盖字符串、日期、文件、网络、设备、编解码、应用、意图、屏幕、振动、富文本、正则、随机、进程、键盘、颜色、图片、Uri 等常用场景。
 
 ## 特性
 
 - **纯扩展函数**：无侵入，按需引入，不污染现有代码
 - **零业务逻辑**：通用工具，不绑定任何业务场景
 - **最小依赖**：仅依赖 AndroidX 核心库，不引入第三方框架
-- **线程安全**：日期格式化等内部使用 ThreadLocal + LRU 缓存
+- **线程安全**：日期格式化等内部使用 ThreadLocal + LRU 缓存，网络监听使用 ConcurrentHashMap
 - **完整测试**：核心逻辑均有单元测试覆盖
 - **API 稳定性**：实验性 API 使用 `@AwExperimentalApi` 标记，版本升级有保障
+
+## 兼容性
+
+- **minSdk**: 24 (Android 7.0)
+- **targetSdk**: 34 (Android 14)
+- **Kotlin**: 2.0+
 
 ## 引入
 
@@ -25,18 +31,29 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.github.answufeng:aw-utils:1.0.0")
+    implementation("com.github.answufeng:aw-utils:1.1.0")
 }
 ```
+
+## 权限说明
+
+部分 API 需要声明对应权限：
+
+| 权限 | 使用场景 | 需要手动声明 |
+|------|----------|-------------|
+| `ACCESS_NETWORK_STATE` | 网络状态判断、网络类型获取 | 是 |
+| `VIBRATE` | 振动相关功能 | 是 |
+| `REQUEST_INSTALL_PACKAGES` | 安装 APK（Android 8+） | 是 |
+| `CAMERA` | 相机拍照 | 是 |
 
 ## 功能概览
 
 | 模块 | 文件 | 说明 |
 |------|------|------|
-| 字符串 | StringExt | 手机号/邮箱/身份证/URL 校验、脱敏、MD5/SHA-256、truncate |
+| 字符串 | StringExt | 手机号/邮箱/身份证/URL/银行卡校验、脱敏、MD5/SHA-256、truncate |
 | 正则 | RegexExt | IP/中文/用户名/密码强度/车牌号/MAC 地址校验 |
-| 日期 | DateExt | 格式化、解析、友好时间、日期比较 |
-| 文件 | FileExt | 大小格式化、MD5/SHA-256、安全删除（含符号链接保护）、流写入 |
+| 日期 | DateExt | 格式化、解析、友好时间、日期比较、日期计算 |
+| 文件 | FileExt | 大小格式化、MD5/SHA-256、安全删除、复制、移动 |
 | 编解码 | EncodeExt | Base64、Hex 编解码（高性能查表实现） |
 | 网络 | NetworkExt | 网络状态判断、Flow 状态监听、网络类型枚举 |
 | 设备 | DeviceExt | 品牌、型号、系统版本、设备摘要（Context 扩展） |
@@ -45,14 +62,20 @@ dependencies {
 | 屏幕 | ScreenExt | 平板判断、横竖屏、窗口亮度、屏幕常亮 |
 | 上下文 | ContextExt | dp/sp 转换（Context 感知 + 无 Context 版本）、屏幕尺寸 |
 | 系统 | SystemExt | 剪贴板、键盘（View/Activity/Fragment）、Toast、应用信息、权限检查 |
-| 视图 | ViewExt | 防抖点击（debounceClick）、可见性控制、postDelay |
+| 视图 | ViewExt | 防抖点击、可见性控制、padding/margin DSL、宽高设置 |
 | Activity | ActivityExt | 泛型启动、类型安全参数获取、Fragment 支持 |
 | 集合 | CollectionExt | ifNotEmpty、safeJoinToString |
 | 富文本 | SpanExt | 颜色/加粗/斜体/下划线/删除线/点击/大小 Span，DSL 构建器 |
 | 振动 | VibrateExt | 短振/自定义时长/模式振动/取消 |
-| 随机 | RandomExt | 随机字符串/数字/颜色/列表元素 |
+| 随机 | RandomExt | 随机字符串/数字/颜色/列表元素（高性能 CharArray 实现） |
 | 进程 | ProcessExt | 主线程判断、UI 线程执行 |
-| 键盘 | KeyboardExt | 键盘可见性判断、键盘监听 |
+| 键盘 | KeyboardExt | 键盘可见性判断（View/Activity 扩展）、键盘监听 |
+| 颜色 | ColorExt | 颜色 Int ↔ Hex 转换、透明度调整、颜色混合 |
+| Uri | UriExt | content:// 转 file path、获取文件名、获取 MIME 类型 |
+| Bitmap | BitmapExt | 缩放、圆角、圆形、压缩保存、Drawable 互转 |
+| TextView | TextViewExt | drawable 设置（含 tint）、drawable 资源 ID 版本 |
+| EditText | EditTextExt | 文本变化监听、最大长度、小数位数过滤、键盘动作 |
+| ImageView | ImageViewExt | tint 设置/清除、图片+tint 组合设置 |
 | 日志 | AwLog | 轻量日志工具，全局开关、级别过滤（推荐迁移至 aw-log） |
 | 偏好 | SpDelegate | SharedPreferences 属性委托（推荐迁移至 aw-store） |
 | 注解 | Annotations | @AwExperimentalApi 实验性 API 标记 |
@@ -68,16 +91,17 @@ dependencies {
 "110101199001011234".isIdCard()     // true
 "https://example.com".isUrl()       // true
 "12345".isDigitsOnly()              // true
+"6222021234567890".isBankCard()     // true
 
 // 脱敏
 "13812345678".maskPhone()           // "138****5678"
 "110101199001011234".maskIdCard()   // "1101**********1234"
 "hello@example.com".maskEmail()     // "h****@example.com"
+"6222021234567890".maskBankCard()   // "6222********7890"
 
 // 摘要（默认 UTF-8，可指定字符集）
 "hello".md5()                       // "5d41402abc4b2a76b9719d911017c592"
 "hello".sha256()                    // "2cf24dba5fb0a30e..."
-"hello".md5(charset = Charsets.ISO_8859_1)  // 指定字符集
 
 // 截断
 "Hello World".truncate(5)           // "Hello…"
@@ -112,11 +136,16 @@ timestamp.isToday()       // true
 timestamp.isYesterday()   // false
 time1.isSameDay(time2)    // true
 
+// 日期计算
+timestamp.startOfDay()    // 当天 00:00:00.000
+timestamp.endOfDay()      // 当天 23:59:59.999
+timestamp.addDays(3)      // 加 3 天
+timestamp.addHours(2)     // 加 2 小时
+timestamp.addMinutes(30)  // 加 30 分钟
+
 // 友好时间（@AwExperimentalApi — 硬编码中文，未来可能国际化）
 (timestamp - 30_000).toFriendlyTime()   // "刚刚"
 (timestamp - 5 * 60_000).toFriendlyTime()  // "5分钟前"
-(timestamp - 3 * 3_600_000).toFriendlyTime()  // "3小时前"
-(timestamp - 30 * 3_600_000).toFriendlyTime()  // "昨天 10:30"
 ```
 
 ### FileExt — 文件操作
@@ -134,6 +163,8 @@ file.sha256()          // "2cf24dba5fb0a30e..."
 // 操作
 file.ensureParentDir()             // 确保父目录存在
 file.safeDeleteRecursively()       // 安全递归删除（含符号链接保护）
+file.copyTo(target)                // 复制文件
+file.moveTo(target)                // 移动文件（先尝试 renameTo，失败则复制+删除）
 inputStream.writeToFile(file)      // 流写入文件
 file.readTextOrNull()              // 安全读取文本，失败返回 null
 
@@ -161,6 +192,7 @@ context.isNetworkAvailable()     // true
 context.isWifiConnected()        // true
 context.isMobileDataConnected()  // false
 context.getNetworkType()         // NetworkType.WIFI
+context.isNetworkType(NetworkType.WIFI)  // true
 
 // Flow 监听（@AwExperimentalApi）
 context.observeNetworkState().collect { available -> }
@@ -182,14 +214,13 @@ context.deviceSummary()     // "Xiaomi MI 11 | Android 14 (SDK 34)" (@AwExperime
 ```kotlin
 context.isAppInstalled("com.tencent.mm")  // true
 context.isAppDebug()                      // true
-context.isAppForeground()                 // true
+context.isAppForeground()                 // true（注意：Android 10+ 可能不可靠）
 context.isSystemApp(packageName)          // false
 context.launchApp("com.tencent.mm")       // 启动微信
 context.getAppIcon("com.tencent.mm")      // Drawable?
 context.getAppName("com.tencent.mm")      // "微信"
 context.getAppSignatureSHA1()             // "a1b2c3..."
 context.openAppDetailSettings()           // 打开应用详情设置
-context.openAppDetailSettings("com.tencent.mm")  // 打开指定应用设置
 ```
 
 ### IntentExt — 系统意图
@@ -199,24 +230,14 @@ context.openAppDetailSettings("com.tencent.mm")  // 打开指定应用设置
 context.sendEmail("dev@example.com", subject = "反馈", text = "内容")
 context.sendSMS("10086", message = "查询余额")
 
-// 媒体
+// 媒体（已废弃，推荐使用 Activity Result API）
 activity.openCamera(imageUri, REQUEST_CAMERA)
 activity.pickImage(REQUEST_PICK_IMAGE)
 
 // 位置
 context.openMap(39.9042, 116.4074, label = "天安门")
 
-// 市场
-context.openAppMarket()                           // 当前应用
-context.openAppMarket("com.tencent.mm")           // 指定应用
-
-// 设置
-context.openSettings()                             // 系统设置
-context.openWifiSettings()                         // WiFi 设置
-context.openLocationSettings()                     // 位置设置
-context.openBluetoothSettings()                    // 蓝牙设置
-
-// 安装
+// 安装（注意：Android 7+ 需要 FileProvider，Android 8+ 需要 REQUEST_INSTALL_PACKAGES 权限）
 context.installApk(apkUri)
 ```
 
@@ -250,7 +271,7 @@ activity.setScreenKeepOn(true)     // 保持常亮
 100.dp                 // 300px
 14.sp                  // 42px
 
-// 屏幕
+// 屏幕（注意：多窗口/分屏模式下可能不准确）
 context.screenWidth          // 1080
 context.screenHeight         // 2400
 context.statusBarHeight      // 88
@@ -260,7 +281,7 @@ context.navigationBarHeight  // 96
 ### SystemExt — 系统服务
 
 ```kotlin
-// 剪贴板
+// 剪贴板（注意：Android 10+ 后台无法读取，Android 13+ 系统自动提示）
 context.copyToClipboard("text")
 context.getClipboardText()
 
@@ -292,19 +313,137 @@ context.isPermissionGranted(Manifest.permission.CAMERA, Manifest.permission.RECO
 ### ViewExt — 视图扩展
 
 ```kotlin
+// 防抖点击（使用 SystemClock.elapsedRealtime()，不受系统时间调整影响）
 view.debounceClick { handleClick() }
 view.debounceClick(interval = 1000L) { handleClick() }
 
+// 可见性
 view.visible()
 view.invisible()
 view.gone()
 view.setVisible(true)
 view.setVisible(false, goneIfFalse = false)  // INVISIBLE
 view.toggleVisibility()
-
 setVisible(viewA, viewB, visible = false)
+listOf(viewA, viewB).setVisible(visible = true)
+
+// Padding DSL
+view.updatePadding {
+    left = 16.dpToPx(context)
+    right = 16.dpToPx(context)
+}
+
+// Margin DSL（需要 MarginLayoutParams）
+view.updateMargin {
+    left = 16.dpToPx(context)
+}
+
+// 宽高
+view.setWidth(500)
+view.setHeight(300)
 
 view.postDelay(300L) { doSomething() }
+```
+
+### ColorExt — 颜色操作
+
+```kotlin
+// Int ↔ Hex 转换
+(-14742431).toHexColor()          // "#FF1F71B3"
+(-14742431).toHexColorNoAlpha()   // "#1F71B3"
+"#1F71B3".toColorInt()            // -14742431
+
+// 支持多种格式
+"#RGB".toColorInt()
+"#ARGB".toColorInt()
+"#RRGGBB".toColorInt()
+"#AARRGGBB".toColorInt()
+
+// 透明度
+color.withAlpha(128)               // 设置半透明
+
+// 混合
+Color.RED.blend(Color.BLUE, 0.5f)  // 红蓝各半混合
+```
+
+### UriExt — Uri 操作
+
+```kotlin
+// content:// 转 file path（云存储 Uri 可能返回 null）
+uri.toFilePath(context)
+
+// 获取文件名
+uri.getFileName(context)
+
+// 获取 MIME 类型
+uri.getMimeType(context)            // "image/jpeg"
+
+// 判断是否本地文件
+uri.isLocalFile()
+```
+
+### BitmapExt — 图片操作
+
+```kotlin
+// Drawable → Bitmap
+drawable.toBitmap()
+
+// 缩放
+bitmap.scale(newWidth, newHeight)
+bitmap.scaleMaxSize(1024)           // 最大边不超过 1024
+
+// 圆形/圆角
+bitmap.toCircle()
+bitmap.toRounded(16f)
+
+// 压缩保存
+bitmap.compressTo(file, format = Bitmap.CompressFormat.JPEG, quality = 80)
+```
+
+### TextViewExt — TextView 扩展
+
+```kotlin
+// 设置 drawable
+textView.setDrawableStart(drawable)
+textView.setDrawableEnd(drawable, boundsWidth = 24, boundsHeight = 24)
+textView.setDrawableTopRes(R.drawable.icon)
+textView.setDrawableBottomRes(R.drawable.icon)
+
+// Drawable tint
+textView.setDrawableTint(Color.RED)
+
+// 清除
+textView.clearDrawables()
+```
+
+### EditTextExt — EditText 扩展
+
+```kotlin
+// 文本变化监听
+editText.onTextChanged { text ->
+    viewModel.onInputChanged(text)
+}
+
+// 输入限制
+editText.setMaxLength(50)
+editText.addDecimalFilter(2)        // 限制 2 位小数
+
+// 键盘动作
+editText.setOnEditorAction(EditorInfo.IME_ACTION_SEARCH) {
+    performSearch()
+}
+
+// 清除焦点 + 隐藏键盘
+editText.clearFocusAndHideKeyboard()
+```
+
+### ImageViewExt — ImageView 扩展
+
+```kotlin
+// Tint
+imageView.setTint(Color.RED)
+imageView.clearTint()
+imageView.setImageWithTint(R.drawable.icon, Color.RED)
 ```
 
 ### ActivityExt — Activity 启动与参数
@@ -315,7 +454,7 @@ context.startActivity<DetailActivity>(bundleOf("id" to 123))
 context.startActivity<DetailActivity> { putExtra("id", 123) }
 
 val userId: String? = extraOrNull("user_id")
-val count: Int? = extraOrNull("count")       // 不存在时返回 null（非 0）
+val count: Int? = extraOrNull("count")
 val title: String? = argumentOrNull("title")
 ```
 
@@ -336,7 +475,8 @@ listOf("a", "b").safeJoinToString("|")         // "a|b"
 "Hello World".spanItalic(0, 5)
 "Hello World".spanUnderline(0, 5)
 "Hello World".spanStrikethrough(0, 5)
-"Hello World".spanSize(24.dp, 0, 5)
+"Hello World".spanSize(24.dpToPx(context), 0, 5)  // 像素单位
+"Hello World".spanSizeDp(24, context, 0, 5)        // dp 单位（便捷方法）
 "Hello World".spanSuperscript(6, 8)
 "Hello World".spanSubscript(6, 8)
 
@@ -357,6 +497,7 @@ textView.text = spannable {
 ### VibrateExt — 振动
 
 ```kotlin
+// 需要 android.permission.VIBRATE 权限
 context.vibrate()                           // 短振 50ms
 context.vibrate(200L)                       // 自定义时长
 context.vibrate(longArrayOf(0, 100, 50, 100))  // 模式振动
@@ -389,15 +530,15 @@ runOnUiThreadDelayed(300L) { fadeIn() }    // 延迟主线程执行
 ### KeyboardExt — 键盘
 
 ```kotlin
-// 判断键盘是否可见
-if (isKeyboardVisible(rootView)) { hideKeyboard() }
-
-// 监听键盘变化
-val unsubscribe = observeKeyboardVisibility(rootView) { visible ->
+// View 扩展
+if (rootView.isKeyboardVisible()) { hideKeyboard() }
+rootView.observeKeyboardVisibility { visible ->
     if (visible) adjustPadding() else resetPadding()
 }
-// 取消监听
-unsubscribe()
+
+// Activity 扩展
+if (activity.isKeyboardVisible()) { hideKeyboard() }
+activity.observeKeyboardVisibility { visible -> }
 ```
 
 ### AwLog — 轻量日志（推荐迁移至 aw-log）
@@ -437,7 +578,7 @@ val friendly = timestamp.toFriendlyTime()
 - `Context.observeNetworkState()` — Flow 实现细节可能调整
 - `Context.deviceSummary()` — 输出格式可能调整
 
-## 迁移指南（1.0.0 → 当前版本）
+## 迁移指南（1.0.0 → 1.1.0）
 
 | 旧 API | 新 API | 说明 |
 |--------|--------|------|
@@ -455,6 +596,9 @@ val friendly = timestamp.toFriendlyTime()
 | `deviceSummary()`（顶层） | `context.deviceSummary()` | Context 扩展 |
 | `"aGVsbG8=".decodeBase64String()` | `"aGVsbG8=".decodeBase64ToString()` | 命名惯例 |
 | `currentTimeMillis()` | `System.currentTimeMillis()` | 无意义包装 |
+| `isKeyboardVisible(rootView)` | `rootView.isKeyboardVisible()` | View 扩展 |
+| `observeKeyboardVisibility(rootView)` | `rootView.observeKeyboardVisibility()` | View 扩展 |
+| `activity.openCamera(uri, requestCode)` | Activity Result API | 废弃 API |
 
 > 所有旧 API 仍可用（标记 `@Deprecated(WARNING)`），不会破坏现有代码。
 

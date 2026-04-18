@@ -95,6 +95,8 @@ fun Long.isSameDay(other: Long): Boolean {
 /**
  * 将时间戳转换为友好的中文时间描述。
  *
+ * 注意：输出为硬编码中文字符串，如需国际化请自行实现。
+ *
  * 规则：
  * - < 1分钟 → "刚刚"
  * - < 1小时 → "X分钟前"
@@ -122,4 +124,51 @@ private fun Long.isThisYear(): Boolean {
     val cal = Calendar.getInstance().apply { timeInMillis = this@isThisYear }
     val now = Calendar.getInstance()
     return cal.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+}
+
+/**
+ * 获取当天开始时间戳（00:00:00.000）。
+ */
+fun Long.startOfDay(): Long {
+    return Calendar.getInstance().apply {
+        timeInMillis = this@startOfDay
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
+}
+
+/**
+ * 获取当天结束时间戳（23:59:59.999）。
+ */
+fun Long.endOfDay(): Long {
+    return Calendar.getInstance().apply {
+        timeInMillis = this@endOfDay
+        set(Calendar.HOUR_OF_DAY, 23)
+        set(Calendar.MINUTE, 59)
+        set(Calendar.SECOND, 59)
+        set(Calendar.MILLISECOND, 999)
+    }.timeInMillis
+}
+
+/**
+ * 在当前时间戳上增加指定天数。
+ */
+fun Long.addDays(days: Int): Long {
+    return this + days.toLong() * 86_400_000L
+}
+
+/**
+ * 在当前时间戳上增加指定小时数。
+ */
+fun Long.addHours(hours: Int): Long {
+    return this + hours.toLong() * 3_600_000L
+}
+
+/**
+ * 在当前时间戳上增加指定分钟数。
+ */
+fun Long.addMinutes(minutes: Int): Long {
+    return this + minutes.toLong() * 60_000L
 }

@@ -7,6 +7,7 @@ private val PHONE_REGEX = Regex("^1[3-9]\\d{9}$")
 private val EMAIL_REGEX = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
 private val ID_CARD_REGEX = Regex("^\\d{17}[\\dXx]$")
 private val URL_REGEX = Regex("^https?://[\\w\\-]+(\\.[\\w\\-]+)+([\\w\\-.,@?^=%&:/~+#]*)*$")
+private val BANK_CARD_REGEX = Regex("^\\d{16,19}$")
 
 /**
  * 判断字符串是否为合法的中国大陆手机号。
@@ -34,6 +35,11 @@ fun String.isDigitsOnly(): Boolean = all { it.isDigit() }
  * 判断字符串是否为合法的 URL（http/https）。
  */
 fun String.isUrl(): Boolean = matches(URL_REGEX)
+
+/**
+ * 判断字符串是否为合法的银行卡号（16-19 位数字）。
+ */
+fun String.isBankCard(): Boolean = matches(BANK_CARD_REGEX)
 
 /**
  * 手机号脱敏，将中间四位替换为 `****`。
@@ -65,6 +71,17 @@ fun String.maskEmail(): String {
     val atIndex = indexOf('@')
     if (atIndex <= 1) return this
     return "${first()}${"*".repeat(atIndex - 1)}${substring(atIndex)}"
+}
+
+/**
+ * 银行卡号脱敏，保留前 4 位和后 4 位，中间用 `*` 替换。
+ *
+ * 如 `"6222021234567890"` → `"6222********7890"`。
+ * 长度不足 8 位的字符串原样返回。
+ */
+fun String.maskBankCard(): String {
+    if (length < 8) return this
+    return replaceRange(4, length - 4, "*".repeat(length - 8))
 }
 
 /**

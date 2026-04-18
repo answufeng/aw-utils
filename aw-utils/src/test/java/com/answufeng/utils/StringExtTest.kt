@@ -196,4 +196,30 @@ class StringExtTest {
         assertFalse("".isNotNullOrEmpty())
         assertTrue("   ".isNotNullOrEmpty())
     }
+
+    @Test
+    fun `isBankCard validates 16-19 digit numbers`() {
+        assertTrue("6222021234567890".isBankCard())
+        assertTrue("62220212345678901".isBankCard())
+        assertTrue("622202123456789012".isBankCard())
+        assertTrue("6222021234567890123".isBankCard())
+    }
+
+    @Test
+    fun `isBankCard rejects invalid inputs`() {
+        assertFalse("".isBankCard())
+        assertFalse("622202123456789".isBankCard())
+        assertFalse("62220212345678901234".isBankCard())
+        assertFalse("6222abcd34567890".isBankCard())
+    }
+
+    @Test
+    fun `maskBankCard hides middle digits`() {
+        assertEquals("6222********7890", "6222021234567890".maskBankCard())
+    }
+
+    @Test
+    fun `maskBankCard returns original for short strings`() {
+        assertEquals("1234567", "1234567".maskBankCard())
+    }
 }

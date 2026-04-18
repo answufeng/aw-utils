@@ -1,6 +1,8 @@
 package com.answufeng.utils
 
+import android.os.SystemClock
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 
 @Deprecated(
     message = "Use debounceClick() for clearer semantics",
@@ -20,7 +22,7 @@ inline fun View.debounceClick(interval: Long = 500L, crossinline onClick: (View)
     require(interval > 0L) { "Debounce interval must be > 0ms, got $interval" }
     var lastClickTime = 0L
     setOnClickListener { v ->
-        val now = System.currentTimeMillis()
+        val now = SystemClock.elapsedRealtime()
         if (now - lastClickTime >= interval) {
             lastClickTime = now
             onClick(v)
@@ -85,4 +87,69 @@ fun View.toggleVisibility(): Int {
     val newVisibility = if (visibility == View.VISIBLE) View.GONE else View.VISIBLE
     visibility = newVisibility
     return newVisibility
+}
+
+/**
+ * DSL 风格更新 padding。
+ *
+ * ```kotlin
+ * view.updatePadding {
+ *     left = 16.dpToPx(context)
+ *     right = 16.dpToPx(context)
+ * }
+ * ```
+ */
+inline fun View.updatePadding(block: android.graphics.Rect.() -> Unit) {
+    val rect = android.graphics.Rect(paddingLeft, paddingTop, paddingRight, paddingBottom)
+    rect.block()
+    setPadding(rect.left, rect.top, rect.right, rect.bottom)
+}
+
+/**
+ * DSL 风格更新 margin。
+ *
+ * 需要 View 的 LayoutParams 为 [MarginLayoutParams]（如 LinearLayout.LayoutParams、FrameLayout.LayoutParams 等），
+ * 否则抛出 [IllegalStateException]。
+ *
+ * ```kotlin
+ * view.updateMargin {
+ *     left = 16.dpToPx(context)
+ * }
+ * ```
+ */
+inline fun View.updateMargin(block: android.graphics.Rect.() -> Unit) {
+    val lp = layoutParams
+    check(lp is MarginLayoutParams) { "View layoutParams must be MarginLayoutParams" }
+    val rect = android.graphics.Rect(lp.leftMargin, lp.topMargin, lp.rightMargin, lp.bottomMargin)
+    rect.block()
+    lp.leftMargin = rect.left
+    lp.topMargin = rect.top
+    lp.rightMargin = rect.right
+    lp.bottomMargin = rect.bottom
+    layoutParams = lp
+}
+
+/**
+ * 设置 View 宽度（像素）。
+ */
+fun View.setWidth(widthPx: Int) {
+    val lp = layoutParams ?: return
+    lp.width = widthPx
+    layoutParams = lp
+}
+
+/**
+ * 设置 View 高度（像素）。
+ */
+fun View.setHeight(heightPx: Int) {
+    val lp = layoutParams ?: return
+    lp.height = heightPx
+    layoutParams = lp
+}
+
+/**
+ * 批量设置 View 可见性（List 版本）。
+ */
+fun List<View>.setVisible(visible: Boolean, goneIfFalse: Boolean = true) {
+    forEach { it.setVisible(visible, goneIfFalse) }
 }
