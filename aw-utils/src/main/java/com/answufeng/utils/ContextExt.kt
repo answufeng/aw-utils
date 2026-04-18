@@ -134,9 +134,10 @@ val Context.isDarkMode: Boolean
     get() = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
             android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-/** 判断外部存储是否可用（已挂载）。 */
+/** 判断外部存储是否可用（已挂载，含只读）。 */
 val Context.isExternalStorageAvailable: Boolean
-    get() = android.os.Environment.getExternalStorageState() == android.os.Environment.MEDIA_MOUNTED
+    get() = android.os.Environment.getExternalStorageState() in
+        setOf(android.os.Environment.MEDIA_MOUNTED, android.os.Environment.MEDIA_MOUNTED_READ_ONLY)
 
 /** 判断外部存储是否可写（已挂载且可读写）。 */
 val Context.isExternalStorageWritable: Boolean

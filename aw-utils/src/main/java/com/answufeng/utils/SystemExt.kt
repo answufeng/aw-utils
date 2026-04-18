@@ -78,12 +78,12 @@ fun Context.toastLong(message: String) {
 
 /** 拨打电话（打开拨号界面）。 */
 fun Context.dial(phone: String) {
-    startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone")))
+    safeStartActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone")))
 }
 
 /** 打开浏览器。 */
 fun Context.openBrowser(url: String) {
-    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    safeStartActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }
 
 /**
