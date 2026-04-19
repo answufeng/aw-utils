@@ -52,19 +52,25 @@ fun File.isAudio(): Boolean = extensionName in AUDIO_EXTENSIONS
 fun File.safeDeleteRecursively(): Boolean {
     return if (isDirectory) {
         if (isSymlink()) delete() else {
-            (listFiles()?.all { it.safeDeleteRecursively() } ?: true) && delete()
+            val children = listFiles()
+            if (children == null) {
+                false
+            } else {
+                children.all { it.safeDeleteRecursively() } && delete()
+            }
         }
     } else {
         delete()
     }
 }
 
-@android.annotation.SuppressLint("NewApi")
 private fun File.isSymlink(): Boolean {
     return try {
-        java.nio.file.Files.isSymbolicLink(toPath())
-    } catch (_: NoClassDefFoundError) {
-        false
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            java.nio.file.Files.isSymbolicLink(toPath())
+        } else {
+            canonicalPath != absolutePath
+        }
     } catch (_: Exception) {
         false
     }
