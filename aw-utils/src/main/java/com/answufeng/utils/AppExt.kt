@@ -96,6 +96,10 @@ fun Context.openAppDetailSettings(packageName: String = this.packageName) {
  *
  * 需要 `GET_TASKS` 权限（API 21 以下），API 21+ 使用 ActivityLifecycleCallbacks 更可靠。
  */
+@Deprecated(
+    message = "Android 10+ runningAppProcesses 受限，推荐使用 ProcessLifecycleOwner 方案替代",
+    level = DeprecationLevel.WARNING
+)
 fun Context.isAppForeground(): Boolean {
     val am = getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
         ?: return false
