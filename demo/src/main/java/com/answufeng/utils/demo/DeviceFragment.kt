@@ -27,7 +27,7 @@ class DeviceFragment : BaseDemoFragment() {
 
         addTitle("📦 应用信息")
         addLog("是否Debug: ${ctx.isAppDebug()}")
-        addLog("是否前台: ${ctx.isAppForeground()}")
+        addLog("是否前台: ${ctx.isAppForeground()}") // @Deprecated, 仅作演示
         addLog("是否系统应用: ${ctx.isSystemApp(ctx.packageName)}")
         addLog("已安装微信: ${ctx.isAppInstalled("com.tencent.mm")}")
         addLog("应用名: ${ctx.getAppName(ctx.packageName)}")

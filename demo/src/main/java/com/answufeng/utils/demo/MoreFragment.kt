@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.util.Log
 import com.answufeng.utils.*
 
 class MoreFragment : BaseDemoFragment() {
@@ -39,15 +40,14 @@ class MoreFragment : BaseDemoFragment() {
         }
         container.addView(spBtn)
 
-        addTitle("📋 AwLog 日志")
+        addTitle("📋 Log 日志")
         val logBtn = Button(ctx).apply {
-            text = "测试 AwLog 输出"
+            text = "测试 Log 输出"
             @Suppress("DEPRECATION")
             debounceClick {
-                AwLog.init(isDebug = true, prefix = "Demo")
-                AwLog.d("MoreFragment", "这是一条 Debug 日志")
-                AwLog.e("MoreFragment", "这是一条 Error 日志")
-                addLog("AwLog 已输出到 Logcat (tag: Demo-MoreFragment)")
+                Log.d("Demo-MoreFragment", "这是一条 Debug 日志")
+                Log.e("Demo-MoreFragment", "这是一条 Error 日志")
+                addLog("Log 已输出到 Logcat (tag: Demo-MoreFragment)")
             }
         }
         container.addView(logBtn)
