@@ -46,11 +46,14 @@ fun Context.isAppDebug(packageName: String): Boolean {
 
 /**
  * 启动指定包名的应用。
+ *
+ * @return 是否成功启动。如果目标应用未安装或没有启动入口，返回 `false`。
  */
-fun Context.launchApp(packageName: String) {
-    val intent = packageManager.getLaunchIntentForPackage(packageName) ?: return
+fun Context.launchApp(packageName: String): Boolean {
+    val intent = packageManager.getLaunchIntentForPackage(packageName) ?: return false
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     startActivity(intent)
+    return true
 }
 
 /**
