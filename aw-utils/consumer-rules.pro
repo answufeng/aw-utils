@@ -9,3 +9,16 @@
 }
 
 -keep @interface com.answufeng.utils.AwExperimentalApi
+-keep @com.answufeng.utils.AwExperimentalApi class * { *; }
+-keepclassmembers class * {
+    @com.answufeng.utils.AwExperimentalApi *;
+}
+
+-keep class com.answufeng.utils.NetworkType { *; }
+-keep class com.answufeng.utils.PasswordStrength { *; }
+
+-keepclassmembers class * implements kotlin.properties.ReadWriteProperty {
+    *;
+}
+
+-keepattributes Signature, *Annotation*

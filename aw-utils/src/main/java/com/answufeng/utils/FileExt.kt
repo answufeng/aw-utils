@@ -114,12 +114,14 @@ fun File.totalSize(): Long {
 /**
  * 将 [InputStream] 写入文件，自动创建父目录。
  *
- * 流会在写入完成后关闭。
+ * InputStream 和 OutputStream 都会在写入完成后关闭。
  */
 fun InputStream.writeToFile(file: File) {
     file.ensureParentDir()
-    file.outputStream().use { out ->
-        copyTo(out)
+    use { input ->
+        file.outputStream().use { output ->
+            input.copyTo(output)
+        }
     }
 }
 
@@ -142,7 +144,7 @@ fun File.readTextOrNull(charset: java.nio.charset.Charset = Charsets.UTF_8): Str
  * @param target 目标文件
  * @return 是否复制成功
  */
-fun File.copyTo(target: File): Boolean {
+fun File.copyToFile(target: File): Boolean {
     return try {
         target.ensureParentDir()
         inputStream().use { input ->
@@ -164,13 +166,13 @@ fun File.copyTo(target: File): Boolean {
  * @param target 目标文件
  * @return 是否移动成功
  */
-fun File.moveTo(target: File): Boolean {
+fun File.moveToFile(target: File): Boolean {
     return try {
         target.ensureParentDir()
         if (renameTo(target)) {
             true
         } else {
-            if (copyTo(target)) {
+            if (copyToFile(target)) {
                 delete()
             } else {
                 false

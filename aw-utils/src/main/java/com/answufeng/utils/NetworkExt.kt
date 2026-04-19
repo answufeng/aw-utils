@@ -117,7 +117,7 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
 @AwExperimentalApi
 fun Context.observeNetworkState(): Flow<Boolean> = callbackFlow {
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetworks = mutableSetOf<Network>()
+    val activeNetworks = java.util.concurrent.ConcurrentHashMap.newKeySet<Network>()
     val callback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             activeNetworks.add(network)
