@@ -5,8 +5,10 @@
 # 公共 API 保留
 # ===========================================================
 
-# 保留所有公共扩展函数和属性
--keep class com.answufeng.utils.** { *; }
+# 精确保留公共 API 类
+-keep public class com.answufeng.utils.** { 
+    public *;
+}
 
 # 保留 @AwExperimentalApi 注解（用于 Opt-In 检查）
 -keep class com.answufeng.utils.AwExperimentalApi { *; }
@@ -36,29 +38,11 @@
 -keepclassmembers class kotlin.jvm.functions.Function2 { *; }
 
 # ===========================================================
-# Android 相关
-# ===========================================================
-
-# 保留 View 扩展函数可能访问的内部类
--keep class android.view.View { *; }
--keep class android.content.Context { *; }
-
-# 保留 SpannableString 相关类
--keep class android.text.SpannableString { *; }
--keep class android.text.Spanned { *; }
-
-# 保留 Process 类相关方法（用于获取进程名）
--keep class android.os.Process { *; }
-
-# ===========================================================
 # Kotlin 反射和属性委托
 # ===========================================================
 
 # 保留 Kotlin 属性委托相关的 ReadWriteProperty 实现
 -keep class kotlin.properties.ReadWriteProperty { *; }
-
-# 保留 KProperty 相关的反射 API
--keep class kotlin.reflect.KProperty { *; }
 
 # ===========================================================
 # 注解保留
