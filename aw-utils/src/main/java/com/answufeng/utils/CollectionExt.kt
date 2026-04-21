@@ -8,8 +8,8 @@ package com.answufeng.utils
  * ```
  */
 inline fun <T> Collection<T>?.ifNotEmpty(action: (Collection<T>) -> Unit) {
-    if (!isNullOrEmpty()) action(this!!)
-    }
+    if (!isNullOrEmpty()) action(this)
+}
 
 /**
  * 集合为空或 null 时执行操作

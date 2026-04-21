@@ -53,8 +53,11 @@ fun String.isMacAddress(): Boolean = matches(MAC_ADDRESS_REGEX)
  * 密码强度等级。
  */
 enum class PasswordStrength {
+    /** 弱密码（不满足中等强度要求）。 */
     WEAK,
+    /** 中等强度密码（6 位以上，包含字母和数字）。 */
     MEDIUM,
+    /** 强密码（8 位以上，包含大小写字母、数字和特殊字符）。 */
     STRONG
 }
 

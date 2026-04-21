@@ -14,9 +14,13 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 /** 网络类型枚举。 */
 enum class NetworkType {
+    /** Wi-Fi 网络连接。 */
     WIFI,
+    /** 移动数据网络连接（蜂窝网络）。 */
     CELLULAR,
+    /** 以太网有线连接。 */
     ETHERNET,
+    /** 无可用网络连接。 */
     NONE
 }
 

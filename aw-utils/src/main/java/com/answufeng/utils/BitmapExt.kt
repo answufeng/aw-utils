@@ -130,6 +130,7 @@ fun Bitmap.compressTo(
 /**
  * 计算 Bitmap 的采样大小，使解码后图片不超过指定最大宽高。
  *
+ * @param options BitmapFactory.Options 兼容包装，包含图片原始宽高信息
  * @param maxWidth 最大宽度
  * @param maxHeight 最大高度
  * @return 采样大小（2 的幂）

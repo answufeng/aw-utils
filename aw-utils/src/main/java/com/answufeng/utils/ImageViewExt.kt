@@ -9,6 +9,8 @@ import androidx.annotation.DrawableRes
 
 /**
  * 设置 ImageView 的 tint 颜色。
+ *
+ * @param color tint 颜色值
  */
 fun ImageView.setTint(color: Int) {
     drawable?.mutate()?.setTint(color)

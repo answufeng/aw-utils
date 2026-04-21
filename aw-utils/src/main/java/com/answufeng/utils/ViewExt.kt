@@ -172,22 +172,34 @@ fun List<View>.setVisible(visible: Boolean, goneIfFalse: Boolean = true) {
     forEach { it.setVisible(visible, goneIfFalse) }
 }
 
-/** 仅设置 paddingStart，其余方向保持不变。 */
+/** 仅设置 paddingStart，其余方向保持不变。
+ *
+ * @param paddingStart 左侧 padding 值（像素）
+ */
 fun View.setPaddingStart(paddingStart: Int) {
     setPadding(paddingStart, paddingTop, paddingRight, paddingBottom)
 }
 
-/** 仅设置 paddingTop，其余方向保持不变。 */
+/** 仅设置 paddingTop，其余方向保持不变。
+ *
+ * @param paddingTop 顶部 Padding 值（像素）
+ */
 fun View.setPaddingTop(paddingTop: Int) {
     setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
 }
 
-/** 仅设置 paddingRight，其余方向保持不变。 */
+/** 仅设置 paddingRight，其余方向保持不变。
+ *
+ * @param paddingRight 右侧 Padding 值（像素）
+ */
 fun View.setPaddingRight(paddingRight: Int) {
     setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
 }
 
-/** 仅设置 paddingBottom，其余方向保持不变。 */
+/** 仅设置 paddingBottom，其余方向保持不变。
+ *
+ * @param paddingBottom 底部 Padding 值（像素）
+ */
 fun View.setPaddingBottom(paddingBottom: Int) {
     setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
 }

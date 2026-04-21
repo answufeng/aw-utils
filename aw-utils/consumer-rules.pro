@@ -5,14 +5,13 @@
 # 公共 API 保留
 # ===========================================================
 
-# 精确保留公共 API 類型名稱，成員允許混淆以避免過度保留
+# 精确保留公共 API 类名称，成员允许混淆以避免过度保留
 -keep public class com.answufeng.utils.SpDelegate
 -keep public class com.answufeng.utils.AwLog
--keep public class com.answufeng.utils.NetworkType
--keep public class com.answufeng.utils.PasswordStrength
--keep public class com.answufeng.utils.AwExperimentalApi
-
-
+-keep public class com.answufeng.utils.NetworkType { *; }
+-keep public class com.answufeng.utils.PasswordStrength { *; }
+-keep public class com.answufeng.utils.AwExperimentalApi { *; }
+-keep public class com.answufeng.utils.BitmapFactoryOptionsCompat { *; }
 
 # ===========================================================
 # SpDelegate 相关
@@ -33,23 +32,13 @@
 # 扩展函数和属性
 # ===========================================================
 
-# 保留常用擴展函式承載類（避免 API 被誤刪）
+# 保留常用扩展函数承载类（避免 API 被误删）
 -keep class com.answufeng.utils.*Kt { public *; }
-
-# ===========================================================
-# Kotlin 反射和属性委托
-# ===========================================================
-
-# 屬性委託類型由 Kotlin 標準庫提供，無需額外 keep
 
 # ===========================================================
 # 注解保留
 # ===========================================================
 
-# 僅保留本庫注解
+# 仅保留本库注解
 -keepattributes *Annotation*
 -keep class com.answufeng.utils.AwExperimentalApi { *; }
-
-# Enum classes used in public API
--keep class com.answufeng.utils.NetworkType { *; }
--keep class com.answufeng.utils.PasswordStrength { *; }
