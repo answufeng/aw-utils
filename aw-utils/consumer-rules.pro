@@ -6,10 +6,13 @@
 # ===========================================================
 
 # 精确保留公共 API 類型名稱，成員允許混淆以避免過度保留
--keep public class com.answufeng.utils.**
+-keep public class com.answufeng.utils.SpDelegate
+-keep public class com.answufeng.utils.AwLog
+-keep public class com.answufeng.utils.NetworkType
+-keep public class com.answufeng.utils.PasswordStrength
+-keep public class com.answufeng.utils.AwExperimentalApi
 
-# 保留 @AwExperimentalApi 注解（用于 Opt-In 检查）
--keep class com.answufeng.utils.AwExperimentalApi { *; }
+
 
 # ===========================================================
 # SpDelegate 相关
