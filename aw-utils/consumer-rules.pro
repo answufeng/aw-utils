@@ -5,10 +5,8 @@
 # 公共 API 保留
 # ===========================================================
 
-# 精确保留公共 API 类
--keep public class com.answufeng.utils.** { 
-    public *;
-}
+# 精确保留公共 API 類型名稱，成員允許混淆以避免過度保留
+-keep public class com.answufeng.utils.**
 
 # 保留 @AwExperimentalApi 注解（用于 Opt-In 检查）
 -keep class com.answufeng.utils.AwExperimentalApi { *; }
@@ -32,25 +30,22 @@
 # 扩展函数和属性
 # ===========================================================
 
-# 保留扩展函数（混淆工具可能错误地移除未被直接调用的扩展）
--keepclassmembers class kotlin.jvm.functions.Function0 { *; }
--keepclassmembers class kotlin.jvm.functions.Function1 { *; }
--keepclassmembers class kotlin.jvm.functions.Function2 { *; }
+# 保留常用擴展函式承載類（避免 API 被誤刪）
+-keep class com.answufeng.utils.*Kt { public *; }
 
 # ===========================================================
 # Kotlin 反射和属性委托
 # ===========================================================
 
-# 保留 Kotlin 属性委托相关的 ReadWriteProperty 实现
--keep class kotlin.properties.ReadWriteProperty { *; }
+# 屬性委託類型由 Kotlin 標準庫提供，無需額外 keep
 
 # ===========================================================
 # 注解保留
 # ===========================================================
 
-# 保留所有自定义注解
--keepattributes Annotation
--keep class * extends java.lang.annotation.Annotation { *; }
+# 僅保留本庫注解
+-keepattributes *Annotation*
+-keep class com.answufeng.utils.AwExperimentalApi { *; }
 
 # Enum classes used in public API
 -keep class com.answufeng.utils.NetworkType { *; }
