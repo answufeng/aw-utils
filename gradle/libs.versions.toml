@@ -14,8 +14,6 @@ viewpager2 = "1.1.0"
 
 material = "1.12.0"
 
-junit = "4.13.2"
-
 [libraries]
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 
@@ -28,8 +26,6 @@ annotation = { group = "androidx.annotation", name = "annotation", version.ref =
 viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
