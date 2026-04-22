@@ -2,6 +2,8 @@
 
 [![](https://jitpack.io/v/answufeng/aw-utils.svg)](https://jitpack.io/#answufeng/aw-utils)
 
+> **相关仓库**：GitHub [answufeng](https://github.com/answufeng) 组织内另有多个独立维护的 `aw-*` 基础库（架构、存储、网络、图片、日志、权限、启动、UI 等），与本库相同面向传统 View/XML，工程基线多为 minSdk 24 与 JDK 17。
+
 Android 工具扩展库，零业务逻辑，纯 Kotlin 扩展函数，覆盖字符串、日期、文件、网络、设备、编解码、应用、意图、屏幕、振动、富文本、正则、随机、进程、键盘、颜色、图片、Uri 等常用场景。
 
 ## 文档导读
