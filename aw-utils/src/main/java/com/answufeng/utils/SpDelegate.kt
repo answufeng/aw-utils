@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
  * @param name SharedPreferences 文件名
  */
 @Deprecated(
-    message = "推荐使用 aw-store 库的 AwStore，基于 MMKV 的实现性能更优",
+    message = "推荐使用 aw-store 的 MmkvDelegate / AwStore（MMKV），详见 aw-utils README「弃用 API 迁移」",
     level = DeprecationLevel.WARNING
 )
 open class SpDelegate(private val name: String) {

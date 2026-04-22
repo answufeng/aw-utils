@@ -31,7 +31,7 @@ import android.util.Log
  * > `AwLog` 继续作为零依赖的轻量日志工具维护，适用于简单场景。
  */
 @Deprecated(
-    message = "推荐使用 aw-log 库的 AwLogger，基于 Timber 的实现功能更完善",
+    message = "推荐使用 aw-log 库的 AwLogger（文件日志、脱敏、崩溃链），详见 aw-utils README「弃用 API 迁移」",
     level = DeprecationLevel.WARNING
 )
 object AwLog {

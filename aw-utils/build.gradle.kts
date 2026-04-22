@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -37,6 +38,11 @@ android {
     }
 }
 
+ktlint {
+    android.set(true)
+    ignoreFailures = false
+}
+
 dependencies {
     api(libs.coroutines.core)
 
@@ -44,8 +50,6 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.annotation)
     implementation(libs.fragment.ktx)
-
-    testImplementation(libs.junit)
 }
 
 apply(from = "${rootDir}/gradle/publish.gradle.kts")

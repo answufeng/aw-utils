@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.answufeng.utils.demo.databinding.ActivityMainBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
@@ -39,6 +40,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_demo_playbook -> {
+                val lines = tabs.joinToString("\n") { "• ${it.first}" }
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.demo_playbook_title)
+                    .setMessage("$lines\n\n${getString(R.string.demo_playbook_footer)}")
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+                true
+            }
             R.id.action_theme_follow_system -> {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 true

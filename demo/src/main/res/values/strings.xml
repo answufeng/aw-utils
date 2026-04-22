@@ -3,6 +3,8 @@
     <string name="theme_follow_system">主题：跟随系统</string>
     <string name="theme_light">主题：浅色</string>
     <string name="theme_dark">主题：深色</string>
+    <string name="demo_playbook_title">演示清单</string>
+    <string name="demo_playbook_footer">无网、无权限等场景请手测。完整索引见仓库 demo/DEMO_MATRIX.md；弃用 API 见 README「弃用 API 迁移」。</string>
 
     <style name="DemoSectionTitle">
         <item name="android:layout_width">match_parent</item>
