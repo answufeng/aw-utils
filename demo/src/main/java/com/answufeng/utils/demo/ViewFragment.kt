@@ -2,19 +2,19 @@ package com.answufeng.utils.demo
 
 import android.graphics.Color
 import android.view.Gravity
-import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.answufeng.utils.*
+import com.google.android.material.button.MaterialButton
 
 class ViewFragment : BaseDemoFragment() {
 
     override fun setupDemo() {
         val ctx = requireContext()
 
-        addTitle("👆 防抖点击")
-        val debounceBtn = Button(ctx).apply {
+        addTitle("防抖点击")
+        val debounceBtn = MaterialButton(ctx).apply {
             text = "防抖按钮 (500ms)"
             debounceClick { 
                 addLog("防抖点击触发 ✓")
@@ -22,7 +22,7 @@ class ViewFragment : BaseDemoFragment() {
         }
         container.addView(debounceBtn)
 
-        addTitle("👁️ 可见性控制")
+        addTitle("可见性控制")
         val targetTv = TextView(ctx).apply {
             text = "我是目标 View"
             textSize = 14f
@@ -30,15 +30,15 @@ class ViewFragment : BaseDemoFragment() {
         }
         container.addView(targetTv)
 
-        val visibleBtn = Button(ctx).apply {
+        val visibleBtn = MaterialButton(ctx).apply {
             text = "VISIBLE"
             debounceClick { targetTv.visible() }
         }
-        val goneBtn = Button(ctx).apply {
+        val goneBtn = MaterialButton(ctx).apply {
             text = "GONE"
             debounceClick { targetTv.gone() }
         }
-        val toggleBtn = Button(ctx).apply {
+        val toggleBtn = MaterialButton(ctx).apply {
             text = "TOGGLE"
             debounceClick { targetTv.toggleVisibility() }
         }
@@ -51,7 +51,7 @@ class ViewFragment : BaseDemoFragment() {
         }
         container.addView(row)
 
-        addTitle("⌨️ 键盘")
+        addTitle("键盘")
         val editText = EditText(ctx).apply {
             hint = "点击后弹出键盘"
             layoutParams = LinearLayout.LayoutParams(
@@ -61,11 +61,11 @@ class ViewFragment : BaseDemoFragment() {
         }
         container.addView(editText)
 
-        val showKeyBtn = Button(ctx).apply {
+        val showKeyBtn = MaterialButton(ctx).apply {
             text = "显示键盘"
             debounceClick { editText.showKeyboard() }
         }
-        val hideKeyBtn = Button(ctx).apply {
+        val hideKeyBtn = MaterialButton(ctx).apply {
             text = "隐藏键盘"
             debounceClick { editText.hideKeyboard() }
         }
@@ -76,14 +76,14 @@ class ViewFragment : BaseDemoFragment() {
         }
         container.addView(keyRow)
 
-        addTitle("📳 振动")
-        val vibrateBtn = Button(ctx).apply {
+        addTitle("振动")
+        val vibrateBtn = MaterialButton(ctx).apply {
             text = "短振动 (50ms)"
             debounceClick { ctx.vibrate() }
         }
         container.addView(vibrateBtn)
 
-        addTitle("📋 集合扩展")
+        addTitle("集合扩展")
         val list = listOf("a", "b", "c")
         addLog("安全连接: ${list.safeJoinToString("|")}")
         list.ifNotEmpty { addLog("非空回调: size=${it.size}") }

@@ -104,6 +104,9 @@ internal class DecimalInputFilter(private val maxDecimalPlaces: Int) : InputFilt
         val newText = (dest?.toString() ?: "").let { text ->
             text.substring(0, dstart) + (source?.toString() ?: "") + text.substring(dend)
         }
+        if (newText.count { it == '.' } > 1) {
+            return ""
+        }
         val dotIndex = newText.indexOf('.')
         if (dotIndex >= 0 && newText.length - dotIndex - 1 > maxDecimalPlaces) {
             return ""

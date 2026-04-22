@@ -39,7 +39,9 @@ fun Context.copyToClipboard(text: String, label: String = "text") {
  */
 fun Context.getClipboardText(): String? {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    return clipboard.primaryClip?.getItemAt(0)?.text?.toString()
+    val clip = clipboard.primaryClip ?: return null
+    if (clip.itemCount == 0) return null
+    return clip.getItemAt(0).text?.toString()
 }
 
 /** 弹出软键盘。 */
@@ -77,13 +79,13 @@ fun Context.toastLong(message: String) {
 }
 
 /** 拨打电话（打开拨号界面）。 */
-fun Context.dial(phone: String) {
-    safeStartActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone")))
+fun Context.dial(phone: String): Boolean {
+    return safeStartActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone")))
 }
 
 /** 打开浏览器。 */
-fun Context.openBrowser(url: String) {
-    safeStartActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+fun Context.openBrowser(url: String): Boolean {
+    return safeStartActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }
 
 /**
@@ -91,36 +93,45 @@ fun Context.openBrowser(url: String) {
  *
  * @param text 要分享的文本
  * @param title 选择器标题，默认 `"分享"`
+ * @return 是否成功打开分享选择器
  */
-fun Context.shareText(text: String, title: String = "分享") {
+fun Context.shareText(text: String, title: String = "分享"): Boolean {
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, text)
     }
-    startActivity(Intent.createChooser(intent, title))
+    return safeStartActivity(Intent.createChooser(intent, title))
 }
 
 /** 打开当前应用的设置页。 */
-fun Context.openAppSettings() {
+fun Context.openAppSettings(): Boolean {
     val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
         data = Uri.fromParts("package", packageName, null)
     }
-    startActivity(intent)
+    return safeStartActivity(intent)
 }
 
 /** 获取应用版本名。 */
 fun Context.appVersionName(): String {
-    return packageManager.getPackageInfo(packageName, 0).versionName ?: ""
+    return try {
+        packageManager.getPackageInfoCompat(packageName, 0).versionName ?: ""
+    } catch (_: PackageManager.NameNotFoundException) {
+        ""
+    }
 }
 
 /** 获取应用版本号。 */
 fun Context.appVersionCode(): Long {
-    val info = packageManager.getPackageInfo(packageName, 0)
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        info.longVersionCode
-    } else {
-        @Suppress("DEPRECATION")
-        info.versionCode.toLong()
+    return try {
+        val info = packageManager.getPackageInfoCompat(packageName, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            info.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            info.versionCode.toLong()
+        }
+    } catch (_: PackageManager.NameNotFoundException) {
+        0L
     }
 }
 

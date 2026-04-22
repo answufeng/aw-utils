@@ -35,7 +35,9 @@ fun View.observeKeyboardVisibility(callback: (visible: Boolean) -> Unit): () -> 
     }
     viewTreeObserver.addOnGlobalLayoutListener(listener)
     return {
-        viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        if (viewTreeObserver.isAlive) {
+            viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        }
     }
 }
 

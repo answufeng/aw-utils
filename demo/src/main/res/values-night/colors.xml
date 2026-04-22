@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand stays consistent -->
+    <color name="primary">#22D3EE</color>
+    <color name="primary_variant">#06B6D4</color>
+    <color name="secondary">#0891B2</color>
+    <color name="secondary_variant">#0E7490</color>
+
+    <!-- Dark surfaces -->
+    <color name="background">#0B1220</color>
+    <color name="surface">#0F172A</color>
+    <color name="surface_variant">#111C33</color>
+
+    <!-- Content -->
+    <color name="on_primary">#052129</color>
+    <color name="on_secondary">#E2F8FD</color>
+    <color name="on_background">#E2E8F0</color>
+    <color name="on_surface">#E2E8F0</color>
+    <color name="on_surface_variant">#94A3B8</color>
+
+    <!-- Status -->
+    <color name="success">#22C55E</color>
+    <color name="warning">#FBBF24</color>
+    <color name="error">#F87171</color>
+    <color name="info">#60A5FA</color>
+
+    <!-- Components -->
+    <color name="button_background">@color/primary</color>
+    <color name="button_text">@color/on_primary</color>
+    <color name="button_outline">@color/primary</color>
+
+    <color name="card_background">@color/surface</color>
+    <color name="card_border">#1F2A44</color>
+
+    <color name="shadow">#66000000</color>
+
+    <color name="log_background">@color/surface_variant</color>
+    <color name="log_text">@color/on_surface_variant</color>
+    <color name="log_header">@color/primary</color>
+</resources>

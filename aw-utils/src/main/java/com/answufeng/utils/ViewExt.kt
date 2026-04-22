@@ -174,7 +174,7 @@ fun List<View>.setVisible(visible: Boolean, goneIfFalse: Boolean = true) {
 
 /** 仅设置 paddingStart，其余方向保持不变。
  *
- * @param paddingStart 左侧 padding 值（像素）
+ * @param paddingStart 起始边 padding（像素，RTL 下为右侧）
  */
 fun View.setPaddingStart(paddingStart: Int) {
     setPadding(paddingStart, paddingTop, paddingRight, paddingBottom)

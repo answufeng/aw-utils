@@ -6,9 +6,10 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.TextViewCompat
 
 /**
- * 设置 TextView 的左侧 drawable。
+ * 设置 TextView 起始侧的 compound drawable（RTL 下为右侧）。
  *
  * @param drawable Drawable 对象，null 则清除
  * @param boundsWidth 显示宽度（像素），0 使用 drawable 原始宽度
@@ -23,7 +24,7 @@ fun TextView.setDrawableStart(
 }
 
 /**
- * 设置 TextView 的右侧 drawable。
+ * 设置 TextView 结束侧的 compound drawable（RTL 下为左侧）。
  */
 fun TextView.setDrawableEnd(
     drawable: Drawable?,
@@ -56,7 +57,7 @@ fun TextView.setDrawableBottom(
 }
 
 /**
- * 设置 TextView 的左侧 drawable（资源 ID）。
+ * 设置 TextView 起始侧 drawable（资源 ID）。
  */
 fun TextView.setDrawableStartRes(
     @DrawableRes resId: Int,
@@ -67,7 +68,7 @@ fun TextView.setDrawableStartRes(
 }
 
 /**
- * 设置 TextView 的右侧 drawable（资源 ID）。
+ * 设置 TextView 结束侧 drawable（资源 ID）。
  */
 fun TextView.setDrawableEndRes(
     @DrawableRes resId: Int,
@@ -103,14 +104,14 @@ fun TextView.setDrawableBottomRes(
  * 清除 TextView 的所有 drawable。
  */
 fun TextView.clearDrawables() {
-    setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+    setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
 }
 
 /**
- * 为 TextView 的 compound drawable 设置 tint 颜色。
+ * 为 TextView 的 compound drawable 设置 tint 颜色（相对方向，适配 RTL）。
  */
 fun TextView.setDrawableTint(@ColorInt color: Int) {
-    val drawables = compoundDrawables
+    val drawables = compoundDrawablesRelative
     val tinted = drawables.map { drawable ->
         drawable?.let {
             val wrapped = DrawableCompat.wrap(it.mutate())
@@ -118,14 +119,16 @@ fun TextView.setDrawableTint(@ColorInt color: Int) {
             wrapped
         }
     }
-    setCompoundDrawablesWithIntrinsicBounds(tinted[0], tinted[1], tinted[2], tinted[3])
+    TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+        this, tinted[0], tinted[1], tinted[2], tinted[3]
+    )
 }
 
 private fun TextView.setDrawables(
-    start: Drawable? = compoundDrawables[0],
-    top: Drawable? = compoundDrawables[1],
-    end: Drawable? = compoundDrawables[2],
-    bottom: Drawable? = compoundDrawables[3],
+    start: Drawable? = compoundDrawablesRelative[0],
+    top: Drawable? = compoundDrawablesRelative[1],
+    end: Drawable? = compoundDrawablesRelative[2],
+    bottom: Drawable? = compoundDrawablesRelative[3],
     boundsWidth: Int = 0,
     boundsHeight: Int = 0
 ) {
@@ -134,7 +137,7 @@ private fun TextView.setDrawables(
         val h = if (boundsHeight > 0) boundsHeight else drawable.intrinsicHeight
         drawable.setBounds(0, 0, w, h)
     }
-    setCompoundDrawables(start, top, end, bottom)
+    setCompoundDrawablesRelative(start, top, end, bottom)
 }
 
 private fun Context.getDrawableCompat(@DrawableRes resId: Int): Drawable? {

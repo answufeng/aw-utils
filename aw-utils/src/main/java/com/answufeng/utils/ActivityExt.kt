@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 inline fun <reified T : Activity> Context.startActivity(extras: Bundle? = null) {
     val intent = Intent(this, T::class.java)
     extras?.let { intent.putExtras(it) }
-    startActivity(intent)
+    safeStartActivity(intent)
 }
 
 /**
@@ -30,7 +30,7 @@ inline fun <reified T : Activity> Context.startActivity(extras: Bundle? = null) 
  * ```
  */
 inline fun <reified T : Activity> Context.startActivity(block: Intent.() -> Unit) {
-    startActivity(Intent(this, T::class.java).apply(block))
+    safeStartActivity(Intent(this, T::class.java).apply(block))
 }
 
 /**

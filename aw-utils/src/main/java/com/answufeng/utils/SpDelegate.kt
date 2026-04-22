@@ -150,7 +150,7 @@ open class SpDelegate(private val name: String) {
         }
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Set<String>) {
             ensureInitialized()
-            sp.edit().putStringSet(key, value).apply()
+            sp.edit().putStringSet(key, LinkedHashSet(value)).apply()
         }
     }
 }

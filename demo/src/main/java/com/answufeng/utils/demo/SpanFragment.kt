@@ -11,7 +11,7 @@ import com.answufeng.utils.*
 class SpanFragment : BaseDemoFragment() {
 
     override fun setupDemo() {
-        addTitle("🎨 单一样式")
+        addTitle("单一样式")
 
         val colorTv = TextView(requireContext()).apply {
             text = "红色文字".spanColor(Color.RED)
@@ -41,7 +41,7 @@ class SpanFragment : BaseDemoFragment() {
         }
         container.addView(strikeTv)
 
-        addTitle("🎭 组合样式 (DSL)")
+        addTitle("组合样式 (DSL)")
         val combinedTv = TextView(requireContext()).apply {
             text = spannable {
                 append("价格：".spanBold())
@@ -53,7 +53,7 @@ class SpanFragment : BaseDemoFragment() {
         }
         container.addView(combinedTv)
 
-        addTitle("👆 可点击 Span")
+        addTitle("可点击 Span")
         val clickableTv = TextView(requireContext()).apply {
             enableClickableSpan()
             text = "查看用户协议和隐私政策".buildClickableSpans(
@@ -65,7 +65,7 @@ class SpanFragment : BaseDemoFragment() {
         }
         container.addView(clickableTv)
 
-        addTitle("🔤 字体大小")
+        addTitle("字体大小")
         val sizeTv = TextView(requireContext()).apply {
             text = "大字小字混合".spanSize(32, 0, 2).let {
                 SpannableString(it).also { ss ->
@@ -80,7 +80,7 @@ class SpanFragment : BaseDemoFragment() {
         }
         container.addView(sizeTv)
 
-        addTitle("🎨 颜色扩展")
+        addTitle("颜色扩展")
         val color = randomColor()
         addLog("随机颜色: ${color.toHexColor()}")
         addLog("无透明度: ${color.toHexColorNoAlpha()}")

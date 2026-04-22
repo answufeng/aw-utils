@@ -104,7 +104,7 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
 /**
  * 观察网络连接状态变化，返回 Flow。
  *
- * 网络可用时发射 `true`，断开时发射 `false`。
+ * 与 [isNetworkAvailable] 一致：已连接且具备 **INTERNET** 与 **VALIDATED** 能力时发射 `true`。
  * 首次订阅时发射当前网络状态。
  *
  * 需要 `ACCESS_NETWORK_STATE` 权限。
@@ -121,18 +121,18 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
 @AwExperimentalApi
 fun Context.observeNetworkState(): Flow<Boolean> = callbackFlow {
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetworks = java.util.concurrent.ConcurrentHashMap.newKeySet<Network>()
     val callback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
-            activeNetworks.add(network)
-            trySend(true)
+            trySend(isNetworkAvailable())
         }
         override fun onLost(network: Network) {
-            activeNetworks.remove(network)
-            trySend(activeNetworks.isNotEmpty())
+            trySend(isNetworkAvailable())
         }
         override fun onUnavailable() {
-            trySend(activeNetworks.isNotEmpty())
+            trySend(isNetworkAvailable())
+        }
+        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+            trySend(isNetworkAvailable())
         }
     }
     val request = NetworkRequest.Builder()

@@ -8,7 +8,7 @@ class DeviceFragment : BaseDemoFragment() {
     override fun setupDemo() {
         val ctx = requireContext()
 
-        addTitle("📱 设备信息")
+        addTitle("设备信息")
         addLog("品牌: ${ctx.deviceBrand}")
         addLog("型号: ${ctx.deviceModel}")
         addLog("厂商: ${ctx.deviceManufacturer}")
@@ -16,7 +16,7 @@ class DeviceFragment : BaseDemoFragment() {
         addLog("SDK版本: ${ctx.sdkVersion}")
         addLog("设备摘要: ${ctx.deviceSummary()}")
 
-        addTitle("🖥️ 屏幕信息")
+        addTitle("屏幕信息")
         addLog("是否平板: ${ctx.isTablet}")
         addLog("是否横屏: ${ctx.isLandscape}")
         addLog("是否竖屏: ${ctx.isPortrait}")
@@ -25,7 +25,7 @@ class DeviceFragment : BaseDemoFragment() {
         addLog("状态栏高度: ${ctx.statusBarHeight} px")
         addLog("导航栏高度: ${ctx.navigationBarHeight} px")
 
-        addTitle("📦 应用信息")
+        addTitle("应用信息")
         addLog("是否Debug: ${ctx.isAppDebug()}")
         addLog("是否前台: ${ctx.isAppForeground()}") // @Deprecated, 仅作演示
         addLog("是否系统应用: ${ctx.isSystemApp(ctx.packageName)}")
@@ -35,7 +35,7 @@ class DeviceFragment : BaseDemoFragment() {
         addLog("版本名: ${ctx.appVersionName()}")
         addLog("版本号: ${ctx.appVersionCode()}")
 
-        addTitle("📏 尺寸转换")
+        addTitle("尺寸转换")
         addLog("100dp = ${100.dpToPx(ctx)}px")
         addLog("14sp = ${14.spToPx(ctx)}px")
         addLog("48px = ${48.pxToDp(ctx)}dp")

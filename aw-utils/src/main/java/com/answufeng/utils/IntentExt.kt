@@ -1,5 +1,6 @@
 package com.answufeng.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -85,7 +86,13 @@ fun android.app.Activity.pickImage(requestCode: Int) {
  * @return 是否成功启动地图应用
  */
 fun Context.openMap(latitude: Double, longitude: Double, label: String = ""): Boolean {
-    val uri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude($label)")
+    val q = buildString {
+        append(latitude).append(',').append(longitude)
+        if (label.isNotEmpty()) {
+            append('(').append(Uri.encode(label)).append(')')
+        }
+    }
+    val uri = Uri.parse("geo:$latitude,$longitude?q=$q")
     val intent = Intent(Intent.ACTION_VIEW, uri)
     return safeStartActivity(intent)
 }
@@ -97,41 +104,47 @@ fun Context.openMap(latitude: Double, longitude: Double, label: String = ""): Bo
  * @return 是否成功启动应用市场
  */
 fun Context.openAppMarket(packageName: String = this.packageName): Boolean {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
-    return try {
-        startActivity(intent)
-        true
-    } catch (_: Exception) {
-        safeStartActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-    }
+    val market = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+    if (safeStartActivity(market)) return true
+    return safeStartActivity(
+        Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
+    )
 }
 
 /**
  * 打开系统设置页面。
+ *
+ * @return 是否成功打开
  */
-fun Context.openSettings(action: String = android.provider.Settings.ACTION_SETTINGS) {
-    startActivity(Intent(action))
+fun Context.openSettings(action: String = android.provider.Settings.ACTION_SETTINGS): Boolean {
+    return safeStartActivity(Intent(action))
 }
 
 /**
  * 打开 WiFi 设置页面。
+ *
+ * @return 是否成功打开
  */
-fun Context.openWifiSettings() {
-    startActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+fun Context.openWifiSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
 }
 
 /**
  * 打开位置设置页面。
+ *
+ * @return 是否成功打开
  */
-fun Context.openLocationSettings() {
-    startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+fun Context.openLocationSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
 }
 
 /**
  * 打开蓝牙设置页面。
+ *
+ * @return 是否成功打开
  */
-fun Context.openBluetoothSettings() {
-    startActivity(Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS))
+fun Context.openBluetoothSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS))
 }
 
 /**
@@ -143,14 +156,15 @@ fun Context.openBluetoothSettings() {
  * - Android 12+ 安装流程需要用户确认
  *
  * @param uri APK 文件的 content Uri
+ * @return 是否成功发起安装界面
  */
-fun Context.installApk(uri: Uri) {
+fun Context.installApk(uri: Uri): Boolean {
     val intent = Intent(Intent.ACTION_VIEW).apply {
         setDataAndType(uri, "application/vnd.android.package-archive")
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     }
-    startActivity(intent)
+    return safeStartActivity(intent)
 }
 
 /**
@@ -161,8 +175,14 @@ fun Context.installApk(uri: Uri) {
  */
 fun Context.safeStartActivity(intent: Intent): Boolean {
     return try {
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(intent)
+        val toStart =
+            if (this !is Activity && intent.flags and Intent.FLAG_ACTIVITY_NEW_TASK == 0) {
+                Intent(intent).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            } else {
+                intent
+            }
+        if (toStart.resolveActivity(packageManager) != null) {
+            startActivity(toStart)
             true
         } else {
             false

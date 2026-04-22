@@ -107,7 +107,8 @@ fun File.sha256(): String = digest("SHA-256")
 /**
  * 计算文件或目录的总大小（字节）。
  *
- * 若为目录，递归计算所有子文件大小之和。
+ * 若为目录，递归计算所有子文件大小之和。若目录树中存在指向目录的符号链接，可能重复统计或形成环，
+ * 需要与 [safeDeleteRecursively] 等 API 的心智模型区分使用。
  */
 fun File.totalSize(): Long {
     return if (isDirectory) {

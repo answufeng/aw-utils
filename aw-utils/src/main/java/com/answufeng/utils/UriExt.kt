@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
+import java.util.Locale
 
 /**
  * 将 content Uri 转换为文件路径。
@@ -79,9 +80,25 @@ fun Uri.getMimeType(context: Context): String {
 }
 
 /**
- * 判断 Uri 是否为本地文件。
+ * 粗略判断 Uri 是否指向设备侧可访问内容（非云端流式等）。
+ *
+ * - `file` 方案视为本地。
+ * - `content` 方案默认视为本地，但排除部分已知的云端/跨设备 Provider（如 Google 文档）。
+ *
+ * 不能替代 [toFilePath]：部分本地 content Uri 仍无法映射到文件路径。
  */
 fun Uri.isLocalFile(): Boolean {
-    return scheme == ContentResolver.SCHEME_FILE ||
-            (scheme == ContentResolver.SCHEME_CONTENT && !host.isNullOrBlank() && !host!!.contains("."))
+    return when (scheme) {
+        ContentResolver.SCHEME_FILE -> true
+        ContentResolver.SCHEME_CONTENT -> {
+            val h = host?.lowercase(Locale.ROOT) ?: return false
+            REMOTE_CONTENT_AUTHORITY_PREFIXES.none { prefix -> h.startsWith(prefix) }
+        }
+        else -> false
+    }
 }
+
+private val REMOTE_CONTENT_AUTHORITY_PREFIXES = listOf(
+    "com.google.android.apps.docs",
+    "com.google.android.apps.photos",
+)
