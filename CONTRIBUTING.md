@@ -37,3 +37,7 @@
 ./gradlew :aw-utils:lintRelease
 ./gradlew :demo:assembleRelease            # 构建 Demo
 ```
+
+## 发版前补充检查（R8）
+
+本库以扩展函数为主，consumer rules 较轻；发版前仍建议 demo `assembleRelease`，升级 AndroidX 后核对弃用 API 与 README。
