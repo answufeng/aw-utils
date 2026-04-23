@@ -7,11 +7,11 @@
 | 字符串 | `StringFragment` | 校验、脱敏、编码等 |
 | 日期 | `DateFragment` | 格式化、友好时间等 |
 | 文件 | `FileFragment` | 安全删除、哈希等 |
-| 设备 | `DeviceFragment` | 设备摘要等 |
+| 设备 | `DeviceFragment` | 设备摘要、`Rom`、媒体音量档位等 |
 | 网络 | `NetworkFragment` | 状态、类型（无网请手测） |
-| 视图 | `ViewFragment` | 可见性、防抖等 |
+| 视图 | `ViewFragment` | 可见性、防抖、`expandTouchArea` 等 |
 | 富文本 | `SpanFragment` | Span DSL |
-| 更多 | `MoreFragment` | 其它扩展 |
+| 更多 | `MoreFragment` | meta-data、剪贴板、存储路径、assets/raw/拷贝、通知、手电筒、无线网络设置、`clearInternalCacheChildren`、zip、状态栏/导航栏、其它扩展 |
 
 **弃用 API**（`AwLog`、`SpDelegate`）见 README「弃用 API 迁移」；新工程优先 **aw-log** / **aw-store**。工具栏 **「演示清单」** 可列出各 Tab。
 

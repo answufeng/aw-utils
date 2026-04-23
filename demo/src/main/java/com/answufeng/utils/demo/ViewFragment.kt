@@ -3,6 +3,7 @@ package com.answufeng.utils.demo
 import android.graphics.Color
 import android.view.Gravity
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.answufeng.utils.*
@@ -21,6 +22,27 @@ class ViewFragment : BaseDemoFragment() {
             }
         }
         container.addView(debounceBtn)
+
+        addTitle("扩大触摸区域（expandTouchArea）")
+        val touchHost = FrameLayout(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            )
+        }
+        val tinyTarget = TextView(ctx).apply {
+            text = "小控件（热区四边 +32dp）"
+            textSize = 10f
+            setBackgroundColor(0x33FF9800.toInt())
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+            ).apply { gravity = Gravity.CENTER }
+            expandTouchArea(extraDp = 32, context = ctx, delegateParent = touchHost)
+            debounceClick { addLog("expandTouchArea 命中 ✓") }
+        }
+        touchHost.addView(tinyTarget)
+        container.addView(touchHost)
 
         addTitle("可见性控制")
         val targetTv = TextView(ctx).apply {

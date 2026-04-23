@@ -130,6 +130,15 @@ fun Context.openWifiSettings(): Boolean {
 }
 
 /**
+ * 打开系统「无线网络」总设置（含移动网络、WLAN 等入口，因系统而异）。
+ *
+ * @return 是否成功打开
+ */
+fun Context.openWirelessSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS))
+}
+
+/**
  * 打开位置设置页面。
  *
  * @return 是否成功打开

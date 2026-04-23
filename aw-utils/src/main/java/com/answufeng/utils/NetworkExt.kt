@@ -107,6 +107,9 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
  * 与 [isNetworkAvailable] 一致：已连接且具备 **INTERNET** 与 **VALIDATED** 能力时发射 `true`。
  * 首次订阅时发射当前网络状态。
  *
+ * **弱网 / 切换网络**：部分机型在 `onAvailable` 后短时间内 `VALIDATED` 尚未就绪，可能出现短暂 `false`，
+ * 随后随 [ConnectivityManager.NetworkCallback.onCapabilitiesChanged] 变为 `true`；UI 层可配合防抖或 Snackbar，避免误判。
+ *
  * 需要 `ACCESS_NETWORK_STATE` 权限。
  *
  * ```kotlin

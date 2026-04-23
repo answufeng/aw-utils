@@ -64,7 +64,7 @@ fun File.safeDeleteRecursively(): Boolean {
     }
 }
 
-private fun File.isSymlink(): Boolean {
+internal fun File.isSymlink(): Boolean {
     return try {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             java.nio.file.Files.isSymbolicLink(toPath())
@@ -107,14 +107,37 @@ fun File.sha256(): String = digest("SHA-256")
 /**
  * 计算文件或目录的总大小（字节）。
  *
- * 若为目录，递归计算所有子文件大小之和。若目录树中存在指向目录的符号链接，可能重复统计或形成环，
- * 需要与 [safeDeleteRecursively] 等 API 的心智模型区分使用。
+ * 目录递归使用 **调用栈 + canonicalPath** 检测环状符号链接，避免无限递归；退出目录时会从栈中移除，
+ * 因此同一物理目录通过不同符号链接多次出现时 **可能重复统计**（偏向「逻辑路径」口径）。
+ * 非目录的符号链接按文件长度计。
  */
-fun File.totalSize(): Long {
-    return if (isDirectory) {
-        listFiles()?.sumOf { it.totalSize() } ?: 0L
-    } else {
-        length()
+fun File.totalSize(): Long = totalSizeImpl(ArrayDeque())
+
+private fun File.totalSizeImpl(stack: ArrayDeque<String>): Long {
+    return try {
+        when {
+            !exists() -> 0L
+            isFile -> length()
+            isDirectory -> {
+                val key = canonicalPath
+                if (key in stack) return 0L
+                stack.addLast(key)
+                try {
+                    listFiles()?.sumOf { child ->
+                        when {
+                            child.isFile -> child.length()
+                            child.isDirectory -> child.totalSizeImpl(stack)
+                            else -> 0L
+                        }
+                    } ?: 0L
+                } finally {
+                    if (stack.lastOrNull() == key) stack.removeLast()
+                }
+            }
+            else -> 0L
+        }
+    } catch (_: Exception) {
+        0L
     }
 }
 
@@ -151,17 +174,19 @@ fun File.readTextOrNull(charset: java.nio.charset.Charset = Charsets.UTF_8): Str
  * @param target 目标文件
  * @return 是否复制成功
  */
-fun File.copyToFile(target: File): Boolean {
-    return try {
+fun File.copyToFile(target: File): Boolean = copyToFileCatching(target).isSuccess
+
+/**
+ * 将文件复制到目标路径（与 [copyToFile] 相同逻辑），失败时 [Result] 携带异常。
+ */
+fun File.copyToFileCatching(target: File): Result<Unit> {
+    return runCatching {
         target.ensureParentDir()
         inputStream().use { input ->
             target.outputStream().use { output ->
                 input.copyTo(output)
             }
         }
-        true
-    } catch (_: Exception) {
-        false
     }
 }
 
@@ -173,19 +198,19 @@ fun File.copyToFile(target: File): Boolean {
  * @param target 目标文件
  * @return 是否移动成功
  */
-fun File.moveToFile(target: File): Boolean {
-    return try {
+fun File.moveToFile(target: File): Boolean = moveToFileCatching(target).isSuccess
+
+/**
+ * 将文件移动到目标路径（与 [moveToFile] 相同逻辑），失败时 [Result] 携带异常。
+ */
+fun File.moveToFileCatching(target: File): Result<Unit> {
+    return runCatching {
         target.ensureParentDir()
-        if (renameTo(target)) {
-            true
-        } else {
-            if (copyToFile(target)) {
-                delete()
-            } else {
-                false
+        if (!renameTo(target)) {
+            copyToFileCatching(target).getOrThrow()
+            if (!delete()) {
+                throw IllegalStateException("Failed to delete source after copy: $absolutePath")
             }
         }
-    } catch (_: Exception) {
-        false
     }
 }

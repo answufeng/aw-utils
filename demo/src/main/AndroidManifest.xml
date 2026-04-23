@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="aw-utils Demo"
         android:theme="@style/Theme.AwUtilsDemo">
+        <meta-data
+            android:name="demo_meta_app"
+            android:value="hello_application" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
+            <meta-data
+                android:name="demo_meta_activity"
+                android:value="hello_activity" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

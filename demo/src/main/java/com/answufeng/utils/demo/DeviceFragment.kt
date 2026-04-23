@@ -1,5 +1,6 @@
 package com.answufeng.utils.demo
 
+import android.media.AudioManager
 import com.answufeng.utils.*
 
 class DeviceFragment : BaseDemoFragment() {
@@ -15,6 +16,13 @@ class DeviceFragment : BaseDemoFragment() {
         addLog("系统版本: ${ctx.osVersion}")
         addLog("SDK版本: ${ctx.sdkVersion}")
         addLog("设备摘要: ${ctx.deviceSummary()}")
+
+        addTitle("厂商启发式（Rom）")
+        addLog("Xiaomi: ${Rom.isXiaomi()} | Huawei: ${Rom.isHuawei()} | Honor: ${Rom.isHonor()}")
+        addLog("OPPO: ${Rom.isOppo()} | vivo: ${Rom.isVivo()} | Samsung: ${Rom.isSamsung()}")
+
+        addTitle("媒体音量（VolumeExt，只读展示）")
+        addLog("STREAM_MUSIC: ${ctx.getStreamVolume(AudioManager.STREAM_MUSIC)} / ${ctx.getStreamMaxVolume(AudioManager.STREAM_MUSIC)}")
 
         addTitle("屏幕信息")
         addLog("是否平板: ${ctx.isTablet}")

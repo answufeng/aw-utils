@@ -44,6 +44,18 @@ fun Context.getClipboardText(): String? {
     return clip.getItemAt(0).text?.toString()
 }
 
+/**
+ * 监听系统主剪贴板内容变化；返回 **移除监听** 的函数（应在 [android.app.Activity.onDestroy] 或不再需要时调用）。
+ *
+ * 前台/后台限制与 [getClipboardText] 相同。
+ */
+fun Context.onPrimaryClipChanged(listener: () -> Unit): () -> Unit {
+    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val callback = ClipboardManager.OnPrimaryClipChangedListener { listener() }
+    clipboard.addPrimaryClipChangedListener(callback)
+    return { clipboard.removePrimaryClipChangedListener(callback) }
+}
+
 /** 弹出软键盘。 */
 fun EditText.showKeyboard() {
     requestFocus()

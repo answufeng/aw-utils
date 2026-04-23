@@ -2,6 +2,7 @@ package com.answufeng.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
@@ -127,10 +128,37 @@ fun Bitmap.compressTo(
     }
 }
 
+private fun sampleSizeForBounds(width: Int, height: Int, maxWidth: Int, maxHeight: Int): Int {
+    if (width <= 0 || height <= 0) return 1
+    var inSampleSize = 1
+    if (width > maxWidth || height > maxHeight) {
+        var halfW = width / 2
+        var halfH = height / 2
+        while (halfW / inSampleSize >= maxWidth && halfH / inSampleSize >= maxHeight) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
+}
+
 /**
  * 计算 Bitmap 的采样大小，使解码后图片不超过指定最大宽高。
  *
- * @param options BitmapFactory.Options 兼容包装，包含图片原始宽高信息
+ * @param options [BitmapFactory.Options]，需已执行 `inJustDecodeBounds = true` 的解码
+ * @param maxWidth 最大宽度（像素）
+ * @param maxHeight 最大高度（像素）
+ * @return 采样大小（2 的幂）
+ */
+fun calculateSampleSize(
+    options: BitmapFactory.Options,
+    maxWidth: Int,
+    maxHeight: Int
+): Int = sampleSizeForBounds(options.outWidth, options.outHeight, maxWidth, maxHeight)
+
+/**
+ * 计算 Bitmap 的采样大小（兼容旧版 [BitmapFactoryOptionsCompat] 包装）。
+ *
+ * @param options 包含图片原始宽高信息
  * @param maxWidth 最大宽度
  * @param maxHeight 最大高度
  * @return 采样大小（2 的幂）
@@ -139,18 +167,22 @@ fun calculateSampleSize(
     options: BitmapFactoryOptionsCompat,
     maxWidth: Int,
     maxHeight: Int
-): Int {
-    val width = options.outWidth
-    val height = options.outHeight
-    var inSampleSize = 1
-    if (width > maxWidth || height > maxHeight) {
-        val halfWidth = width / 2
-        val halfHeight = height / 2
-        while (halfWidth / inSampleSize >= maxWidth && halfHeight / inSampleSize >= maxHeight) {
-            inSampleSize *= 2
-        }
-    }
-    return inSampleSize
+): Int = sampleSizeForBounds(options.outWidth, options.outHeight, maxWidth, maxHeight)
+
+/**
+ * 自适采样解码文件图片，降低 OOM 风险（大图为先缩小再解码）。
+ *
+ * @param maxWidth 允许的最大宽度（像素）
+ * @param maxHeight 允许的最大高度（像素）
+ */
+fun File.decodeBitmapSampled(maxWidth: Int, maxHeight: Int): Bitmap? {
+    val path = absolutePath
+    val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeFile(path, opts)
+    if (opts.outWidth <= 0 || opts.outHeight <= 0) return null
+    opts.inSampleSize = calculateSampleSize(opts, maxWidth, maxHeight)
+    opts.inJustDecodeBounds = false
+    return BitmapFactory.decodeFile(path, opts)
 }
 
 /**

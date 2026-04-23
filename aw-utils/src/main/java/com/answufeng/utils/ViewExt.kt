@@ -1,7 +1,11 @@
 package com.answufeng.utils
 
+import android.content.Context
+import android.graphics.Rect
 import android.os.SystemClock
+import android.view.TouchDelegate
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 
 @Deprecated(
@@ -27,6 +31,31 @@ inline fun View.debounceClick(interval: Long = 500L, crossinline onClick: (View)
             lastClickTime = now
             onClick(v)
         }
+    }
+}
+
+/**
+ * 向四边扩大可点击/可触摸区域（基于 [TouchDelegate]）。
+ *
+ * **注意**：同一父 View 上仅会保留**最后一次**设置的 [View.touchDelegate]；有多个子 View 需扩大时请在父层自定义
+ * [TouchDelegate] 组合或使用更大的透明覆盖 View。
+ *
+ * @param extraDp 每边扩展的 dp（会转为像素）
+ * @param delegateParent 承载 [TouchDelegate] 的父 [ViewGroup]；为 `null` 时使用 [View.getParent]
+ */
+fun View.expandTouchArea(
+    extraDp: Int,
+    context: Context = this.context,
+    delegateParent: ViewGroup? = null,
+) {
+    require(extraDp >= 0) { "extraDp must be >= 0, got $extraDp" }
+    val p = delegateParent ?: (parent as? ViewGroup) ?: return
+    val extraPx = extraDp.dpToPx(context)
+    p.post {
+        val r = Rect()
+        getHitRect(r)
+        r.inset(-extraPx, -extraPx)
+        p.touchDelegate = TouchDelegate(r, this)
     }
 }
 
