@@ -119,41 +119,49 @@ fun View.toggleVisibility(): Int {
 }
 
 /**
- * DSL 风格更新 padding。
+ * DSL 风格更新 padding（RTL 感知）。
  *
  * ```kotlin
  * view.updatePadding {
- *     left = 16.dpToPx(context)
- *     right = 16.dpToPx(context)
+ *     start = 16.dpToPx(context)
+ *     end = 16.dpToPx(context)
+ *     top = 8.dpToPx(context)
  * }
  * ```
+ *
+ * 内部使用 `setPaddingRelative`，在 RTL 布局下自动适配方向。
+ * `left` / `right` 为 `start` / `end` 的别名，推荐使用 `start` / `end`。
  */
 inline fun View.updatePadding(block: android.graphics.Rect.() -> Unit) {
-    val rect = android.graphics.Rect(paddingLeft, paddingTop, paddingRight, paddingBottom)
+    val rect = android.graphics.Rect(paddingStart, paddingTop, paddingEnd, paddingBottom)
     rect.block()
-    setPadding(rect.left, rect.top, rect.right, rect.bottom)
+    setPaddingRelative(rect.left, rect.top, rect.right, rect.bottom)
 }
 
 /**
- * DSL 风格更新 margin。
+ * DSL 风格更新 margin（RTL 感知）。
  *
  * 需要 View 的 LayoutParams 为 [MarginLayoutParams]（如 LinearLayout.LayoutParams、FrameLayout.LayoutParams 等），
  * 否则抛出 [IllegalStateException]。
  *
  * ```kotlin
  * view.updateMargin {
- *     left = 16.dpToPx(context)
+ *     start = 16.dpToPx(context)
+ *     end = 16.dpToPx(context)
  * }
  * ```
+ *
+ * 内部使用 `marginStart` / `marginEnd`，在 RTL 布局下自动适配方向。
+ * `left` / `right` 为 `start` / `end` 的别名，推荐使用 `start` / `end`。
  */
 inline fun View.updateMargin(block: android.graphics.Rect.() -> Unit) {
     val lp = layoutParams
     check(lp is MarginLayoutParams) { "View layoutParams must be MarginLayoutParams" }
-    val rect = android.graphics.Rect(lp.leftMargin, lp.topMargin, lp.rightMargin, lp.bottomMargin)
+    val rect = android.graphics.Rect(lp.marginStart, lp.topMargin, lp.marginEnd, lp.bottomMargin)
     rect.block()
-    lp.leftMargin = rect.left
+    lp.marginStart = rect.left
     lp.topMargin = rect.top
-    lp.rightMargin = rect.right
+    lp.marginEnd = rect.right
     lp.bottomMargin = rect.bottom
     layoutParams = lp
 }
@@ -201,12 +209,12 @@ fun List<View>.setVisible(visible: Boolean, goneIfFalse: Boolean = true) {
     forEach { it.setVisible(visible, goneIfFalse) }
 }
 
-/** 仅设置 paddingStart，其余方向保持不变。
+/** 仅设置 paddingStart，其余方向保持不变（RTL 感知）。
  *
  * @param paddingStart 起始边 padding（像素，RTL 下为右侧）
  */
 fun View.setPaddingStart(paddingStart: Int) {
-    setPadding(paddingStart, paddingTop, paddingRight, paddingBottom)
+    setPaddingRelative(paddingStart, paddingTop, paddingEnd, paddingBottom)
 }
 
 /** 仅设置 paddingTop，其余方向保持不变。
@@ -214,15 +222,15 @@ fun View.setPaddingStart(paddingStart: Int) {
  * @param paddingTop 顶部 Padding 值（像素）
  */
 fun View.setPaddingTop(paddingTop: Int) {
-    setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+    setPaddingRelative(paddingStart, paddingTop, paddingEnd, paddingBottom)
 }
 
-/** 仅设置 paddingRight，其余方向保持不变。
+/** 仅设置 paddingEnd，其余方向保持不变（RTL 感知）。
  *
- * @param paddingRight 右侧 Padding 值（像素）
+ * @param paddingEnd 结束边 padding（像素，RTL 下为左侧）
  */
-fun View.setPaddingRight(paddingRight: Int) {
-    setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+fun View.setPaddingEnd(paddingEnd: Int) {
+    setPaddingRelative(paddingStart, paddingTop, paddingEnd, paddingBottom)
 }
 
 /** 仅设置 paddingBottom，其余方向保持不变。
@@ -230,5 +238,12 @@ fun View.setPaddingRight(paddingRight: Int) {
  * @param paddingBottom 底部 Padding 值（像素）
  */
 fun View.setPaddingBottom(paddingBottom: Int) {
-    setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+    setPaddingRelative(paddingStart, paddingTop, paddingEnd, paddingBottom)
+}
+
+/**
+ * 判断 View 的布局方向是否为 RTL（从右到左）。
+ */
+fun View.isLayoutRtl(): Boolean {
+    return layoutDirection == View.LAYOUT_DIRECTION_RTL
 }

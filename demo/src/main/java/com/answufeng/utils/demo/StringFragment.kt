@@ -18,9 +18,12 @@ class StringFragment : BaseDemoFragment() {
         addLog("身份证: ${"110101199001011234".maskIdCard()}")
         addLog("邮箱: ${"hello@example.com".maskEmail()}")
         addLog("银行卡: ${"6222021234567890".maskBankCard()}")
+        addLog("姓名: ${"张三丰".maskName()}")
+        addLog("自定义: ${"abcdefghij".mask(2, 7, '*')}")
 
         addTitle("哈希")
         addLog("MD5: ${"hello".md5()}")
+        addLog("SHA1: ${"hello".sha1().take(16)}...")
         addLog("SHA256: ${"hello".sha256().take(16)}...")
 
         addTitle("截断")
@@ -33,5 +36,7 @@ class StringFragment : BaseDemoFragment() {
         addLog("强密码: ${"Abc@1234".isStrongPassword()}")
         addLog("车牌号: ${"京A12345".isCarPlate()}")
         addLog("MAC地址: ${"00:1A:2B:3C:4D:5E".isMacAddress()}")
+        addLog("JSON: ${"""{"key":"value"}""".isJson()}")
+        addLog("中国手机号: ${"13812345678".isChinesePhoneNumber()}")
     }
 }

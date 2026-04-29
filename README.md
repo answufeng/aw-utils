@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts（版本与 Git tag / JitPack 一致）
 dependencies {
-    implementation("com.github.answufeng:aw-utils:1.0.0")
+    implementation("com.github.answufeng:aw-utils:1.0.1")
 }
 ```
 
@@ -57,7 +57,8 @@ button.debounceClick { /* ... */ }
 |----------|--------|
 | 最短时间接入并开始用 | [5 分钟上手（最小接入）](#5-分钟上手最小接入) · [环境要求](#环境要求) |
 | 哪些能力需要权限 | [权限](#权限) |
-| 快速找到“某类扩展在哪” | [能力概览](#能力概览) |
+| 快速找到"某类扩展在哪" | [能力概览](#能力概览) |
+| 查看某模块详细文档 | [模块文档](#模块文档) |
 | 直接抄用常见代码片段 | [常用示例](#常用示例) |
 | 看 Demo / 手测入口 | [演示应用](#演示应用) |
 | 工程/发版/CI | [本仓库与工程检查](#本仓库与工程检查) |
@@ -94,33 +95,80 @@ button.debounceClick { /* ... */ }
 
 ## 能力概览
 
-本库定位为“**可维护的高频子集**”，不是 [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode) 的全量平替（避免单 AAR 无限膨胀）。
+本库定位为"**可维护的高频子集**"，不是 [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode) 的全量平替（避免单 AAR 无限膨胀）。
 
-<details>
-<summary><b>点击展开能力列表</b>（按文件名 / 主题快速定位）</summary>
+| 主题 | 入口 | 说明 | 详细文档 |
+|------|------|------|----------|
+| 字符串 | `StringExt` | 校验、脱敏、摘要、截断 | [string.md](aw-utils/doc/string.md) |
+| 正则 | `RegexExt` | IP/中文/密码/车牌/MAC | [regex.md](aw-utils/doc/regex.md) |
+| 日期 | `DateExt` | 格式化、解析、比较、加减、友好时间 | [date.md](aw-utils/doc/date.md) |
+| 文件 | `FileExt` | 大小/哈希、复制移动、安全删除 | [file.md](aw-utils/doc/file.md) |
+| Zip | `ZipExt` | 压缩、解压（Zip Slip 校验） | [zip.md](aw-utils/doc/zip.md) |
+| 编解码 | `EncodeExt` | Base64、Hex、URL、HTML | [encode.md](aw-utils/doc/encode.md) |
+| 网络 | `NetworkExt` | 连通性、类型、Wi-Fi SSID、Flow 监听 | [network.md](aw-utils/doc/network.md) |
+| 设备 | `DeviceExt` | 品牌/型号/系统版本/摘要 | [device.md](aw-utils/doc/device.md) |
+| 厂商 | `RomExt`（`Rom`） | 国内/国际厂商启发式判断 | [rom.md](aw-utils/doc/rom.md) |
+| 存储路径 | `StoragePathExt` | cache/files/external/obb、存储容量 | [storage-path.md](aw-utils/doc/storage-path.md) |
+| Assets/Raw | `AssetsRawExt` | 读取/拷贝 assets 与 raw | [assets-raw.md](aw-utils/doc/assets-raw.md) |
+| View | `ViewExt` | 防抖点击、触摸区域、可见性、Padding/Margin DSL | [view.md](aw-utils/doc/view.md) |
+| 系统栏 | `BarExt` | 状态栏/导航栏颜色、样式、沉浸式、可见性 | [bar.md](aw-utils/doc/bar.md) |
+| 通知 | `NotificationExt` | 渠道、简单通知、进度通知、大文本通知 | [notification.md](aw-utils/doc/notification.md) |
+| 富文本 | `SpanExt` | Span DSL（颜色/粗体/斜体/下划线/点击/图片） | [span.md](aw-utils/doc/span.md) |
+| 系统 | `SystemExt` | 剪贴板、Toast、拨号、分享、权限检查 | [system.md](aw-utils/doc/system.md) |
+| 键盘 | `KeyboardExt` | 可见性检测与监听 | [keyboard.md](aw-utils/doc/keyboard.md) |
+| 进程 | `ProcessExt` | 主线程判断、UI 线程执行 | [process.md](aw-utils/doc/process.md) |
+| 意图 | `IntentExt` | 邮件/短信/地图/市场/系统设置/安装 APK | [intent.md](aw-utils/doc/intent.md) |
+| Activity | `ActivityExt` | 泛型启动、Extra/Arguments、生命周期 | [activity.md](aw-utils/doc/activity.md) |
+| 颜色 | `ColorExt` | 十六进制转换、透明度、混合 | [color.md](aw-utils/doc/color.md) |
+| Uri | `UriExt` | 文件路径/文件名/MIME/本地判断 | [uri.md](aw-utils/doc/uri.md) |
+| Bitmap | `BitmapExt` | 缩放/圆形/圆角/旋转/压缩/采样解码 | [bitmap.md](aw-utils/doc/bitmap.md) |
+| 应用 | `AppExt` | 安装/Debug/启动/图标/签名/版本信息 | [app.md](aw-utils/doc/app.md) |
+| 集合 | `CollectionExt` | 空判断、安全 joinToString、默认值 | [collection.md](aw-utils/doc/collection.md) |
+| 尺寸转换 | `ContextExt` | dp/sp/px 转换、屏幕尺寸、深色模式、屏幕密度 | [context.md](aw-utils/doc/context.md) |
+| EditText | `EditTextExt` | 文本监听、长度限制、小数过滤 | [edittext.md](aw-utils/doc/edittext.md) |
+| 手电筒 | `FlashlightExt` | 闪光灯开关 | [flashlight.md](aw-utils/doc/flashlight.md) |
+| ImageView | `ImageViewExt` | tint 着色 | [imageview.md](aw-utils/doc/imageview.md) |
+| Meta-data | `MetaDataExt` | Manifest meta-data 读取 | [metadata.md](aw-utils/doc/metadata.md) |
+| 随机 | `RandomExt` | 随机字符串/数/颜色/采样 | [random.md](aw-utils/doc/random.md) |
+| 屏幕 | `ScreenExt` | 方向/亮度/常亮/平板判断/系统亮度 | [screen.md](aw-utils/doc/screen.md) |
+| Service | `ServiceExt` | 启动/前台/停止服务 | [service.md](aw-utils/doc/service.md) |
+| TextView | `TextViewExt` | Compound Drawable / Drawable Tint | [textview.md](aw-utils/doc/textview.md) |
+| 振动 | `VibrateExt` | 短振/自定义/模式振动 | [vibrate.md](aw-utils/doc/vibrate.md) |
+| 音量 | `VolumeExt` | 系统音量读取与设置 | [volume.md](aw-utils/doc/volume.md) |
+| 清理 | `CleanExt` | 缓存目录清理 | [clean.md](aw-utils/doc/clean.md) |
+| 资源关闭 | `CloseExt` | 静默关闭 Closeable | [close.md](aw-utils/doc/close.md) |
+| 注解 | `Annotations` | `@AwExperimentalApi` | [annotations.md](aw-utils/doc/annotations.md) |
+| 兼容 | `PackageManagerExt` | 内部兼容封装 | [packagemanager.md](aw-utils/doc/packagemanager.md) |
+| ~~日志~~ | `AwLog` | ~~轻量日志~~ → 迁移至 aw-log | [aw-log.md](aw-utils/doc/aw-log.md) |
+| ~~SP 委托~~ | `SpDelegate` | ~~SP 属性委托~~ → 迁移至 aw-store | [sp-delegate.md](aw-utils/doc/sp-delegate.md) |
 
-| 主题 | 入口（常见文件/扩展名） | 说明 |
-|------|--------------------------|------|
-| 字符串 / 正则 | `StringExt` / `RegexExt` | 校验、脱敏、摘要、截断 |
-| 日期 | `DateExt` | 格式化、解析、比较、加减、友好时间 |
-| 文件 / Zip | `FileExt` / `ZipExt` | 大小/哈希、复制移动、解压（Zip Slip 校验） |
-| 编解码 | `EncodeExt` | Base64、Hex |
-| 网络 | `NetworkExt` | 连通性、网络类型、`Flow` 监听（部分为实验 API） |
-| 设备 / 厂商 | `DeviceExt` / `Rom`（`RomExt`） | 型号/系统/厂商判断 |
-| 存储路径 / 资源 | `StoragePathExt` / `AssetsRawExt` | cache/files/external、assets/raw |
-| UI（View/Bar/通知/Span） | `ViewExt` / `BarExt` / `NotificationExt` / `SpanExt` | 防抖点击、系统栏、通知、富文本 DSL |
-| 系统能力 | `SystemExt` / `KeyboardExt` / `ProcessExt` | 剪贴板、键盘、UI 线程工具等 |
-| 其它常用 | `IntentExt` / `ActivityExt` / `ColorExt` / `UriExt` / `BitmapExt` | 常见跳转与小工具 |
-| 兼容/内部 | `PackageManagerExt` 等 | 兼容性封装 |
-| 迁移建议 | `AwLog` / `SpDelegate` | 建议迁移至 `aw-log` / `aw-store` |
+---
 
-</details>
+## 模块文档
+
+每个工具模块都有独立的详细文档，包含完整 API 参考、使用示例和注意事项：
+
+📁 [aw-utils/doc/](aw-utils/doc/)
+
+| 分类 | 文档 |
+|------|------|
+| **文本** | [字符串](aw-utils/doc/string.md) · [正则](aw-utils/doc/regex.md) · [编解码](aw-utils/doc/encode.md) |
+| **时间** | [日期](aw-utils/doc/date.md) · [随机](aw-utils/doc/random.md) |
+| **文件** | [文件](aw-utils/doc/file.md) · [Zip](aw-utils/doc/zip.md) · [清理](aw-utils/doc/clean.md) · [存储路径](aw-utils/doc/storage-path.md) · [Assets/Raw](aw-utils/doc/assets-raw.md) · [资源关闭](aw-utils/doc/close.md) |
+| **设备** | [设备](aw-utils/doc/device.md) · [厂商](aw-utils/doc/rom.md) · [屏幕](aw-utils/doc/screen.md) · [尺寸转换](aw-utils/doc/context.md) |
+| **网络** | [网络](aw-utils/doc/network.md) |
+| **UI** | [View](aw-utils/doc/view.md) · [EditText](aw-utils/doc/edittext.md) · [TextView](aw-utils/doc/textview.md) · [ImageView](aw-utils/doc/imageview.md) · [Span](aw-utils/doc/span.md) · [颜色](aw-utils/doc/color.md) · [Bitmap](aw-utils/doc/bitmap.md) |
+| **系统** | [系统](aw-utils/doc/system.md) · [键盘](aw-utils/doc/keyboard.md) · [进程](aw-utils/doc/process.md) · [振动](aw-utils/doc/vibrate.md) · [音量](aw-utils/doc/volume.md) · [手电筒](aw-utils/doc/flashlight.md) · [通知](aw-utils/doc/notification.md) · [系统栏](aw-utils/doc/bar.md) |
+| **意图/跳转** | [Intent](aw-utils/doc/intent.md) · [Activity](aw-utils/doc/activity.md) · [Service](aw-utils/doc/service.md) |
+| **应用** | [应用](aw-utils/doc/app.md) · [Meta-data](aw-utils/doc/metadata.md) · [Uri](aw-utils/doc/uri.md) · [集合](aw-utils/doc/collection.md) |
+| **注解/内部** | [注解](aw-utils/doc/annotations.md) · [PackageManager](aw-utils/doc/packagemanager.md) |
+| **已弃用** | [AwLog → aw-log](aw-utils/doc/aw-log.md) · [SpDelegate → aw-store](aw-utils/doc/sp-delegate.md) |
 
 ---
 
 ## 常用示例
 
-以下为常用写法速查；按主题折叠，便于“复制即用”。
+以下为常用写法速查；按主题折叠，便于"复制即用"。
 
 <details>
 <summary><b>字符串 · 正则 · 日期 · 随机</b></summary>
@@ -269,4 +317,3 @@ runOnUiThread { }
 ## 许可证
 
 Apache License 2.0，见 [LICENSE](LICENSE)。
-

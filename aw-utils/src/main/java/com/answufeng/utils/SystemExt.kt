@@ -124,6 +124,10 @@ fun Context.openAppSettings(): Boolean {
 }
 
 /** 获取应用版本名。 */
+@Deprecated(
+    message = "Use getAppVersionName() in AppExt instead",
+    replaceWith = ReplaceWith("getAppVersionName()")
+)
 fun Context.appVersionName(): String {
     return try {
         packageManager.getPackageInfoCompat(packageName, 0).versionName ?: ""
@@ -133,6 +137,10 @@ fun Context.appVersionName(): String {
 }
 
 /** 获取应用版本号。 */
+@Deprecated(
+    message = "Use getAppVersionCode() in AppExt instead",
+    replaceWith = ReplaceWith("getAppVersionCode()")
+)
 fun Context.appVersionCode(): Long {
     return try {
         val info = packageManager.getPackageInfoCompat(packageName, 0)

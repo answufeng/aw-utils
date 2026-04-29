@@ -32,7 +32,7 @@ fun File.clearDirectoryChildren(): Boolean {
     return try {
         listFiles()?.forEach { child ->
             if (child.isDirectory) {
-                child.deleteRecursively()
+                child.safeDeleteRecursively()
             } else {
                 child.delete()
             }

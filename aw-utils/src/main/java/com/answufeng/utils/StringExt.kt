@@ -163,6 +163,44 @@ fun String.sha256(charset: Charset = Charsets.UTF_8): String {
     return bytes.toHexString()
 }
 
+/**
+ * 计算字符串的 SHA-1 摘要（40 位小写十六进制）。
+ *
+ * @param charset 字符编码，默认 UTF-8
+ */
+fun String.sha1(charset: Charset = Charsets.UTF_8): String {
+    val digest = getDigest("SHA-1")
+    digest.reset()
+    val bytes = digest.digest(toByteArray(charset))
+    return bytes.toHexString()
+}
+
+/**
+ * 判断字符串是否为 JSON 格式（首字符为 `{` 或 `[`）。
+ *
+ * 仅做快速格式判断，不保证 JSON 内容完全合法。
+ * 适用于接口调试、日志过滤等场景。
+ */
+fun String.isJson(): Boolean {
+    val trimmed = trim()
+    return (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+            (trimmed.startsWith('[') && trimmed.endsWith(']'))
+}
+
+/**
+ * 中文姓名脱敏，保留姓氏，其余用 `*` 替换。
+ *
+ * 如 `"张三"` → `"张*"`，`"欧阳修"` → `"欧**"`。
+ * 非中文字符串原样返回。
+ */
+fun String.maskName(): String {
+    if (length < 2) return this
+    if (!first().isChineseChar()) return this
+    return first() + "*".repeat(length - 1)
+}
+
+private fun Char.isChineseChar(): Boolean = this in '\u4e00'..'\u9fa5'
+
 @Deprecated(
     message = "Use Elvis operator ?: instead, e.g. str ?: default",
     level = DeprecationLevel.WARNING

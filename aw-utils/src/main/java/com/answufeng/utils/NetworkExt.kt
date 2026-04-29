@@ -145,3 +145,25 @@ fun Context.observeNetworkState(): Flow<Boolean> = callbackFlow {
     trySend(isNetworkAvailable())
     awaitClose { cm.unregisterNetworkCallback(callback) }
 }.distinctUntilChanged()
+
+/**
+ * 获取当前连接的 Wi-Fi SSID。
+ *
+ * Android 12+ 需要持有 `ACCESS_FINE_LOCATION` 权限才能获取 SSID，
+ * 否则返回 `"<unknown ssid>"`。
+ * Android 13+ 需要持有 `NEARBY_WIFI_DEVICES` 权限（或 `ACCESS_FINE_LOCATION`）。
+ *
+ * 未连接 Wi-Fi 时返回 `null`。
+ */
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+fun Context.getWifiSSID(): String? {
+    if (!isWifiConnected()) return null
+    return try {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return null
+        val info = cm.getNetworkInfo(network) ?: return null
+        info.extraInfo?.removeSurrounding("\"")
+    } catch (_: Exception) {
+        null
+    }
+}

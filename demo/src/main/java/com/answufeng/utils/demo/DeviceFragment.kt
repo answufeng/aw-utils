@@ -35,13 +35,14 @@ class DeviceFragment : BaseDemoFragment() {
 
         addTitle("应用信息")
         addLog("是否Debug: ${ctx.isAppDebug()}")
-        addLog("是否前台: ${ctx.isAppForeground()}") // @Deprecated, 仅作演示
         addLog("是否系统应用: ${ctx.isSystemApp(ctx.packageName)}")
         addLog("已安装微信: ${ctx.isAppInstalled("com.tencent.mm")}")
         addLog("应用名: ${ctx.getAppName(ctx.packageName)}")
         addLog("签名SHA1: ${ctx.getAppSignatureSHA1().take(16)}...")
-        addLog("版本名: ${ctx.appVersionName()}")
-        addLog("版本号: ${ctx.appVersionCode()}")
+        addLog("版本名: ${ctx.getAppVersionName()}")
+        addLog("版本号: ${ctx.getAppVersionCode()}")
+        addLog("minSdk: ${ctx.getAppMinSdkVersion()}")
+        addLog("targetSdk: ${ctx.getAppTargetSdkVersion()}")
 
         addTitle("尺寸转换")
         addLog("100dp = ${100.dpToPx(ctx)}px")

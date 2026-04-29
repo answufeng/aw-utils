@@ -157,6 +157,55 @@ fun Context.openBluetoothSettings(): Boolean {
 }
 
 /**
+ * 打开无障碍设置页面。
+ */
+fun Context.openAccessibilitySettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
+}
+
+/**
+ * 打开开发者选项设置页面。
+ */
+fun Context.openDeveloperSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS))
+}
+
+/**
+ * 打开日期和时间设置页面。
+ */
+fun Context.openDateSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_DATE_SETTINGS))
+}
+
+/**
+ * 打开声音/通知设置页面。
+ */
+fun Context.openSoundSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_SOUND_SETTINGS))
+}
+
+/**
+ * 打开显示设置页面。
+ */
+fun Context.openDisplaySettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_DISPLAY_SETTINGS))
+}
+
+/**
+ * 打开存储设置页面。
+ */
+fun Context.openStorageSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS))
+}
+
+/**
+ * 打开关于手机页面。
+ */
+fun Context.openAboutPhoneSettings(): Boolean {
+    return safeStartActivity(Intent(android.provider.Settings.ACTION_DEVICE_INFO_SETTINGS))
+}
+
+/**
  * 安装 APK 文件。
  *
  * 注意：

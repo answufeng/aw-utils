@@ -12,7 +12,7 @@ import android.os.Build
  */
 fun Context.isAppInstalled(packageName: String): Boolean {
     return try {
-        packageManager.getApplicationInfo(packageName, 0)
+        packageManager.getApplicationInfoCompat(packageName, 0)
         true
     } catch (_: PackageManager.NameNotFoundException) {
         false
@@ -24,7 +24,7 @@ fun Context.isAppInstalled(packageName: String): Boolean {
  */
 fun Context.isAppDebug(): Boolean {
     return try {
-        val info = packageManager.getApplicationInfo(packageName, 0)
+        val info = packageManager.getApplicationInfoCompat(packageName, 0)
         (info.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
     } catch (_: Exception) {
         false
@@ -36,7 +36,7 @@ fun Context.isAppDebug(): Boolean {
  */
 fun Context.isAppDebug(packageName: String): Boolean {
     return try {
-        val info = packageManager.getApplicationInfo(packageName, 0)
+        val info = packageManager.getApplicationInfoCompat(packageName, 0)
         (info.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
     } catch (_: Exception) {
         false
@@ -117,7 +117,7 @@ fun Context.isAppForeground(): Boolean {
  */
 fun Context.isSystemApp(packageName: String): Boolean {
     return try {
-        val info = packageManager.getApplicationInfo(packageName, 0)
+        val info = packageManager.getApplicationInfoCompat(packageName, 0)
         (info.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
     } catch (_: Exception) {
         false
@@ -149,5 +149,61 @@ fun Context.getAppSignatureSHA1(packageName: String = this.packageName): String 
         } ?: ""
     } catch (_: Exception) {
         ""
+    }
+}
+
+/**
+ * 获取应用版本名。
+ */
+fun Context.getAppVersionName(packageName: String = this.packageName): String {
+    return try {
+        packageManager.getPackageInfoCompat(packageName, 0).versionName ?: ""
+    } catch (_: PackageManager.NameNotFoundException) {
+        ""
+    }
+}
+
+/**
+ * 获取应用版本号。
+ */
+fun Context.getAppVersionCode(packageName: String = this.packageName): Long {
+    return try {
+        val info = packageManager.getPackageInfoCompat(packageName, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            info.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            info.versionCode.toLong()
+        }
+    } catch (_: PackageManager.NameNotFoundException) {
+        0L
+    }
+}
+
+/**
+ * 获取应用最小 SDK 版本。
+ */
+fun Context.getAppMinSdkVersion(packageName: String = this.packageName): Int {
+    return try {
+        val info = packageManager.getApplicationInfoCompat(packageName, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            info.minSdkVersion
+        } else {
+            0
+        }
+    } catch (_: Exception) {
+        0
+    }
+}
+
+/**
+ * 获取应用目标 SDK 版本。
+ */
+fun Context.getAppTargetSdkVersion(packageName: String = this.packageName): Int {
+    return try {
+        val info = packageManager.getApplicationInfoCompat(packageName, 0)
+        info.targetSdkVersion
+    } catch (_: Exception) {
+        0
     }
 }

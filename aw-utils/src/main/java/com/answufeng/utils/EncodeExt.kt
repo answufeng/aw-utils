@@ -1,6 +1,11 @@
 package com.answufeng.utils
 
 import android.util.Base64
+import android.text.Html
+import android.text.TextUtils
+import java.io.UnsupportedEncodingException
+import java.net.URLDecoder
+import java.net.URLEncoder
 import java.nio.charset.Charset
 
 /**
@@ -84,4 +89,61 @@ fun String.hexToByteArray(): ByteArray {
         result[i] = ((high shl 4) or low).toByte()
     }
     return result
+}
+
+/**
+ * URL 编码（UTF-8）。
+ *
+ * 如 `"hello world"` → `"hello+world"`，`"你好"` → `"%E4%BD%A0%E5%A5%BD"`。
+ *
+ * @param charset 编码字符集，默认 UTF-8
+ */
+fun String.urlEncode(charset: String = "UTF-8"): String {
+    return try {
+        URLEncoder.encode(this, charset)
+    } catch (_: UnsupportedEncodingException) {
+        this
+    }
+}
+
+/**
+ * URL 解码（UTF-8）。
+ *
+ * 如 `"hello+world"` → `"hello world"`，`"%E4%BD%A0%E5%A5%BD"` → `"你好"`。
+ *
+ * @param charset 解码字符集，默认 UTF-8
+ */
+fun String.urlDecode(charset: String = "UTF-8"): String {
+    return try {
+        URLDecoder.decode(this, charset)
+    } catch (_: UnsupportedEncodingException) {
+        this
+    }
+}
+
+/**
+ * HTML 编码，将特殊字符转义为 HTML 实体。
+ *
+ * 如 `"<b>hi</b>"` → `"&lt;b&gt;hi&lt;/b&gt;"`，
+ * `"a & b"` → `"a &amp; b"`。
+ */
+fun String.htmlEncode(): String {
+    return TextUtils.htmlEncode(this)
+}
+
+/**
+ * HTML 解码，将 HTML 实体还原为原始字符。
+ *
+ * 如 `"&lt;b&gt;"` → `"<b>"`，
+ * `"&amp;"` → `"&"`。
+ *
+ * 支持 Named entity（`&amp;`、`&lt;` 等）和 Numeric entity（`&#60;`、`&#x3c;`）。
+ */
+fun String.htmlDecode(): String {
+    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+        Html.fromHtml(this, Html.FROM_HTML_MODE_COMPACT).toString()
+    } else {
+        @Suppress("DEPRECATION")
+        Html.fromHtml(this).toString()
+    }
 }

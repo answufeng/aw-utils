@@ -214,3 +214,57 @@ fun File.moveToFileCatching(target: File): Result<Unit> {
         }
     }
 }
+
+/**
+ * 重命名文件或目录。
+ *
+ * @param newName 新名称（仅文件名，不含路径）
+ * @return 重命名后的 File 对象；失败时返回 null
+ */
+fun File.rename(newName: String): File? {
+    val parent = parentFile ?: return null
+    val newFile = File(parent, newName)
+    return if (renameTo(newFile)) newFile else null
+}
+
+/**
+ * 统计文件行数。
+ *
+ * 适用于文本文件（日志、CSV 等）。
+ * 空文件返回 0，读取失败返回 -1。
+ */
+fun File.lineCount(): Int {
+    return try {
+        bufferedReader().use { reader ->
+            var count = 0
+            while (reader.readLine() != null) count++
+            count
+        }
+    } catch (_: Exception) {
+        -1
+    }
+}
+
+/**
+ * 列出目录下的文件（可选递归和过滤）。
+ *
+ * @param recursive 是否递归子目录，默认 false
+ * @param filter 文件过滤器，默认接受所有文件
+ * @return 符合条件的文件列表；目录不存在时返回空列表
+ */
+fun File.listDirFiles(
+    recursive: Boolean = false,
+    filter: ((File) -> Boolean)? = null
+): List<File> {
+    if (!isDirectory) return emptyList()
+    val result = mutableListOf<File>()
+    listFiles()?.forEach { child ->
+        if (recursive && child.isDirectory) {
+            result.addAll(child.listDirFiles(recursive = true, filter = filter))
+        }
+        if (filter == null || filter(child)) {
+            result.add(child)
+        }
+    }
+    return result
+}

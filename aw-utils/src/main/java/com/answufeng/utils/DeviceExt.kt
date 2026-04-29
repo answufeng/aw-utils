@@ -73,3 +73,19 @@ val Context.sdkVersion: Int get() = Build.VERSION.SDK_INT
 @AwExperimentalApi
 fun Context.deviceSummary(): String =
     "$deviceBrand $deviceModel | Android $osVersion (SDK $sdkVersion)"
+
+/**
+ * 获取设备 Android ID。
+ *
+ * 在设备恢复出厂设置后会改变，不同用户（多用户模式）下也可能不同。
+ * 不建议作为唯一设备标识使用。
+ *
+ * 注意：Android 10+ 如应用设置了 `android:allowBackup="true"`，
+ * 备份恢复后 Android ID 可能变化。
+ */
+val Context.androidId: String
+    get() = try {
+        android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID) ?: ""
+    } catch (_: Exception) {
+        ""
+    }

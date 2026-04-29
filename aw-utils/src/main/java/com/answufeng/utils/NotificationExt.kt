@@ -63,3 +63,69 @@ fun Context.showSimpleNotification(
 fun Context.cancelNotification(notificationId: Int) {
     NotificationManagerCompat.from(this).cancel(notificationId)
 }
+
+/**
+ * 展示进度通知。
+ *
+ * 适用于下载、上传等场景。当 `progress >= max` 时自动设为确定式进度条（无动画）。
+ *
+ * @param channelId 渠道 ID
+ * @param notificationId 通知 ID（同一 ID 会更新而非新建）
+ * @param title 通知标题
+ * @param text 通知正文
+ * @param max 进度最大值
+ * @param progress 当前进度
+ * @param indeterminate 是否为不确定进度（加载中动画），默认 false
+ * @param smallIcon 小图标资源 ID
+ * @param channelName 渠道显示名
+ */
+fun Context.showProgressNotification(
+    channelId: String,
+    notificationId: Int,
+    title: CharSequence,
+    text: CharSequence,
+    max: Int,
+    progress: Int,
+    @DrawableRes smallIcon: Int,
+    indeterminate: Boolean = false,
+    channelName: CharSequence = channelId,
+) {
+    ensureNotificationChannel(channelId, channelName)
+    val builder = NotificationCompat.Builder(this, channelId)
+        .setSmallIcon(smallIcon)
+        .setContentTitle(title)
+        .setContentText(text)
+        .setProgress(max, progress, indeterminate)
+        .setOngoing(progress < max)
+    NotificationManagerCompat.from(this).notify(notificationId, builder.build())
+}
+
+/**
+ * 展示大文本通知（展开后显示完整文本）。
+ *
+ * @param channelId 渠道 ID
+ * @param notificationId 通知 ID
+ * @param title 通知标题
+ * @param text 通知正文（折叠时显示）
+ * @param bigText 展开时显示的完整文本
+ * @param smallIcon 小图标资源 ID
+ * @param channelName 渠道显示名
+ */
+fun Context.showBigTextNotification(
+    channelId: String,
+    notificationId: Int,
+    title: CharSequence,
+    text: CharSequence,
+    bigText: CharSequence,
+    @DrawableRes smallIcon: Int,
+    channelName: CharSequence = channelId,
+) {
+    ensureNotificationChannel(channelId, channelName)
+    val builder = NotificationCompat.Builder(this, channelId)
+        .setSmallIcon(smallIcon)
+        .setContentTitle(title)
+        .setContentText(text)
+        .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    NotificationManagerCompat.from(this).notify(notificationId, builder.build())
+}

@@ -195,3 +195,84 @@ fun Long.addSeconds(seconds: Int): Long {
 fun Long.addWeeks(weeks: Int): Long {
     return this + weeks.toLong() * 604_800_000L
 }
+
+/**
+ * 在当前时间戳上增加指定月数。
+ *
+ * 使用 [Calendar.add] 实现，正确处理月末和夏令时切换。
+ * 如 `1月31日 + 1个月` → `2月28日`（或29日）。
+ */
+fun Long.addMonths(months: Int): Long {
+    return calendarOf(this).apply { add(Calendar.MONTH, months) }.timeInMillis
+}
+
+/**
+ * 在当前时间戳上增加指定年数。
+ *
+ * 使用 [Calendar.add] 实现，正确处理闰年。
+ * 如 `2024-02-29 + 1年` → `2025-02-28`。
+ */
+fun Long.addYears(years: Int): Long {
+    return calendarOf(this).apply { add(Calendar.YEAR, years) }.timeInMillis
+}
+
+/**
+ * 将毫秒时长格式化为可读字符串。
+ *
+ * ```kotlin
+ * 3723000L.formatDuration()          // "01:02:03"
+ * 3723000L.formatDuration(showMs = true)  // "01:02:03.000"
+ * 90000L.formatDuration()            // "01:30"
+ * 3000L.formatDuration()             // "00:03"
+ * ```
+ *
+ * 负值会被视为 0（输出 "00:00:00"）。
+ *
+ * @param showMs 是否显示毫秒部分，默认 false
+ * @return 格式化后的时长字符串
+ */
+fun Long.formatDuration(showMs: Boolean = false): String {
+    val ms = this.coerceAtLeast(0L)
+    val seconds = ms / 1000
+    val minutes = seconds / 60
+    val hours = minutes / 60
+
+    val h = hours.toString().padStart(2, '0')
+    val m = (minutes % 60).toString().padStart(2, '0')
+    val s = (seconds % 60).toString().padStart(2, '0')
+
+    return if (showMs) {
+        val millis = (ms % 1000).toString().padStart(3, '0')
+        "$h:$m:$s.$millis"
+    } else {
+        "$h:$m:$s"
+    }
+}
+
+/**
+ * 将毫秒时长格式化为友好的中文描述。
+ *
+ * ```kotlin
+ * 3723000L.formatDurationFriendly()  // "1小时2分钟3秒"
+ * 90000L.formatDurationFriendly()    // "1分钟30秒"
+ * 3000L.formatDurationFriendly()     // "3秒"
+ * ```
+ *
+ * 负值会被视为 0（输出 "0秒"）。
+ *
+ * @return 中文友好的时长描述，零值返回 "0秒"
+ */
+fun Long.formatDurationFriendly(): String {
+    val ms = this.coerceAtLeast(0L)
+    val totalSeconds = ms / 1000
+    val hours = totalSeconds / 3600
+    val minutes = (totalSeconds % 3600) / 60
+    val seconds = totalSeconds % 60
+
+    val parts = mutableListOf<String>()
+    if (hours > 0) parts.add("${hours}小时")
+    if (minutes > 0) parts.add("${minutes}分钟")
+    if (seconds > 0 || parts.isEmpty()) parts.add("${seconds}秒")
+
+    return parts.joinToString("")
+}
