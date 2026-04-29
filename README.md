@@ -22,11 +22,11 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts（版本与 Git tag / JitPack 一致）
 dependencies {
-    implementation("com.github.answufeng:aw-utils:1.0.1")
+    implementation("com.github.answufeng:aw-utils:1.0.2")
 }
 ```
 
-`implementation` 中的 **版本号与 Git / JitPack 的 tag 一致**（上例为 `1.0.0`）。
+`implementation` 中的 **版本号与 Git / JitPack 的 tag 一致**（上例为 `1.0.2`）。
 
 ### 2) 直接使用（Kotlin 扩展函数）
 
