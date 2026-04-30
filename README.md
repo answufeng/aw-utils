@@ -34,6 +34,8 @@ dependencies {
 // 字符串
 "13812345678".maskPhone()
 "hello".md5()
+"欧阳修".maskName() // 复姓：欧阳*
+"""{"a":1}""".parseJsonObject()
 
 // 网络
 val ok = context.isNetworkAvailable()
@@ -99,7 +101,7 @@ button.debounceClick { /* ... */ }
 
 | 主题 | 入口 | 说明 | 详细文档 |
 |------|------|------|----------|
-| 字符串 | `StringExt` | 校验、脱敏、摘要、截断 | [string.md](aw-utils/doc/string.md) |
+| 字符串 | `StringExt` | 校验、脱敏（含复姓）、摘要、截断、JSON 解析 | [string.md](aw-utils/doc/string.md) |
 | 正则 | `RegexExt` | IP/中文/密码/车牌/MAC | [regex.md](aw-utils/doc/regex.md) |
 | 日期 | `DateExt` | 格式化、解析、比较、加减、友好时间 | [date.md](aw-utils/doc/date.md) |
 | 文件 | `FileExt` | 大小/哈希、复制移动、安全删除 | [file.md](aw-utils/doc/file.md) |
@@ -138,6 +140,7 @@ button.debounceClick { /* ... */ }
 | 清理 | `CleanExt` | 缓存目录清理 | [clean.md](aw-utils/doc/clean.md) |
 | 资源关闭 | `CloseExt` | 静默关闭 Closeable | [close.md](aw-utils/doc/close.md) |
 | 注解 | `Annotations` | `@AwExperimentalApi` | [annotations.md](aw-utils/doc/annotations.md) |
+| 协程 | `CoroutineExt` | 重试退避/固定间隔、Flow 超时、asyncSafe | — |
 | 兼容 | `PackageManagerExt` | 内部兼容封装 | [packagemanager.md](aw-utils/doc/packagemanager.md) |
 | ~~日志~~ | `AwLog` | ~~轻量日志~~ → 迁移至 aw-log | [aw-log.md](aw-utils/doc/aw-log.md) |
 | ~~SP 委托~~ | `SpDelegate` | ~~SP 属性委托~~ → 迁移至 aw-store | [sp-delegate.md](aw-utils/doc/sp-delegate.md) |

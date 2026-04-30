@@ -187,16 +187,41 @@ fun String.isJson(): Boolean {
             (trimmed.startsWith('[') && trimmed.endsWith(']'))
 }
 
+fun String.parseJsonObject(): org.json.JSONObject? {
+    return try {
+        org.json.JSONObject(this)
+    } catch (_: Exception) {
+        null
+    }
+}
+
+fun String.parseJsonArray(): org.json.JSONArray? {
+    return try {
+        org.json.JSONArray(this)
+    } catch (_: Exception) {
+        null
+    }
+}
+
 /**
  * 中文姓名脱敏，保留姓氏，其余用 `*` 替换。
  *
- * 如 `"张三"` → `"张*"`，`"欧阳修"` → `"欧**"`。
+ * 如 `"张三"` → `"张*"`，`"欧阳修"` → `"欧阳*"`。
+ * 支持常见复姓（欧阳、司马、诸葛等 32 个），长度 >= 3 时自动识别。
  * 非中文字符串原样返回。
  */
+private val COMPOUND_SURNAMES = setOf(
+    "欧阳", "司马", "上官", "诸葛", "东方", "皇甫", "尉迟", "公孙",
+    "令狐", "宇文", "长孙", "慕容", "司徒", "南宫", "独孤", "夏侯",
+    "轩辕", "百里", "端木", "赫连", "澹台", "皇甫", "申屠", "公冶",
+    "淳于", "主父", "太叔", "微生", "颛孙", "即墨", "达奚", "褚师"
+)
+
 fun String.maskName(): String {
     if (length < 2) return this
     if (!first().isChineseChar()) return this
-    return first() + "*".repeat(length - 1)
+    val surnameLen = if (length >= 3 && take(2) in COMPOUND_SURNAMES) 2 else 1
+    return take(surnameLen) + "*".repeat(length - surnameLen)
 }
 
 private fun Char.isChineseChar(): Boolean = this in '\u4e00'..'\u9fa5'
