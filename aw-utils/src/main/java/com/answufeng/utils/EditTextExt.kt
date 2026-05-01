@@ -60,8 +60,8 @@ fun EditText.addFilter(filter: InputFilter) {
  * editText.addDecimalFilter(2)
  * ```
  */
-fun EditText.addDecimalFilter(maxDecimalPlaces: Int): InputFilter {
-    val filter = DecimalInputFilter(maxDecimalPlaces)
+fun EditText.addDecimalFilter(maxDecimalPlaces: Int, allowNegative: Boolean = false): InputFilter {
+    val filter = DecimalInputFilter(maxDecimalPlaces, allowNegative)
     addFilter(filter)
     return filter
 }
@@ -92,7 +92,10 @@ fun EditText.setOnEditorAction(actionId: Int, listener: () -> Unit) {
     }
 }
 
-internal class DecimalInputFilter(private val maxDecimalPlaces: Int) : InputFilter {
+internal class DecimalInputFilter(
+    private val maxDecimalPlaces: Int,
+    private val allowNegative: Boolean = false,
+) : InputFilter {
     override fun filter(
         source: CharSequence?,
         start: Int,
@@ -103,6 +106,14 @@ internal class DecimalInputFilter(private val maxDecimalPlaces: Int) : InputFilt
     ): CharSequence? {
         val newText = (dest?.toString() ?: "").let { text ->
             text.substring(0, dstart) + (source?.toString() ?: "") + text.substring(dend)
+        }
+        if (!allowNegative && newText.contains('-')) {
+            return ""
+        }
+        if (allowNegative) {
+            if (newText.count { it == '-' } > 1) return ""
+            val mi = newText.indexOf('-')
+            if (mi > 0) return ""
         }
         if (newText.count { it == '.' } > 1) {
             return ""

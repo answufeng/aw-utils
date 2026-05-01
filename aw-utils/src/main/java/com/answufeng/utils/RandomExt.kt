@@ -1,7 +1,7 @@
 package com.answufeng.utils
 
 import android.graphics.Color
-import kotlin.random.Random
+import kotlin.random.Random as KotlinRandom
 
 private const val ALPHANUMERIC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 private const val NUMERIC = "0123456789"
@@ -15,7 +15,7 @@ fun randomString(length: Int): String {
     if (length == 0) return ""
     val chars = CharArray(length)
     for (i in 0 until length) {
-        chars[i] = ALPHANUMERIC[Random.nextInt(ALPHANUMERIC.length)]
+        chars[i] = ALPHANUMERIC[KotlinRandom.nextInt(ALPHANUMERIC.length)]
     }
     return String(chars)
 }
@@ -28,7 +28,7 @@ fun randomNumericString(length: Int): String {
     if (length == 0) return ""
     val chars = CharArray(length)
     for (i in 0 until length) {
-        chars[i] = NUMERIC[Random.nextInt(NUMERIC.length)]
+        chars[i] = NUMERIC[KotlinRandom.nextInt(NUMERIC.length)]
     }
     return String(chars)
 }
@@ -41,7 +41,7 @@ fun randomLetterString(length: Int): String {
     if (length == 0) return ""
     val chars = CharArray(length)
     for (i in 0 until length) {
-        chars[i] = LETTERS[Random.nextInt(LETTERS.length)]
+        chars[i] = LETTERS[KotlinRandom.nextInt(LETTERS.length)]
     }
     return String(chars)
 }
@@ -51,7 +51,7 @@ fun randomLetterString(length: Int): String {
  */
 fun randomInt(min: Int, max: Int): Int {
     require(min <= max) { "min must be <= max, got min=$min max=$max" }
-    return Random.nextInt(min, max + 1)
+    return (min..max).random(KotlinRandom)
 }
 
 /**
@@ -59,7 +59,7 @@ fun randomInt(min: Int, max: Int): Int {
  */
 fun randomLong(min: Long, max: Long): Long {
     require(min <= max) { "min must be <= max, got min=$min max=$max" }
-    return Random.nextLong(min, max + 1)
+    return (min..max).random(KotlinRandom)
 }
 
 /**
@@ -70,9 +70,9 @@ fun randomLong(min: Long, max: Long): Long {
 fun randomColor(alpha: Int = 255): Int {
     return Color.argb(
         alpha.coerceIn(0, 255),
-        Random.nextInt(256),
-        Random.nextInt(256),
-        Random.nextInt(256)
+        KotlinRandom.nextInt(256),
+        KotlinRandom.nextInt(256),
+        KotlinRandom.nextInt(256)
     )
 }
 
@@ -81,7 +81,7 @@ fun randomColor(alpha: Int = 255): Int {
  */
 fun <T> List<T>.randomElement(): T {
     require(isNotEmpty()) { "List must not be empty" }
-    return this[Random.nextInt(size)]
+    return this[KotlinRandom.nextInt(size)]
 }
 
 /**
@@ -96,7 +96,7 @@ fun <T> List<T>.randomElements(n: Int): List<T> {
     val result = mutableListOf<T>()
     val indices = (0 until size).toMutableList()
     for (i in 0 until n) {
-        val j = Random.nextInt(i, indices.size)
+        val j = KotlinRandom.nextInt(i, indices.size)
         result.add(this[indices[j]])
         indices[j] = indices[i]
     }

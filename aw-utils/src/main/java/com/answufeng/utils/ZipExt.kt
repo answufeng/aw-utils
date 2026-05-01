@@ -32,19 +32,31 @@ fun File.zipDirectoryTo(targetZip: File): Boolean {
     }
 }
 
+private const val DEFAULT_MAX_ZIP_ENTRIES = 10_000
+private const val DEFAULT_MAX_UNZIP_BYTES = 256L * 1024L * 1024L
+
 /**
  * 将 zip 解压到目标目录；对条目路径做 **Zip Slip** 校验，拒绝写到 [destDir] 之外。
  *
+ * @param maxEntries 最多处理的条目数（含目录），防止 zip 炸弹条目风暴。
+ * @param maxExpandedBytes 解压写入的字节上限（近似），防止磁盘占满。
  * @return 是否完成解压
  */
-fun File.unzipToDirectory(destDir: File): Boolean {
+fun File.unzipToDirectory(
+    destDir: File,
+    maxEntries: Int = DEFAULT_MAX_ZIP_ENTRIES,
+    maxExpandedBytes: Long = DEFAULT_MAX_UNZIP_BYTES,
+): Boolean {
     if (!isFile) return false
     return try {
         destDir.mkdirs()
         val canonicalDest = destDir.canonicalFile
+        var entryIndex = 0
+        var totalWritten = 0L
         ZipInputStream(FileInputStream(this)).use { zis ->
             var entry = zis.nextEntry
             while (entry != null) {
+                if (++entryIndex > maxEntries) return false
                 val rawName = entry.name.replace('\\', '/')
                 if (rawName.isEmpty() || rawName.startsWith("/") || rawName.startsWith("../") ||
                     "/../" in "/$rawName/" || rawName.endsWith("/..")
@@ -67,7 +79,13 @@ fun File.unzipToDirectory(destDir: File): Boolean {
                     outFile.mkdirs()
                 } else {
                     outFile.parentFile?.mkdirs()
-                    FileOutputStream(outFile).use { fos -> zis.copyTo(fos) }
+                    val est = entry.size.takeIf { it > 0 } ?: (4L * 1024L)
+                    if (totalWritten + est > maxExpandedBytes) return false
+                    FileOutputStream(outFile).use { fos ->
+                        val n = zis.copyTo(fos)
+                        totalWritten += n
+                        if (totalWritten > maxExpandedBytes) return false
+                    }
                 }
                 zis.closeEntry()
                 entry = zis.nextEntry

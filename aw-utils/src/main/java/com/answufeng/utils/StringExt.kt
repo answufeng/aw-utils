@@ -44,12 +44,25 @@ private const val ID_CARD_CHECK_CODES = "10X98765432"
  */
 fun String.isIdCard(): Boolean {
     if (!matches(ID_CARD_REGEX)) return false
+    val y = substring(6, 10).toIntOrNull() ?: return false
+    val mo = substring(10, 12).toIntOrNull() ?: return false
+    val da = substring(12, 14).toIntOrNull() ?: return false
+    if (!isValidCivilBirthDate(y, mo, da)) return false
     var sum = 0
     for (i in 0..16) {
         sum += (this[i] - '0') * ID_CARD_WEIGHTS[i]
     }
     val expectedCheckChar = ID_CARD_CHECK_CODES[sum % 11]
     return this[17].uppercaseChar() == expectedCheckChar
+}
+
+private fun isLeapYear(y: Int): Boolean = (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
+
+private fun isValidCivilBirthDate(year: Int, month: Int, day: Int): Boolean {
+    if (year !in 1900..2100 || month !in 1..12 || day !in 1..31) return false
+    val feb = if (isLeapYear(year)) 29 else 28
+    val md = intArrayOf(31, feb, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    return day <= md[month - 1]
 }
 
 /**
@@ -130,24 +143,13 @@ fun String.mask(keepStart: Int, keepEnd: Int, maskChar: Char = '*'): String {
     return take(keepStart) + maskChar.toString().repeat(maskedLength) + takeLast(keepEnd)
 }
 
-private val threadLocalDigests = object : ThreadLocal<MutableMap<String, MessageDigest>>() {
-    override fun initialValue(): MutableMap<String, MessageDigest> = mutableMapOf()
-}
-
-private fun getDigest(algorithm: String): MessageDigest {
-    val cache = threadLocalDigests.get()!!
-    return cache.getOrPut(algorithm) { MessageDigest.getInstance(algorithm) }
-}
-
 /**
  * 计算字符串的 MD5 摘要（32 位小写十六进制）。
  *
  * @param charset 字符编码，默认 UTF-8
  */
 fun String.md5(charset: Charset = Charsets.UTF_8): String {
-    val digest = getDigest("MD5")
-    digest.reset()
-    val bytes = digest.digest(toByteArray(charset))
+    val bytes = MessageDigest.getInstance("MD5").digest(toByteArray(charset))
     return bytes.toHexString()
 }
 
@@ -157,9 +159,7 @@ fun String.md5(charset: Charset = Charsets.UTF_8): String {
  * @param charset 字符编码，默认 UTF-8
  */
 fun String.sha256(charset: Charset = Charsets.UTF_8): String {
-    val digest = getDigest("SHA-256")
-    digest.reset()
-    val bytes = digest.digest(toByteArray(charset))
+    val bytes = MessageDigest.getInstance("SHA-256").digest(toByteArray(charset))
     return bytes.toHexString()
 }
 
@@ -169,9 +169,7 @@ fun String.sha256(charset: Charset = Charsets.UTF_8): String {
  * @param charset 字符编码，默认 UTF-8
  */
 fun String.sha1(charset: Charset = Charsets.UTF_8): String {
-    val digest = getDigest("SHA-1")
-    digest.reset()
-    val bytes = digest.digest(toByteArray(charset))
+    val bytes = MessageDigest.getInstance("SHA-1").digest(toByteArray(charset))
     return bytes.toHexString()
 }
 
