@@ -4,8 +4,7 @@ import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 
-private fun Context.cameraManager(): CameraManager =
-    getSystemService(Context.CAMERA_SERVICE) as CameraManager
+private fun Context.cameraManager(): CameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
 private fun Context.flashCameraId(): String? {
     val cm = cameraManager()

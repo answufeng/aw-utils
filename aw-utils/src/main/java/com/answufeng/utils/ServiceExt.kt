@@ -15,9 +15,7 @@ inline fun <reified T : Service> Context.startServiceCompat(noinline configure: 
 /**
  * 启动前台服务（O+ 走 [Context.startForegroundService]），并在低版本回退为 [Context.startService]。
  */
-inline fun <reified T : Service> Context.startForegroundServiceCompat(
-    noinline configure: Intent.() -> Unit = {},
-) {
+inline fun <reified T : Service> Context.startForegroundServiceCompat(noinline configure: Intent.() -> Unit = {}) {
     val intent = Intent(this, T::class.java).apply(configure)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         startForegroundService(intent)

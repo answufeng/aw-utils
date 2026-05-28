@@ -8,21 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 
-@Deprecated(
-    message = "Use debounceClick() for clearer semantics",
-    replaceWith = ReplaceWith("debounceClick(interval, onClick)")
-)
-fun View.onClick(interval: Long = 500L, onClick: (View) -> Unit) {
-    debounceClick(interval, onClick)
-}
-
 /**
  * 设置防抖点击监听器。
  *
  * @param interval 防抖间隔（毫秒），默认 500ms，必须 > 0
  * @param onClick 点击回调
  */
-inline fun View.debounceClick(interval: Long = 500L, crossinline onClick: (View) -> Unit) {
+inline fun View.debounceClick(
+    interval: Long = 500L,
+    crossinline onClick: (View) -> Unit,
+) {
     require(interval > 0L) { "Debounce interval must be > 0ms, got $interval" }
     var lastClickTime = 0L
     setOnClickListener { v ->
@@ -60,13 +55,19 @@ fun View.expandTouchArea(
 }
 
 /** 设置 View 可见。 */
-fun View.visible() { visibility = View.VISIBLE }
+fun View.visible() {
+    visibility = View.VISIBLE
+}
 
 /** 设置 View 不可见（占位）。 */
-fun View.invisible() { visibility = View.INVISIBLE }
+fun View.invisible() {
+    visibility = View.INVISIBLE
+}
 
 /** 设置 View 隐藏（不占位）。 */
-fun View.gone() { visibility = View.GONE }
+fun View.gone() {
+    visibility = View.GONE
+}
 
 /**
  * 根据 Boolean 值设置 View 可见性。
@@ -74,27 +75,27 @@ fun View.gone() { visibility = View.GONE }
  * @param visible 是否可见
  * @param goneIfFalse 不可见时是否 GONE（true 为 GONE，false 为 INVISIBLE）
  */
-fun View.setVisible(visible: Boolean, goneIfFalse: Boolean = true) {
-    visibility = when {
-        visible -> View.VISIBLE
-        goneIfFalse -> View.GONE
-        else -> View.INVISIBLE
-    }
+fun View.setVisible(
+    visible: Boolean,
+    goneIfFalse: Boolean = true,
+) {
+    visibility =
+        when {
+            visible -> View.VISIBLE
+            goneIfFalse -> View.GONE
+            else -> View.INVISIBLE
+        }
 }
 
 /**
  * 批量设置 View 可见性。
  */
-fun setVisible(vararg views: View, visible: Boolean, goneIfFalse: Boolean = true) {
+fun setVisible(
+    vararg views: View,
+    visible: Boolean,
+    goneIfFalse: Boolean = true,
+) {
     views.forEach { it.setVisible(visible, goneIfFalse) }
-}
-
-@Deprecated(
-    message = "Use postDelay() to avoid shadowing View.postDelayed()",
-    replaceWith = ReplaceWith("postDelay(delayMillis, action)")
-)
-fun View.postDelayed(delayMillis: Long, action: () -> Unit) {
-    postDelay(delayMillis, action)
 }
 
 /**
@@ -103,7 +104,10 @@ fun View.postDelayed(delayMillis: Long, action: () -> Unit) {
  * @param delayMillis 延迟时间（毫秒）
  * @param action 要执行的操作
  */
-fun View.postDelay(delayMillis: Long, action: () -> Unit) {
+fun View.postDelay(
+    delayMillis: Long,
+    action: () -> Unit,
+) {
     postDelayed(action, delayMillis)
 }
 
@@ -191,21 +195,30 @@ fun View.setHeight(heightPx: Int) {
 /**
  * 设置 View 宽度（dp，自动转换为像素）。
  */
-fun View.setWidthDp(widthDp: Int, context: android.content.Context = this.context) {
+fun View.setWidthDp(
+    widthDp: Int,
+    context: android.content.Context = this.context,
+) {
     setWidth(widthDp.dpToPx(context))
 }
 
 /**
  * 设置 View 高度（dp，自动转换为像素）。
  */
-fun View.setHeightDp(heightDp: Int, context: android.content.Context = this.context) {
+fun View.setHeightDp(
+    heightDp: Int,
+    context: android.content.Context = this.context,
+) {
     setHeight(heightDp.dpToPx(context))
 }
 
 /**
  * 批量设置 View 可见性（List 版本）。
  */
-fun List<View>.setVisible(visible: Boolean, goneIfFalse: Boolean = true) {
+fun List<View>.setVisible(
+    visible: Boolean,
+    goneIfFalse: Boolean = true,
+) {
     forEach { it.setVisible(visible, goneIfFalse) }
 }
 

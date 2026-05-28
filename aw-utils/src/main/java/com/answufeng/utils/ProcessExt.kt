@@ -30,7 +30,10 @@ fun runOnUiThread(action: () -> Unit) {
  * @param action 要执行的操作
  * @return [Runnable] 可传入 [removeUiThreadCallback] 取消执行
  */
-fun runOnUiThreadDelayed(delayMillis: Long, action: () -> Unit): Runnable {
+fun runOnUiThreadDelayed(
+    delayMillis: Long,
+    action: () -> Unit,
+): Runnable {
     val runnable = Runnable { action() }
     mainHandler.postDelayed(runnable, delayMillis)
     return runnable

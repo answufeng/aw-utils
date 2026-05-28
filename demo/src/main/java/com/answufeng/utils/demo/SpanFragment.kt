@@ -81,7 +81,7 @@ class SpanFragment : BaseDemoFragment() {
         container.addView(sizeTv)
 
         addTitle("颜色扩展")
-        val color = randomColor()
+        val color = android.graphics.Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random())
         addLog("随机颜色: ${color.toHexColor()}")
         addLog("无透明度: ${color.toHexColorNoAlpha()}")
         addLog("半透明: ${color.withAlpha(128).toHexColor()}")

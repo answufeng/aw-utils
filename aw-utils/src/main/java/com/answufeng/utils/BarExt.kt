@@ -4,7 +4,6 @@ import android.app.Activity
 import android.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 
 /**
  * 设置状态栏背景色与浅色/深色前景（图标与系统装饰对比度）。
@@ -12,7 +11,10 @@ import androidx.core.view.WindowInsetsControllerCompat
  * @param color 状态栏颜色（通常为不透明色；完全沉浸式需配合 `Window` 标志另行处理）
  * @param darkStatusBarIcons `true` 表示状态栏图标为深色（适合浅色背景）；`false` 为浅色图标（适合深色背景）
  */
-fun Activity.setStatusBarColorAndStyle(color: Int, darkStatusBarIcons: Boolean) {
+fun Activity.setStatusBarColorAndStyle(
+    color: Int,
+    darkStatusBarIcons: Boolean,
+) {
     window.statusBarColor = color
     val controller = WindowCompat.getInsetsController(window, window.decorView)
     controller.isAppearanceLightStatusBars = darkStatusBarIcons
@@ -24,7 +26,10 @@ fun Activity.setStatusBarColorAndStyle(color: Int, darkStatusBarIcons: Boolean) 
  * @param color 导航栏颜色
  * @param darkNavigationBarIcons `true` 表示导航栏按钮为深色（适合浅色背景）；`false` 为浅色按钮（适合深色背景）
  */
-fun Activity.setNavigationBarColorAndStyle(color: Int, darkNavigationBarIcons: Boolean) {
+fun Activity.setNavigationBarColorAndStyle(
+    color: Int,
+    darkNavigationBarIcons: Boolean,
+) {
     window.navigationBarColor = color
     val controller = WindowCompat.getInsetsController(window, window.decorView)
     controller.isAppearanceLightNavigationBars = darkNavigationBarIcons
@@ -68,8 +73,9 @@ fun Activity.transparentSystemBars() {
  */
 fun Activity.isStatusBarVisible(): Boolean {
     val insets = window.decorView.rootWindowInsets ?: return true
-    val statusBarInsets = WindowInsetsCompat.toWindowInsetsCompat(insets)
-        .getInsets(WindowInsetsCompat.Type.statusBars())
+    val statusBarInsets =
+        WindowInsetsCompat.toWindowInsetsCompat(insets)
+            .getInsets(WindowInsetsCompat.Type.statusBars())
     return statusBarInsets.top > 0
 }
 
@@ -80,8 +86,9 @@ fun Activity.isStatusBarVisible(): Boolean {
  */
 fun Activity.isNavBarVisible(): Boolean {
     val insets = window.decorView.rootWindowInsets ?: return true
-    val navInsets = WindowInsetsCompat.toWindowInsetsCompat(insets)
-        .getInsets(WindowInsetsCompat.Type.navigationBars())
+    val navInsets =
+        WindowInsetsCompat.toWindowInsetsCompat(insets)
+            .getInsets(WindowInsetsCompat.Type.navigationBars())
     return navInsets.bottom > 0
 }
 

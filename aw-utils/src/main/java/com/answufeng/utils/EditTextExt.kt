@@ -1,9 +1,7 @@
 package com.answufeng.utils
 
-import android.graphics.drawable.Drawable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 
 /**
@@ -21,13 +19,26 @@ import android.widget.EditText
  * @return [android.text.TextWatcher] 可用于移除监听
  */
 fun EditText.onTextChanged(listener: (text: String) -> Unit): android.text.TextWatcher {
-    val watcher = object : android.text.TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        override fun afterTextChanged(s: android.text.Editable?) {
-            listener(s?.toString() ?: "")
+    val watcher =
+        object : android.text.TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {}
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {}
+
+            override fun afterTextChanged(s: android.text.Editable?) {
+                listener(s?.toString() ?: "")
+            }
         }
-    }
     addTextChangedListener(watcher)
     return watcher
 }
@@ -60,7 +71,10 @@ fun EditText.addFilter(filter: InputFilter) {
  * editText.addDecimalFilter(2)
  * ```
  */
-fun EditText.addDecimalFilter(maxDecimalPlaces: Int, allowNegative: Boolean = false): InputFilter {
+fun EditText.addDecimalFilter(
+    maxDecimalPlaces: Int,
+    allowNegative: Boolean = false,
+): InputFilter {
     val filter = DecimalInputFilter(maxDecimalPlaces, allowNegative)
     addFilter(filter)
     return filter
@@ -83,14 +97,21 @@ fun EditText.clearFocusAndHideKeyboard() {
  * }
  * ```
  */
-fun EditText.setOnEditorAction(actionId: Int, listener: () -> Unit) {
+fun EditText.setOnEditorAction(
+    actionId: Int,
+    listener: () -> Unit,
+) {
     setOnEditorActionListener { _, id, _ ->
         if (id == actionId) {
             listener()
             true
-        } else false
+        } else {
+            false
+        }
     }
 }
+
+private val DECIMAL_INPUT_PATTERN = Regex("^-?(\\d*(\\.\\d*)?)?$")
 
 internal class DecimalInputFilter(
     private val maxDecimalPlaces: Int,
@@ -102,21 +123,23 @@ internal class DecimalInputFilter(
         end: Int,
         dest: android.text.Spanned?,
         dstart: Int,
-        dend: Int
+        dend: Int,
     ): CharSequence? {
-        val newText = (dest?.toString() ?: "").let { text ->
-            text.substring(0, dstart) + (source?.toString() ?: "") + text.substring(dend)
-        }
+        val newText =
+            (dest?.toString() ?: "").let { text ->
+                text.substring(0, dstart) + (source?.subSequence(start, end)?.toString() ?: "") + text.substring(dend)
+            }
+        if (newText.isEmpty()) return null
         if (!allowNegative && newText.contains('-')) {
+            return ""
+        }
+        if (!DECIMAL_INPUT_PATTERN.matches(newText)) {
             return ""
         }
         if (allowNegative) {
             if (newText.count { it == '-' } > 1) return ""
             val mi = newText.indexOf('-')
             if (mi > 0) return ""
-        }
-        if (newText.count { it == '.' } > 1) {
-            return ""
         }
         val dotIndex = newText.indexOf('.')
         if (dotIndex >= 0 && newText.length - dotIndex - 1 > maxDecimalPlaces) {

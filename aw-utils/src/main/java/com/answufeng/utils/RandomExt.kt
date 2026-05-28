@@ -1,6 +1,5 @@
 package com.answufeng.utils
 
-import android.graphics.Color
 import kotlin.random.Random as KotlinRandom
 
 private const val ALPHANUMERIC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -44,36 +43,6 @@ fun randomLetterString(length: Int): String {
         chars[i] = LETTERS[KotlinRandom.nextInt(LETTERS.length)]
     }
     return String(chars)
-}
-
-/**
- * 生成指定范围的随机整数。
- */
-fun randomInt(min: Int, max: Int): Int {
-    require(min <= max) { "min must be <= max, got min=$min max=$max" }
-    return (min..max).random(KotlinRandom)
-}
-
-/**
- * 生成指定范围的随机长整数。
- */
-fun randomLong(min: Long, max: Long): Long {
-    require(min <= max) { "min must be <= max, got min=$min max=$max" }
-    return (min..max).random(KotlinRandom)
-}
-
-/**
- * 生成随机颜色（带可选透明度）。
- *
- * @param alpha 透明度 0-255，默认 255（不透明）
- */
-fun randomColor(alpha: Int = 255): Int {
-    return Color.argb(
-        alpha.coerceIn(0, 255),
-        KotlinRandom.nextInt(256),
-        KotlinRandom.nextInt(256),
-        KotlinRandom.nextInt(256)
-    )
 }
 
 /**

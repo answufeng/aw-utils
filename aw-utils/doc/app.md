@@ -48,16 +48,6 @@ context.getAppVersionCode("com.example") // 指定包名
 
 > `getAppVersionCode()` 在 API 28+ 返回 `longVersionCode`，低版本返回 `versionCode.toLong()`。
 
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `isAppForeground()` | `ProcessLifecycleOwner` 方案 |
-| `Context.appVersionName()` (SystemExt) | `Context.getAppVersionName()` (AppExt) |
-| `Context.appVersionCode()` (SystemExt) | `Context.getAppVersionCode()` (AppExt) |
-
-> `isAppForeground()` 在 Android 10+ 因 `runningAppProcesses` 受限而不可靠。
-
 ## 相关
 
 - [ActivityExt](activity.md) — Activity 启动与 Extra

@@ -83,33 +83,12 @@ fun Context.getAppName(packageName: String): String {
  * @return 是否成功打开设置页
  */
 fun Context.openAppDetailSettings(packageName: String = this.packageName): Boolean {
-    val intent = Intent(
-        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", packageName, null)
-    )
+    val intent =
+        Intent(
+            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", packageName, null),
+        )
     return safeStartActivity(intent)
-}
-
-/**
- * 判断当前应用是否在前台运行。
- *
- * 注意：Android 10+ `runningAppProcesses` 返回信息受限，
- * 此方法在高版本系统上可能不可靠。
- * 推荐使用 `ProcessLifecycleOwner` 方案替代。
- *
- * 需要 `GET_TASKS` 权限（API 21 以下），API 21+ 使用 ActivityLifecycleCallbacks 更可靠。
- */
-@Deprecated(
-    message = "Android 10+ runningAppProcesses 受限，推荐使用 ProcessLifecycleOwner 方案替代",
-    level = DeprecationLevel.WARNING
-)
-fun Context.isAppForeground(): Boolean {
-    val am = getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
-        ?: return false
-    val info = am.runningAppProcesses ?: return false
-    return info.any {
-        it.processName == packageName && it.importance == android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-    }
 }
 
 /**
@@ -131,19 +110,21 @@ fun Context.isSystemApp(packageName: String): Boolean {
  */
 fun Context.getAppSignatureSHA1(packageName: String = this.packageName): String {
     return try {
-        val info = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            packageManager.getPackageInfoCompat(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-                .signingInfo
-        } else {
-            @Suppress("DEPRECATION")
-            packageManager.getPackageInfoCompat(packageName, PackageManager.GET_SIGNATURES).signatures
-        }
-        val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            (info as android.content.pm.SigningInfo).apkContentsSigners
-        } else {
-            @Suppress("DEPRECATION", "UNCHECKED_CAST")
-            info as Array<android.content.pm.Signature>
-        }
+        val info =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageManager.getPackageInfoCompat(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                    .signingInfo
+            } else {
+                @Suppress("DEPRECATION")
+                packageManager.getPackageInfoCompat(packageName, PackageManager.GET_SIGNATURES).signatures
+            }
+        val signatures =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                (info as android.content.pm.SigningInfo).apkContentsSigners
+            } else {
+                @Suppress("DEPRECATION", "UNCHECKED_CAST")
+                info as Array<android.content.pm.Signature>
+            }
         signatures.firstOrNull()?.let { sig ->
             java.security.MessageDigest.getInstance("SHA-1").digest(sig.toByteArray()).toHexString()
         } ?: ""

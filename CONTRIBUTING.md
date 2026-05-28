@@ -29,7 +29,7 @@
 - Android SDK 35
 - Kotlin 2.0+
 
-## 构建 & 测试
+## 构建与检查
 
 ```bash
 ./gradlew :aw-utils:assembleRelease        # 构建库
@@ -40,4 +40,4 @@
 
 ## 发版前补充检查（R8）
 
-本库以扩展函数为主，consumer rules 较轻；发版前仍建议 demo `assembleRelease`，升级 AndroidX 后核对弃用 API 与 README。
+本库以扩展函数为主，consumer rules 较轻；发版前建议执行 demo `assembleRelease` 做 R8 冒烟验证。

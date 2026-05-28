@@ -5,7 +5,10 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 
-internal fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo {
+internal fun PackageManager.getPackageInfoCompat(
+    packageName: String,
+    flags: Int = 0,
+): PackageInfo {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
     } else {
@@ -14,7 +17,10 @@ internal fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int
     }
 }
 
-internal fun PackageManager.getApplicationInfoCompat(packageName: String, flags: Int = 0): ApplicationInfo {
+internal fun PackageManager.getApplicationInfoCompat(
+    packageName: String,
+    flags: Int = 0,
+): ApplicationInfo {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getApplicationInfo(packageName, PackageManager.ApplicationInfoFlags.of(flags.toLong()))
     } else {

@@ -25,7 +25,11 @@ import android.widget.TextView
  * textView.text = "Hello World".spanColor(Color.RED, 0, 5)
  * ```
  */
-fun String.spanColor(color: Int, start: Int = 0, end: Int = length): SpannableString {
+fun String.spanColor(
+    color: Int,
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -34,7 +38,11 @@ fun String.spanColor(color: Int, start: Int = 0, end: Int = length): SpannableSt
 /**
  * 创建带背景色的 SpannableString。
  */
-fun String.spanBackgroundColor(color: Int, start: Int = 0, end: Int = length): SpannableString {
+fun String.spanBackgroundColor(
+    color: Int,
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(BackgroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -43,7 +51,10 @@ fun String.spanBackgroundColor(color: Int, start: Int = 0, end: Int = length): S
 /**
  * 创建加粗的 SpannableString。
  */
-fun String.spanBold(start: Int = 0, end: Int = length): SpannableString {
+fun String.spanBold(
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(StyleSpan(android.graphics.Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -52,7 +63,10 @@ fun String.spanBold(start: Int = 0, end: Int = length): SpannableString {
 /**
  * 创建斜体的 SpannableString。
  */
-fun String.spanItalic(start: Int = 0, end: Int = length): SpannableString {
+fun String.spanItalic(
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(StyleSpan(android.graphics.Typeface.ITALIC), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -61,7 +75,10 @@ fun String.spanItalic(start: Int = 0, end: Int = length): SpannableString {
 /**
  * 创建加粗斜体的 SpannableString。
  */
-fun String.spanBoldItalic(start: Int = 0, end: Int = length): SpannableString {
+fun String.spanBoldItalic(
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(StyleSpan(android.graphics.Typeface.BOLD_ITALIC), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -70,7 +87,10 @@ fun String.spanBoldItalic(start: Int = 0, end: Int = length): SpannableString {
 /**
  * 创建带下划线的 SpannableString。
  */
-fun String.spanUnderline(start: Int = 0, end: Int = length): SpannableString {
+fun String.spanUnderline(
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(UnderlineSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -79,7 +99,10 @@ fun String.spanUnderline(start: Int = 0, end: Int = length): SpannableString {
 /**
  * 创建带删除线的 SpannableString。
  */
-fun String.spanStrikethrough(start: Int = 0, end: Int = length): SpannableString {
+fun String.spanStrikethrough(
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(StrikethroughSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -92,7 +115,11 @@ fun String.spanStrikethrough(start: Int = 0, end: Int = length): SpannableString
  * @param start 起始位置
  * @param end 结束位置
  */
-fun String.spanSize(sizePx: Int, start: Int = 0, end: Int = length): SpannableString {
+fun String.spanSize(
+    sizePx: Int,
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(AbsoluteSizeSpan(sizePx), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -101,7 +128,10 @@ fun String.spanSize(sizePx: Int, start: Int = 0, end: Int = length): SpannableSt
 /**
  * 创建上标的 SpannableString。
  */
-fun String.spanSuperscript(start: Int = 0, end: Int = length): SpannableString {
+fun String.spanSuperscript(
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(SuperscriptSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -110,7 +140,10 @@ fun String.spanSuperscript(start: Int = 0, end: Int = length): SpannableString {
 /**
  * 创建下标的 SpannableString。
  */
-fun String.spanSubscript(start: Int = 0, end: Int = length): SpannableString {
+fun String.spanSubscript(
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return SpannableString(this).apply {
         setSpan(SubscriptSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
@@ -132,17 +165,25 @@ fun String.spanClickable(
     end: Int = length,
     onClick: () -> Unit,
     underline: Boolean = true,
-    color: Int = Color.parseColor("#2196F3")
+    color: Int = Color.parseColor("#2196F3"),
 ): SpannableString {
     return SpannableString(this).apply {
-        setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) { onClick() }
-            override fun updateDrawState(ds: android.text.TextPaint) {
-                super.updateDrawState(ds)
-                ds.color = color
-                ds.isUnderlineText = underline
-            }
-        }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        setSpan(
+            object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    onClick()
+                }
+
+                override fun updateDrawState(ds: android.text.TextPaint) {
+                    super.updateDrawState(ds)
+                    ds.color = color
+                    ds.isUnderlineText = underline
+                }
+            },
+            start,
+            end,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE,
+        )
     }
 }
 
@@ -172,7 +213,12 @@ fun spannable(builder: SpannableStringBuilder.() -> Unit): SpannableStringBuilde
  * @param start 起始位置
  * @param end 结束位置
  */
-fun String.spanSizeDp(sizeDp: Int, context: android.content.Context, start: Int = 0, end: Int = length): SpannableString {
+fun String.spanSizeDp(
+    sizeDp: Int,
+    context: android.content.Context,
+    start: Int = 0,
+    end: Int = length,
+): SpannableString {
     return spanSize(sizeDp.dpToPx(context), start, end)
 }
 
@@ -202,7 +248,7 @@ fun String.spanImage(
     drawable: android.graphics.drawable.Drawable,
     start: Int = 0,
     end: Int = length,
-    alignment: Int = ImageSpan.ALIGN_BASELINE
+    alignment: Int = ImageSpan.ALIGN_BASELINE,
 ): SpannableString {
     drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
     return SpannableString(this).apply {

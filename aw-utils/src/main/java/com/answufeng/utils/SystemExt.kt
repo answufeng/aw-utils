@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -24,7 +23,10 @@ import androidx.fragment.app.Fragment
  * @param text 要复制的文本
  * @param label 剪贴板标签，默认 `"text"`
  */
-fun Context.copyToClipboard(text: String, label: String = "text") {
+fun Context.copyToClipboard(
+    text: String,
+    label: String = "text",
+) {
     val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     clipboard.setPrimaryClip(ClipData.newPlainText(label, text))
 }
@@ -107,52 +109,16 @@ fun Context.openBrowser(url: String): Boolean {
  * @param title 选择器标题，默认 `"分享"`
  * @return 是否成功打开分享选择器
  */
-fun Context.shareText(text: String, title: String = "分享"): Boolean {
-    val intent = Intent(Intent.ACTION_SEND).apply {
-        type = "text/plain"
-        putExtra(Intent.EXTRA_TEXT, text)
-    }
-    return safeStartActivity(Intent.createChooser(intent, title))
-}
-
-/** 打开当前应用的设置页。 */
-fun Context.openAppSettings(): Boolean {
-    val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-        data = Uri.fromParts("package", packageName, null)
-    }
-    return safeStartActivity(intent)
-}
-
-/** 获取应用版本名。 */
-@Deprecated(
-    message = "Use getAppVersionName() in AppExt instead",
-    replaceWith = ReplaceWith("getAppVersionName()")
-)
-fun Context.appVersionName(): String {
-    return try {
-        packageManager.getPackageInfoCompat(packageName, 0).versionName ?: ""
-    } catch (_: PackageManager.NameNotFoundException) {
-        ""
-    }
-}
-
-/** 获取应用版本号。 */
-@Deprecated(
-    message = "Use getAppVersionCode() in AppExt instead",
-    replaceWith = ReplaceWith("getAppVersionCode()")
-)
-fun Context.appVersionCode(): Long {
-    return try {
-        val info = packageManager.getPackageInfoCompat(packageName, 0)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            info.longVersionCode
-        } else {
-            @Suppress("DEPRECATION")
-            info.versionCode.toLong()
+fun Context.shareText(
+    text: String,
+    title: String = "分享",
+): Boolean {
+    val intent =
+        Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
         }
-    } catch (_: PackageManager.NameNotFoundException) {
-        0L
-    }
+    return safeStartActivity(Intent.createChooser(intent, title))
 }
 
 /** 检查是否拥有指定权限。 */

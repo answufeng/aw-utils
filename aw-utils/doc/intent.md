@@ -27,19 +27,26 @@ context.openAppMarket("com.example.app")     // 指定包名
 ## 系统设置
 
 ```kotlin
-context.openSettings()                  // 系统设置
-context.openWifiSettings()              // WiFi 设置
-context.openWirelessSettings()          // 无线网络设置
-context.openLocationSettings()          // 位置设置
-context.openBluetoothSettings()         // 蓝牙设置
-context.openAccessibilitySettings()     // 无障碍设置
-context.openDeveloperSettings()         // 开发者选项
-context.openDateSettings()              // 日期和时间
-context.openSoundSettings()             // 声音/通知
-context.openDisplaySettings()           // 显示
-context.openStorageSettings()           // 存储
-context.openAboutPhoneSettings()        // 关于手机
+context.openSystemSettings(SystemSettings.Wifi)
+context.openSettings()  // 系统设置主页，可传入自定义 action
 ```
+
+### SystemSettings 枚举
+
+| 值 | 说明 |
+|----|------|
+| `Settings` | 系统设置主页 |
+| `Wifi` | Wi-Fi |
+| `Wireless` | 无线网络总入口 |
+| `Location` | 位置 |
+| `Bluetooth` | 蓝牙 |
+| `Accessibility` | 无障碍 |
+| `Developer` | 开发者选项 |
+| `Date` | 日期和时间 |
+| `Sound` | 声音/通知 |
+| `Display` | 显示 |
+| `Storage` | 存储 |
+| `AboutPhone` | 关于手机 |
 
 ## 安装 APK
 
@@ -63,10 +70,3 @@ context.safeStartActivity(intent)  // 先检查 resolveActivity，非 Activity C
 ```
 
 > 所有跳转扩展内部均使用 `safeStartActivity`，返回 `Boolean` 表示是否成功启动。
-
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `Activity.openCamera()` | Activity Result API |
-| `Activity.pickImage()` | Activity Result API |

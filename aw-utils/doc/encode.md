@@ -44,9 +44,3 @@ byteArrayOf(0x0F, 0xAB.toByte()).toHexString()  // "0fab"（查表法高性能�
 ```
 
 > `htmlEncode()` 使用 `TextUtils.htmlEncode()`；`htmlDecode()` 使用 `Html.fromHtml()`，支持 Named entity 和 Numeric entity。
-
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `String.decodeBase64String()` | `decodeBase64ToString()` |

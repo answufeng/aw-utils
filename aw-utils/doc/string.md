@@ -12,7 +12,7 @@
 | `String.isIdCard()` | 18 位身份证号（含校验码验证） |
 | `String.isDigitsOnly()` | 仅数字 |
 | `String.isUrl()` | http/https URL |
-| `String.isBankCard()` | 银行卡号（16-19 位数字） |
+| `String.isBankCard()` | 银行卡号（16-19 位数字 + Luhn 校验） |
 | `String.isJson()` | JSON 格式（首字符为 `{` 或 `[`） |
 
 ```kotlin
@@ -22,7 +22,7 @@
 "110101199001011234".isIdCard()     // true（含加权校验）
 "12345".isDigitsOnly()              // true
 "https://example.com".isUrl()       // true
-"6222021234567890".isBankCard()     // true
+"6222021234567894".isBankCard()     // true（含 Luhn 校验）
 "{\"key\":1}".isJson()              // true
 ```
 
@@ -34,7 +34,7 @@
 | `String.maskIdCard()` | `110101199001011234` → `1101**********1234` |
 | `String.maskEmail()` | `hello@example.com` → `h****@example.com` |
 | `String.maskBankCard()` | `6222021234567890` → `6222********7890` |
-| `String.maskName()` | `张三` → `张*`，`欧阳修` → `欧**` |
+| `String.maskName()` | `张三` → `张*`，`欧阳修` → `欧阳*` |
 | `String.mask(keepStart, keepEnd)` | 通用脱敏，保留首尾指定数量字符 |
 
 ```kotlin
@@ -43,7 +43,7 @@
 "hello@example.com".maskEmail()
 "6222021234567890".maskBankCard()
 "张三".maskName()                 // "张*"
-"欧阳修".maskName()               // "欧**"
+"欧阳修".maskName()               // "欧阳*"
 "13812345678".mask(3, 4)           // "138****5678"
 ```
 
@@ -63,20 +63,11 @@
 "hello".sha256()  // "2cf24dba5fb0a30e26e83b2ac5b9e29e..."
 ```
 
-> 内部使用 ThreadLocal 缓存 `MessageDigest` 实例，线程安全且高性能。
+> 哈希摘要每次调用 `MessageDigest.getInstance()`，无跨调用缓存。
 
 ## 截断
 
 ```kotlin
-"Hello World".truncate(5)        // "Hello…"
-"Hello World".truncate(5, "!")   // "Hello!"
+"Hello World".truncate(5)        // "Hel…"（总长度含后缀）
+"Hello World".truncate(5, "!")   // "Hell!"
 ```
-
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `String?.orDefault()` | Elvis 运算符 `str ?: default` |
-| `String.ellipsize()` | `truncate()` |
-| `String?.isNotNullOrBlank()` | `!isNullOrBlank()` |
-| `String?.isNotNullOrEmpty()` | `!isNullOrEmpty()` |

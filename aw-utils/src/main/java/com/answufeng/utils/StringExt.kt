@@ -58,7 +58,11 @@ fun String.isIdCard(): Boolean {
 
 private fun isLeapYear(y: Int): Boolean = (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
 
-private fun isValidCivilBirthDate(year: Int, month: Int, day: Int): Boolean {
+private fun isValidCivilBirthDate(
+    year: Int,
+    month: Int,
+    day: Int,
+): Boolean {
     if (year !in 1900..2100 || month !in 1..12 || day !in 1..31) return false
     val feb = if (isLeapYear(year)) 29 else 28
     val md = intArrayOf(31, feb, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
@@ -76,9 +80,24 @@ fun String.isDigitsOnly(): Boolean = all { it.isDigit() }
 fun String.isUrl(): Boolean = matches(URL_REGEX)
 
 /**
- * 判断字符串是否为合法的银行卡号（16-19 位数字）。
+ * 判断字符串是否为合法的银行卡号（16-19 位数字，含 Luhn 校验）。
  */
-fun String.isBankCard(): Boolean = matches(BANK_CARD_REGEX)
+fun String.isBankCard(): Boolean = matches(BANK_CARD_REGEX) && passesLuhnCheck()
+
+private fun String.passesLuhnCheck(): Boolean {
+    var sum = 0
+    var alternate = false
+    for (i in length - 1 downTo 0) {
+        var digit = this[i] - '0'
+        if (alternate) {
+            digit *= 2
+            if (digit > 9) digit -= 9
+        }
+        sum += digit
+        alternate = !alternate
+    }
+    return sum % 10 == 0
+}
 
 /**
  * 手机号脱敏，将中间四位替换为 `****`。
@@ -137,7 +156,11 @@ fun String.maskBankCard(): String {
  * @param maskChar 占位字符，默认 `*`
  * @return 脱敏后的字符串
  */
-fun String.mask(keepStart: Int, keepEnd: Int, maskChar: Char = '*'): String {
+fun String.mask(
+    keepStart: Int,
+    keepEnd: Int,
+    maskChar: Char = '*',
+): String {
     if (length <= keepStart + keepEnd) return this
     val maskedLength = length - keepStart - keepEnd
     return take(keepStart) + maskChar.toString().repeat(maskedLength) + takeLast(keepEnd)
@@ -182,9 +205,12 @@ fun String.sha1(charset: Charset = Charsets.UTF_8): String {
 fun String.isJson(): Boolean {
     val trimmed = trim()
     return (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
-            (trimmed.startsWith('[') && trimmed.endsWith(']'))
+        (trimmed.startsWith('[') && trimmed.endsWith(']'))
 }
 
+/**
+ * 将字符串解析为 [org.json.JSONObject]；格式非法时返回 null。
+ */
 fun String.parseJsonObject(): org.json.JSONObject? {
     return try {
         org.json.JSONObject(this)
@@ -193,6 +219,9 @@ fun String.parseJsonObject(): org.json.JSONObject? {
     }
 }
 
+/**
+ * 将字符串解析为 [org.json.JSONArray]；格式非法时返回 null。
+ */
 fun String.parseJsonArray(): org.json.JSONArray? {
     return try {
         org.json.JSONArray(this)
@@ -208,12 +237,13 @@ fun String.parseJsonArray(): org.json.JSONArray? {
  * 支持常见复姓（欧阳、司马、诸葛等 32 个），长度 >= 3 时自动识别。
  * 非中文字符串原样返回。
  */
-private val COMPOUND_SURNAMES = setOf(
-    "欧阳", "司马", "上官", "诸葛", "东方", "皇甫", "尉迟", "公孙",
-    "令狐", "宇文", "长孙", "慕容", "司徒", "南宫", "独孤", "夏侯",
-    "轩辕", "百里", "端木", "赫连", "澹台", "皇甫", "申屠", "公冶",
-    "淳于", "主父", "太叔", "微生", "颛孙", "即墨", "达奚", "褚师"
-)
+private val COMPOUND_SURNAMES =
+    setOf(
+        "欧阳", "司马", "上官", "诸葛", "东方", "皇甫", "尉迟", "公孙",
+        "令狐", "宇文", "长孙", "慕容", "司徒", "南宫", "独孤", "夏侯",
+        "轩辕", "百里", "端木", "赫连", "澹台", "申屠", "公冶",
+        "淳于", "主父", "太叔", "微生", "颛孙", "即墨", "达奚", "褚师",
+    )
 
 fun String.maskName(): String {
     if (length < 2) return this
@@ -224,39 +254,18 @@ fun String.maskName(): String {
 
 private fun Char.isChineseChar(): Boolean = this in '\u4e00'..'\u9fa5'
 
-@Deprecated(
-    message = "Use Elvis operator ?: instead, e.g. str ?: default",
-    level = DeprecationLevel.WARNING
-)
-fun String?.orDefault(default: String = ""): String {
-    return if (isNullOrBlank()) default else this
-}
-
-@Deprecated(
-    message = "Use truncate() to avoid confusion with TextUtils.ellipsize()",
-    replaceWith = ReplaceWith("truncate(maxLength, suffix)")
-)
-fun String.ellipsize(maxLength: Int, suffix: String = "…"): String = truncate(maxLength, suffix)
-
 /**
  * 截断超长字符串并添加后缀。
  *
- * @param maxLength 最大保留长度，必须 >= 0
+ * @param maxLength 截断后字符串的总长度上限（含 [suffix]），必须 >= 0
  * @param suffix 截断后缀，默认为 `"…"`
  */
-fun String.truncate(maxLength: Int, suffix: String = "…"): String {
+fun String.truncate(
+    maxLength: Int,
+    suffix: String = "…",
+): String {
     require(maxLength >= 0) { "maxLength must be >= 0, got $maxLength" }
-    return if (length <= maxLength) this else take(maxLength) + suffix
+    if (length <= maxLength) return this
+    if (suffix.length >= maxLength) return take(maxLength)
+    return take(maxLength - suffix.length) + suffix
 }
-
-@Deprecated(
-    message = "Use !isNullOrBlank() directly — this extension adds no value over the stdlib",
-    level = DeprecationLevel.WARNING
-)
-fun String?.isNotNullOrBlank(): Boolean = !isNullOrBlank()
-
-@Deprecated(
-    message = "Use !isNullOrEmpty() directly — this extension adds no value over the stdlib",
-    level = DeprecationLevel.WARNING
-)
-fun String?.isNotNullOrEmpty(): Boolean = !isNullOrEmpty()

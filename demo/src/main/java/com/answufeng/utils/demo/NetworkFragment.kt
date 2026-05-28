@@ -18,7 +18,7 @@ class NetworkFragment : BaseDemoFragment() {
         addLog("sendSMS → smsto:10086")
         addLog("openMap → geo:39.9,116.4")
         addLog("openAppMarket → market://details?id=...")
-        addLog("openWifiSettings → ACTION_WIFI_SETTINGS")
+        addLog("openSystemSettings(Wifi) → ACTION_WIFI_SETTINGS")
 
         addTitle("系统扩展")
         ctx.copyToClipboard("从 aw-utils demo 复制的文本")

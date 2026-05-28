@@ -13,8 +13,7 @@ import androidx.core.app.NotificationManagerCompat
  *
  * Android 13（API 33）起发送通知需 `POST_NOTIFICATIONS` 运行时权限。
  */
-fun Context.areNotificationsEnabled(): Boolean =
-    NotificationManagerCompat.from(this).areNotificationsEnabled()
+fun Context.areNotificationsEnabled(): Boolean = NotificationManagerCompat.from(this).areNotificationsEnabled()
 
 /**
  * 创建通知渠道（Android 8.0+）；低版本无操作。
@@ -49,11 +48,12 @@ fun Context.showSimpleNotification(
     channelName: CharSequence = channelId,
 ) {
     ensureNotificationChannel(channelId, channelName)
-    val builder = NotificationCompat.Builder(this, channelId)
-        .setSmallIcon(smallIcon)
-        .setContentTitle(title)
-        .setContentText(text)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    val builder =
+        NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(smallIcon)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     NotificationManagerCompat.from(this).notify(notificationId, builder.build())
 }
 
@@ -91,12 +91,13 @@ fun Context.showProgressNotification(
     channelName: CharSequence = channelId,
 ) {
     ensureNotificationChannel(channelId, channelName)
-    val builder = NotificationCompat.Builder(this, channelId)
-        .setSmallIcon(smallIcon)
-        .setContentTitle(title)
-        .setContentText(text)
-        .setProgress(max, progress, indeterminate)
-        .setOngoing(progress < max)
+    val builder =
+        NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(smallIcon)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setProgress(max, progress, indeterminate)
+            .setOngoing(progress < max)
     NotificationManagerCompat.from(this).notify(notificationId, builder.build())
 }
 
@@ -121,11 +122,12 @@ fun Context.showBigTextNotification(
     channelName: CharSequence = channelId,
 ) {
     ensureNotificationChannel(channelId, channelName)
-    val builder = NotificationCompat.Builder(this, channelId)
-        .setSmallIcon(smallIcon)
-        .setContentTitle(title)
-        .setContentText(text)
-        .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+    val builder =
+        NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(smallIcon)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     NotificationManagerCompat.from(this).notify(notificationId, builder.build())
 }

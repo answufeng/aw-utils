@@ -34,21 +34,6 @@ context.shareText("分享内容")
 context.shareFile(uri, "image/png", title = "分享到")
 ```
 
-## 应用信息（已弃用）
-
-```kotlin
-context.appVersionName()    // ⚠️ 已弃用 → 使用 AppExt.getAppVersionName()
-context.appVersionCode()    // ⚠️ 已弃用 → 使用 AppExt.getAppVersionCode()
-context.openAppSettings()   // 打开当前应用设置页
-```
-
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `Context.appVersionName()` | `Context.getAppVersionName()` (AppExt) |
-| `Context.appVersionCode()` | `Context.getAppVersionCode()` (AppExt) |
-
 ## 权限检查
 
 ```kotlin

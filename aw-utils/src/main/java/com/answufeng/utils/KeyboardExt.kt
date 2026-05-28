@@ -8,6 +8,8 @@ import android.view.ViewTreeObserver
 /**
  * 判断软键盘是否可见。
  *
+ * 基于可见区域高度差估算；Android 11+ 可配合 [getImeInsets] 获取更精确的 IME Insets。
+ *
  * @param threshold 键盘高度阈值（dp），默认 200dp
  */
 fun View.isKeyboardVisible(threshold: Int = 200): Boolean {
@@ -26,13 +28,14 @@ fun View.isKeyboardVisible(threshold: Int = 200): Boolean {
  */
 fun View.observeKeyboardVisibility(callback: (visible: Boolean) -> Unit): () -> Unit {
     var lastVisible = false
-    val listener = ViewTreeObserver.OnGlobalLayoutListener {
-        val visible = isKeyboardVisible()
-        if (visible != lastVisible) {
-            lastVisible = visible
-            callback(visible)
+    val listener =
+        ViewTreeObserver.OnGlobalLayoutListener {
+            val visible = isKeyboardVisible()
+            if (visible != lastVisible) {
+                lastVisible = visible
+                callback(visible)
+            }
         }
-    }
     viewTreeObserver.addOnGlobalLayoutListener(listener)
     return {
         if (viewTreeObserver.isAlive) {

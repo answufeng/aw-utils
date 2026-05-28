@@ -10,14 +10,14 @@ class StringFragment : BaseDemoFragment() {
         addLog("邮箱: ${"test@example.com".isEmail()}")
         addLog("身份证: ${"110101199001011234".isIdCard()}")
         addLog("URL: ${"https://example.com".isUrl()}")
-        addLog("银行卡: ${"6222021234567890".isBankCard()}")
+        addLog("银行卡: ${"6222021234567894".isBankCard()}")
         addLog("纯数字: ${"12345".isDigitsOnly()}")
 
         addTitle("脱敏")
         addLog("手机号: ${"13812345678".maskPhone()}")
         addLog("身份证: ${"110101199001011234".maskIdCard()}")
         addLog("邮箱: ${"hello@example.com".maskEmail()}")
-        addLog("银行卡: ${"6222021234567890".maskBankCard()}")
+        addLog("银行卡: ${"6222021234567894".maskBankCard()}")
         addLog("姓名: ${"张三丰".maskName()}")
         addLog("自定义: ${"abcdefghij".mask(2, 7, '*')}")
 

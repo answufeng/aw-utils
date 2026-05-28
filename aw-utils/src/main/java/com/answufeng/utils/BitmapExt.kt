@@ -1,12 +1,11 @@
 package com.answufeng.utils
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
-import android.graphics.BitmapShader
 import android.graphics.Shader
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -33,11 +32,14 @@ fun Drawable.toBitmap(): Bitmap {
 /**
  * 将 Bitmap 缩放到指定宽高。
  */
-fun Bitmap.scale(newWidth: Int, newHeight: Int): Bitmap {
+fun Bitmap.scale(
+    newWidth: Int,
+    newHeight: Int,
+): Bitmap {
     val matrix = Matrix()
     matrix.postScale(
         newWidth.toFloat() / width,
-        newHeight.toFloat() / height
+        newHeight.toFloat() / height,
     )
     return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }
@@ -61,9 +63,10 @@ fun Bitmap.toCircle(): Bitmap {
     val size = minOf(width, height)
     val output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        shader = BitmapShader(this@toCircle, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-    }
+    val paint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            shader = BitmapShader(this@toCircle, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+        }
     val x = (width - size) / 2f
     val y = (height - size) / 2f
     if (x != 0f || y != 0f) {
@@ -85,9 +88,10 @@ fun Bitmap.toCircle(): Bitmap {
 fun Bitmap.toRounded(radius: Float): Bitmap {
     val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(output)
-    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        shader = BitmapShader(this@toRounded, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-    }
+    val paint =
+        Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            shader = BitmapShader(this@toRounded, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+        }
     val rect = android.graphics.RectF(0f, 0f, width.toFloat(), height.toFloat())
     canvas.drawRoundRect(rect, radius, radius, paint)
     return output
@@ -115,7 +119,7 @@ fun Bitmap.rotate(degrees: Float): Bitmap {
 fun Bitmap.compressTo(
     file: File,
     format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG,
-    quality: Int = 80
+    quality: Int = 80,
 ): Boolean {
     file.ensureParentDir()
     return try {
@@ -128,7 +132,12 @@ fun Bitmap.compressTo(
     }
 }
 
-private fun sampleSizeForBounds(width: Int, height: Int, maxWidth: Int, maxHeight: Int): Int {
+private fun sampleSizeForBounds(
+    width: Int,
+    height: Int,
+    maxWidth: Int,
+    maxHeight: Int,
+): Int {
     if (width <= 0 || height <= 0) return 1
     var inSampleSize = 1
     if (width > maxWidth || height > maxHeight) {
@@ -152,7 +161,7 @@ private fun sampleSizeForBounds(width: Int, height: Int, maxWidth: Int, maxHeigh
 fun calculateSampleSize(
     options: BitmapFactory.Options,
     maxWidth: Int,
-    maxHeight: Int
+    maxHeight: Int,
 ): Int = sampleSizeForBounds(options.outWidth, options.outHeight, maxWidth, maxHeight)
 
 /**
@@ -166,7 +175,7 @@ fun calculateSampleSize(
 fun calculateSampleSize(
     options: BitmapFactoryOptionsCompat,
     maxWidth: Int,
-    maxHeight: Int
+    maxHeight: Int,
 ): Int = sampleSizeForBounds(options.outWidth, options.outHeight, maxWidth, maxHeight)
 
 /**
@@ -175,7 +184,10 @@ fun calculateSampleSize(
  * @param maxWidth 允许的最大宽度（像素）
  * @param maxHeight 允许的最大高度（像素）
  */
-fun File.decodeBitmapSampled(maxWidth: Int, maxHeight: Int): Bitmap? {
+fun File.decodeBitmapSampled(
+    maxWidth: Int,
+    maxHeight: Int,
+): Bitmap? {
     val path = absolutePath
     val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeFile(path, opts)

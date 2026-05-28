@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.webkit.MimeTypeMap
+import java.io.File
 import java.util.Locale
 
 /**
@@ -27,7 +28,9 @@ fun Uri.toFilePath(context: Context): String? {
             if (cursor.moveToFirst()) {
                 val columnIndex = cursor.getColumnIndex(android.provider.MediaStore.MediaColumns.DATA)
                 if (columnIndex >= 0) cursor.getString(columnIndex) else null
-            } else null
+            } else {
+                null
+            }
         }
     } catch (_: Exception) {
         null
@@ -54,7 +57,9 @@ fun Uri.getFileName(context: Context): String? {
             if (cursor.moveToFirst()) {
                 val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 if (columnIndex >= 0) cursor.getString(columnIndex) else null
-            } else null
+            } else {
+                null
+            }
         }
     } catch (_: Exception) {
         lastPathSegment
@@ -98,7 +103,33 @@ fun Uri.isLocalFile(): Boolean {
     }
 }
 
-private val REMOTE_CONTENT_AUTHORITY_PREFIXES = listOf(
-    "com.google.android.apps.docs",
-    "com.google.android.apps.photos",
-)
+/**
+ * 将 content / file Uri 的内容复制到本地文件。
+ *
+ * 适用于 Android 10+ 无法通过 [toFilePath] 获取路径的场景。
+ *
+ * @return 是否复制成功
+ */
+fun Uri.copyToFile(
+    context: Context,
+    dest: File,
+): Boolean {
+    return try {
+        dest.ensureParentDir()
+        val input = context.contentResolver.openInputStream(this) ?: return false
+        input.use { stream ->
+            dest.outputStream().use { output ->
+                stream.copyTo(output)
+            }
+        }
+        true
+    } catch (_: Exception) {
+        false
+    }
+}
+
+private val REMOTE_CONTENT_AUTHORITY_PREFIXES =
+    listOf(
+        "com.google.android.apps.docs",
+        "com.google.android.apps.photos",
+    )

@@ -11,21 +11,30 @@ import kotlin.text.Charsets
  *
  * @param assetPath 资产路径，如 `"config.json"`、`"subdir/data.txt"`
  */
-fun Context.readAssetText(assetPath: String, charset: Charset = Charsets.UTF_8): String {
+fun Context.readAssetText(
+    assetPath: String,
+    charset: Charset = Charsets.UTF_8,
+): String {
     return assets.open(assetPath).bufferedReader(charset).use { it.readText() }
 }
 
 /**
  * 从 `assets` 按行读取文本。
  */
-fun Context.readAssetLines(assetPath: String, charset: Charset = Charsets.UTF_8): List<String> {
+fun Context.readAssetLines(
+    assetPath: String,
+    charset: Charset = Charsets.UTF_8,
+): List<String> {
     return assets.open(assetPath).bufferedReader(charset).use { it.readLines() }
 }
 
 /**
  * 从 `res/raw` 读取全部文本。
  */
-fun Context.readRawText(@RawRes rawResId: Int, charset: Charset = Charsets.UTF_8): String {
+fun Context.readRawText(
+    @RawRes rawResId: Int,
+    charset: Charset = Charsets.UTF_8,
+): String {
     return resources.openRawResource(rawResId).bufferedReader(charset).use { it.readText() }
 }
 
@@ -34,7 +43,10 @@ fun Context.readRawText(@RawRes rawResId: Int, charset: Charset = Charsets.UTF_8
  *
  * @return 是否拷贝成功
  */
-fun Context.copyAssetToFile(assetPath: String, dest: File): Boolean {
+fun Context.copyAssetToFile(
+    assetPath: String,
+    dest: File,
+): Boolean {
     return try {
         dest.ensureParentDir()
         assets.open(assetPath).use { input ->

@@ -4,8 +4,6 @@
 
 ## 尺寸转换
 
-### Context 感知（推荐）
-
 ```kotlin
 100.dpToPx(context)   // dp → px
 14.spToPx(context)    // sp → px
@@ -13,19 +11,7 @@
 48.pxToSp(context)    // px → sp
 ```
 
-> 多窗口/折叠屏安全，使用当前 Context 的 DisplayMetrics。
-
-### 无 Context（实验性）
-
-```kotlin
-@OptIn(AwExperimentalApi::class)
-val px = 100.dp     // 使用 Resources.getSystem()
-val pxF = 100.dpF   // Float 版本
-val spx = 14.sp
-val spxF = 14.spF
-```
-
-> ⚠️ 使用 `Resources.getSystem()`，多窗口/折叠屏场景下可能不准确。
+> 使用当前 Context 的 DisplayMetrics，多窗口/折叠屏安全。
 
 ## 屏幕尺寸
 
@@ -60,15 +46,6 @@ context.screenDensity      // 2.0、3.0、3.5 等
 context.screenDensityDpi   // 320、480、640 等
 context.isHighDensity      // densityDpi >= 320（xhdpi 及以上）
 ```
-
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `Context.dp2px()` | `Number.dpToPx(context)` |
-| `Context.sp2px()` | `Number.spToPx(context)` |
-| `Context.px2dp()` | `Int.pxToDp(context)` |
-| `Context.px2sp()` | `Int.pxToSp(context)` |
 
 ## 相关
 

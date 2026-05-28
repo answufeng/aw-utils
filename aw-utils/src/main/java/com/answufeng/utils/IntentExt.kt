@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.MediaStore
 
 /**
  * 发送邮件。
@@ -14,12 +13,17 @@ import android.provider.MediaStore
  * @param text 邮件正文
  * @return 是否成功启动邮件应用
  */
-fun Context.sendEmail(email: String, subject: String = "", text: String = ""): Boolean {
-    val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse("mailto:$email")
-        putExtra(Intent.EXTRA_SUBJECT, subject)
-        putExtra(Intent.EXTRA_TEXT, text)
-    }
+fun Context.sendEmail(
+    email: String,
+    subject: String = "",
+    text: String = "",
+): Boolean {
+    val intent =
+        Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:$email")
+            putExtra(Intent.EXTRA_SUBJECT, subject)
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
     return safeStartActivity(Intent.createChooser(intent, "选择邮件应用"))
 }
 
@@ -30,51 +34,16 @@ fun Context.sendEmail(email: String, subject: String = "", text: String = ""): B
  * @param message 短信内容
  * @return 是否成功启动短信应用
  */
-fun Context.sendSMS(phoneNumber: String, message: String = ""): Boolean {
-    val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse("smsto:$phoneNumber")
-        putExtra("sms_body", message)
-    }
+fun Context.sendSMS(
+    phoneNumber: String,
+    message: String = "",
+): Boolean {
+    val intent =
+        Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("smsto:$phoneNumber")
+            putExtra("sms_body", message)
+        }
     return safeStartActivity(intent)
-}
-
-/**
- * 打开相机拍照。
- *
- * **已废弃**：使用 `startActivityForResult`，API 30 已废弃。
- * 推荐使用 Activity Result API（`registerForActivityResult`）替代。
- *
- * @param requestCode 请求码
- * @param imageUri 拍照保存的 Uri
- */
-@Deprecated(
-    message = "Use Activity Result API (registerForActivityResult) instead",
-    level = DeprecationLevel.WARNING
-)
-fun android.app.Activity.openCamera(imageUri: Uri, requestCode: Int) {
-    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-        putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-    }
-    startActivityForResult(intent, requestCode)
-}
-
-/**
- * 打开相册选择图片。
- *
- * **已废弃**：使用 `startActivityForResult`，API 30 已废弃。
- * 推荐使用 Activity Result API（`registerForActivityResult`）替代。
- *
- * @param requestCode 请求码
- */
-@Deprecated(
-    message = "Use Activity Result API (registerForActivityResult) instead",
-    level = DeprecationLevel.WARNING
-)
-fun android.app.Activity.pickImage(requestCode: Int) {
-    val intent = Intent(Intent.ACTION_PICK).apply {
-        type = "image/*"
-    }
-    startActivityForResult(intent, requestCode)
 }
 
 /**
@@ -85,13 +54,18 @@ fun android.app.Activity.pickImage(requestCode: Int) {
  * @param label 地标名称
  * @return 是否成功启动地图应用
  */
-fun Context.openMap(latitude: Double, longitude: Double, label: String = ""): Boolean {
-    val q = buildString {
-        append(latitude).append(',').append(longitude)
-        if (label.isNotEmpty()) {
-            append('(').append(Uri.encode(label)).append(')')
+fun Context.openMap(
+    latitude: Double,
+    longitude: Double,
+    label: String = "",
+): Boolean {
+    val q =
+        buildString {
+            append(latitude).append(',').append(longitude)
+            if (label.isNotEmpty()) {
+                append('(').append(Uri.encode(label)).append(')')
+            }
         }
-    }
     val uri = Uri.parse("geo:$latitude,$longitude?q=$q")
     val intent = Intent(Intent.ACTION_VIEW, uri)
     return safeStartActivity(intent)
@@ -107,13 +81,14 @@ fun Context.openAppMarket(packageName: String = this.packageName): Boolean {
     val market = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
     if (safeStartActivity(market)) return true
     return safeStartActivity(
-        Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName"))
+        Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")),
     )
 }
 
 /**
  * 打开系统设置页面。
  *
+ * @param action [android.provider.Settings] Action，默认系统设置主页
  * @return 是否成功打开
  */
 fun Context.openSettings(action: String = android.provider.Settings.ACTION_SETTINGS): Boolean {
@@ -121,88 +96,55 @@ fun Context.openSettings(action: String = android.provider.Settings.ACTION_SETTI
 }
 
 /**
- * 打开 WiFi 设置页面。
+ * 打开指定类型的系统设置页。
  *
- * @return 是否成功打开
+ * ```kotlin
+ * context.openSystemSettings(SystemSettings.Wifi)
+ * ```
  */
-fun Context.openWifiSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_WIFI_SETTINGS))
+fun Context.openSystemSettings(type: SystemSettings): Boolean {
+    return safeStartActivity(Intent(type.action))
 }
 
 /**
- * 打开系统「无线网络」总设置（含移动网络、WLAN 等入口，因系统而异）。
- *
- * @return 是否成功打开
+ * 系统设置页类型（对应 [android.provider.Settings] 的 Action）。
  */
-fun Context.openWirelessSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS))
-}
+enum class SystemSettings(val action: String) {
+    /** 系统设置主页。 */
+    Settings(android.provider.Settings.ACTION_SETTINGS),
 
-/**
- * 打开位置设置页面。
- *
- * @return 是否成功打开
- */
-fun Context.openLocationSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-}
+    /** Wi-Fi 设置。 */
+    Wifi(android.provider.Settings.ACTION_WIFI_SETTINGS),
 
-/**
- * 打开蓝牙设置页面。
- *
- * @return 是否成功打开
- */
-fun Context.openBluetoothSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS))
-}
+    /** 无线网络总设置（含移动网络、WLAN 等，因系统而异）。 */
+    Wireless(android.provider.Settings.ACTION_WIRELESS_SETTINGS),
 
-/**
- * 打开无障碍设置页面。
- */
-fun Context.openAccessibilitySettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS))
-}
+    /** 位置设置。 */
+    Location(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),
 
-/**
- * 打开开发者选项设置页面。
- */
-fun Context.openDeveloperSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS))
-}
+    /** 蓝牙设置。 */
+    Bluetooth(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS),
 
-/**
- * 打开日期和时间设置页面。
- */
-fun Context.openDateSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_DATE_SETTINGS))
-}
+    /** 无障碍设置。 */
+    Accessibility(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS),
 
-/**
- * 打开声音/通知设置页面。
- */
-fun Context.openSoundSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_SOUND_SETTINGS))
-}
+    /** 开发者选项。 */
+    Developer(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS),
 
-/**
- * 打开显示设置页面。
- */
-fun Context.openDisplaySettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_DISPLAY_SETTINGS))
-}
+    /** 日期和时间。 */
+    Date(android.provider.Settings.ACTION_DATE_SETTINGS),
 
-/**
- * 打开存储设置页面。
- */
-fun Context.openStorageSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS))
-}
+    /** 声音/通知。 */
+    Sound(android.provider.Settings.ACTION_SOUND_SETTINGS),
 
-/**
- * 打开关于手机页面。
- */
-fun Context.openAboutPhoneSettings(): Boolean {
-    return safeStartActivity(Intent(android.provider.Settings.ACTION_DEVICE_INFO_SETTINGS))
+    /** 显示。 */
+    Display(android.provider.Settings.ACTION_DISPLAY_SETTINGS),
+
+    /** 存储。 */
+    Storage(android.provider.Settings.ACTION_INTERNAL_STORAGE_SETTINGS),
+
+    /** 关于手机 / 设备信息。 */
+    AboutPhone(android.provider.Settings.ACTION_DEVICE_INFO_SETTINGS),
 }
 
 /**
@@ -217,11 +159,12 @@ fun Context.openAboutPhoneSettings(): Boolean {
  * @return 是否成功发起安装界面
  */
 fun Context.installApk(uri: Uri): Boolean {
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(uri, "application/vnd.android.package-archive")
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
+    val intent =
+        Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/vnd.android.package-archive")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
     return safeStartActivity(intent)
 }
 
@@ -257,12 +200,16 @@ fun Context.safeStartActivity(intent: Intent): Boolean {
  * @param mimeType 文件 MIME 类型，如 `"image/png"`、`"application/pdf"`
  * @return 是否成功启动
  */
-fun Context.openFile(uri: Uri, mimeType: String): Boolean {
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(uri, mimeType)
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
+fun Context.openFile(
+    uri: Uri,
+    mimeType: String,
+): Boolean {
+    val intent =
+        Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, mimeType)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
     return safeStartActivity(intent)
 }
 
@@ -274,11 +221,16 @@ fun Context.openFile(uri: Uri, mimeType: String): Boolean {
  * @param title 选择器标题
  * @return 是否成功启动
  */
-fun Context.shareFile(uri: Uri, mimeType: String, title: String = "分享到"): Boolean {
-    val intent = Intent(Intent.ACTION_SEND).apply {
-        type = mimeType
-        putExtra(Intent.EXTRA_STREAM, uri)
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    }
+fun Context.shareFile(
+    uri: Uri,
+    mimeType: String,
+    title: String = "分享到",
+): Boolean {
+    val intent =
+        Intent(Intent.ACTION_SEND).apply {
+            type = mimeType
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
     return safeStartActivity(Intent.createChooser(intent, title))
 }

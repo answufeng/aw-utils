@@ -49,7 +49,10 @@ fun Context.vibrate(milliseconds: Long) {
  * @param pattern 振动模式，偶数索引为静止时长，奇数索引为振动时长
  * @param repeat 重复次数，-1 为不重复
  */
-fun Context.vibrate(pattern: LongArray, repeat: Int = -1) {
+fun Context.vibrate(
+    pattern: LongArray,
+    repeat: Int = -1,
+) {
     val vibrator = getVibrator() ?: return
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         vibrator.vibrate(VibrationEffect.createWaveform(pattern, repeat))

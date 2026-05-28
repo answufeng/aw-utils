@@ -28,4 +28,12 @@ uri.getMimeType(context)  // "image/png" — 无法确定时返回 "application/
 uri.isLocalFile()  // Boolean — 粗略判断是否为设备侧可访问内容
 ```
 
+## 复制到文件
+
+```kotlin
+uri.copyToFile(context, File(filesDir, "out.bin"))  // Boolean
+```
+
+> Android 10+ 推荐用 `copyToFile` 替代 `toFilePath` + 手动读取。
+
 > `file` 方案视为本地；`content` 方案默认视为本地，但排除已知的云端 Provider（如 Google Docs/Photos）。

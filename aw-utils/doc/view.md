@@ -83,10 +83,3 @@ view.setPaddingBottom(8)
 ```kotlin
 view.isLayoutRtl()   // 是否 RTL 布局
 ```
-
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `View.onClick()` | `debounceClick()` |
-| `View.postDelayed()` | `postDelay()`（避免遮蔽 View.postDelayed） |

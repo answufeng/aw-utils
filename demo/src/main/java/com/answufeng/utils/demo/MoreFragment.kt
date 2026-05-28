@@ -40,19 +40,6 @@ class MoreFragment : BaseDemoFragment() {
         }
         container.addView(editText)
 
-        addTitle("SharedPreferences")
-        val spBtn = MaterialButton(ctx).apply {
-            text = "测试 SpDelegate 读写"
-            @Suppress("DEPRECATION")
-            debounceClick {
-                val prefs = DemoPrefs
-                prefs.init(ctx.applicationContext)
-                prefs.clickCount = (prefs.clickCount ?: 0) + 1
-                addLog("SpDelegate 点击次数: ${prefs.clickCount}")
-            }
-        }
-        container.addView(spBtn)
-
         addTitle("Log 日志")
         val logBtn = MaterialButton(ctx).apply {
             text = "测试 Log 输出"
@@ -145,8 +132,10 @@ class MoreFragment : BaseDemoFragment() {
 
         addTitle("系统设置（IntentExt）")
         val wirelessBtn = MaterialButton(ctx).apply {
-            text = "openWirelessSettings()"
-            debounceClick { addLog("openWirelessSettings: ${ctx.openWirelessSettings()}") }
+            text = "openSystemSettings(Wireless)"
+            debounceClick {
+                addLog("openSystemSettings(Wireless): ${ctx.openSystemSettings(SystemSettings.Wireless)}")
+            }
         }
         container.addView(wirelessBtn)
 
@@ -278,9 +267,4 @@ class MoreFragment : BaseDemoFragment() {
         }
         container.addView(navDarkBtn)
     }
-}
-
-@Suppress("DEPRECATION")
-object DemoPrefs : SpDelegate("demo_prefs") {
-    var clickCount by int("click_count", 0)
 }

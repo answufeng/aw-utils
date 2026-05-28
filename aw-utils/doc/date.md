@@ -31,7 +31,7 @@ val friendly = timestamp.toFriendlyTime()
 // < 1分钟 → "刚刚"
 // < 1小时 → "5分钟前"
 // < 24小时 → "3小时前"
-// 昨天 → "昨天 18:30"
+// 日历昨天 → "昨天 18:30"（基于 isYesterday()，非简单 48 小时）
 // 今年 → "04-28 18:30"
 // 更早 → "2025-12-01"
 ```
@@ -69,9 +69,3 @@ now.addYears(1)      // +1 年（Calendar.add，正确处理闰年）
 ```
 
 > 负值会被视为 0。
-
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| `currentTimeMillis()` | `System.currentTimeMillis()` |

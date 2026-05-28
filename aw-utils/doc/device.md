@@ -23,19 +23,6 @@ context.deviceSummary()
 
 > 适合日志和错误上报场景。
 
-## 已弃用 API
-
-| 弃用 API | 替代方案 |
-|----------|----------|
-| 顶层 `deviceBrand` | `Context.deviceBrand` |
-| 顶层 `deviceModel` | `Context.deviceModel` |
-| 顶层 `deviceManufacturer` | `Context.deviceManufacturer` |
-| 顶层 `osVersion` | `Context.osVersion` |
-| 顶层 `sdkVersion` | `Context.sdkVersion` |
-| 顶层 `deviceSummary()` | `Context.deviceSummary()` |
-
-> 顶层属性已弃用以避免命名空间污染，统一迁移为 `Context` 扩展。
-
 ## 相关
 
 - [RomExt](rom.md) — 厂商 ROM 判断

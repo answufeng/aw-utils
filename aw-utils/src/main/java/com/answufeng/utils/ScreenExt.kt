@@ -9,7 +9,8 @@ import android.view.WindowManager
  * 判断设备是否为平板。
  */
 val Context.isTablet: Boolean
-    get() = (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >=
+    get() =
+        (resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >=
             Configuration.SCREENLAYOUT_SIZE_LARGE
 
 /**
@@ -89,7 +90,7 @@ fun Context.isAutoBrightnessEnabled(): Boolean {
     return try {
         android.provider.Settings.System.getInt(
             contentResolver,
-            android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE
+            android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
         ) == android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
     } catch (_: Exception) {
         false
@@ -109,8 +110,11 @@ fun Context.setAutoBrightnessEnabled(enabled: Boolean): Boolean {
         android.provider.Settings.System.putInt(
             contentResolver,
             android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
-            if (enabled) android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
-            else android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
+            if (enabled) {
+                android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
+            } else {
+                android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
+            },
         )
     } catch (_: Exception) {
         false
@@ -126,7 +130,7 @@ fun Context.getSystemBrightness(): Int {
     return try {
         android.provider.Settings.System.getInt(
             contentResolver,
-            android.provider.Settings.System.SCREEN_BRIGHTNESS
+            android.provider.Settings.System.SCREEN_BRIGHTNESS,
         )
     } catch (_: Exception) {
         128

@@ -8,7 +8,7 @@
 
 ```kotlin
 @OptIn(AwExperimentalApi::class)
-val px = 100.dp
+val friendly = timestamp.toFriendlyTime()
 ```
 
 或文件级 Opt-In：
@@ -21,9 +21,8 @@ val px = 100.dp
 
 | 模块 | API |
 |------|-----|
-| ContextExt | `Number.dp` / `dpF` / `sp` / `spF` |
 | DateExt | `Long.toFriendlyTime()` |
 | DeviceExt | `Context.deviceSummary()` |
 | NetworkExt | `Context.observeNetworkState()` |
 
-> 标记此注解的 API 可能在未来版本中变更或移除，不保证向后兼容。
+> 标记此注解的 API 可能在未来版本中变更，使用前请评估是否接受行为调整。

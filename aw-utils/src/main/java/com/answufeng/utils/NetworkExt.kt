@@ -16,12 +16,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 enum class NetworkType {
     /** Wi-Fi 网络连接。 */
     WIFI,
+
     /** 移动数据网络连接（蜂窝网络）。 */
     CELLULAR,
+
     /** 以太网有线连接。 */
     ETHERNET,
+
     /** 无可用网络连接。 */
-    NONE
+    NONE,
 }
 
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
@@ -40,7 +43,7 @@ private fun Context.getActiveNetworkCapabilities(): NetworkCapabilities? {
 fun Context.isNetworkAvailable(): Boolean {
     val caps = getActiveNetworkCapabilities() ?: return false
     return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 }
 
 /**
@@ -97,10 +100,6 @@ fun Context.isNetworkType(type: NetworkType): Boolean {
     return getNetworkType() == type
 }
 
-@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-@Deprecated("Use getNetworkType() instead", ReplaceWith("getNetworkType().name"))
-fun Context.getNetworkTypeName(): String = getNetworkType().name
-
 /**
  * 观察网络连接状态变化，返回 Flow。
  *
@@ -122,48 +121,35 @@ fun Context.getNetworkTypeName(): String = getNetworkType().name
  */
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 @AwExperimentalApi
-fun Context.observeNetworkState(): Flow<Boolean> = callbackFlow {
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val callback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            trySend(isNetworkAvailable())
-        }
-        override fun onLost(network: Network) {
-            trySend(isNetworkAvailable())
-        }
-        override fun onUnavailable() {
-            trySend(isNetworkAvailable())
-        }
-        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
-            trySend(isNetworkAvailable())
-        }
-    }
-    val request = NetworkRequest.Builder()
-        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        .build()
-    cm.registerNetworkCallback(request, callback)
-    trySend(isNetworkAvailable())
-    awaitClose { cm.unregisterNetworkCallback(callback) }
-}.distinctUntilChanged()
-
-/**
- * 获取当前连接的 Wi-Fi SSID。
- *
- * Android 12+ 需要持有 `ACCESS_FINE_LOCATION` 权限才能获取 SSID，
- * 否则返回 `"<unknown ssid>"`。
- * Android 13+ 需要持有 `NEARBY_WIFI_DEVICES` 权限（或 `ACCESS_FINE_LOCATION`）。
- *
- * 未连接 Wi-Fi 时返回 `null`。
- */
-@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-fun Context.getWifiSSID(): String? {
-    if (!isWifiConnected()) return null
-    return try {
+fun Context.observeNetworkState(): Flow<Boolean> =
+    callbackFlow {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = cm.activeNetwork ?: return null
-        val info = cm.getNetworkInfo(network) ?: return null
-        info.extraInfo?.removeSurrounding("\"")
-    } catch (_: Exception) {
-        null
-    }
-}
+        val callback =
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    trySend(isNetworkAvailable())
+                }
+
+                override fun onLost(network: Network) {
+                    trySend(isNetworkAvailable())
+                }
+
+                override fun onUnavailable() {
+                    trySend(isNetworkAvailable())
+                }
+
+                override fun onCapabilitiesChanged(
+                    network: Network,
+                    networkCapabilities: NetworkCapabilities,
+                ) {
+                    trySend(isNetworkAvailable())
+                }
+            }
+        val request =
+            NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build()
+        cm.registerNetworkCallback(request, callback)
+        trySend(isNetworkAvailable())
+        awaitClose { cm.unregisterNetworkCallback(callback) }
+    }.distinctUntilChanged()

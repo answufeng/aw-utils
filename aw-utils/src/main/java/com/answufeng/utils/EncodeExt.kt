@@ -1,8 +1,8 @@
 package com.answufeng.utils
 
-import android.util.Base64
 import android.text.Html
 import android.text.TextUtils
+import android.util.Base64
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -35,28 +35,24 @@ fun String.decodeBase64(flags: Int = Base64.NO_WRAP): ByteArray {
     return Base64.decode(this, flags)
 }
 
-@Deprecated(
-    message = "Use decodeBase64ToString() for clearer naming",
-    replaceWith = ReplaceWith("decodeBase64ToString(flags = flags)")
-)
-fun String.decodeBase64String(flags: Int = Base64.NO_WRAP): String {
-    return decodeBase64ToString(flags = flags)
-}
-
 /**
  * 将 Base64 字符串解码为字符串。
  *
  * @param charset 字符编码，默认 UTF-8
  * @param flags Base64 标志位，默认 [Base64.NO_WRAP]
  */
-fun String.decodeBase64ToString(charset: Charset = Charsets.UTF_8, flags: Int = Base64.NO_WRAP): String {
+fun String.decodeBase64ToString(
+    charset: Charset = Charsets.UTF_8,
+    flags: Int = Base64.NO_WRAP,
+): String {
     return String(decodeBase64(flags), charset)
 }
 
-private val HEX_CHARS = charArrayOf(
-    '0', '1', '2', '3', '4', '5', '6', '7',
-    '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
-)
+private val HEX_CHARS =
+    charArrayOf(
+        '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+    )
 
 /**
  * 将字节数组转换为小写十六进制字符串（查表法高性能实现）。

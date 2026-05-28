@@ -50,7 +50,10 @@ inline fun <reified T : Activity> Fragment.startActivity(block: Intent.() -> Uni
 /**
  * 设置结果并关闭 Activity。
  */
-fun Activity.finishWithResult(resultCode: Int, data: Intent? = null) {
+fun Activity.finishWithResult(
+    resultCode: Int,
+    data: Intent? = null,
+) {
     setResult(resultCode, data)
     finish()
 }
@@ -98,14 +101,20 @@ inline fun <reified T> Fragment.argumentOrNull(key: String): T? {
 /**
  * 获取 Activity Intent 中的 Extra 值，不存在时返回默认值。
  */
-inline fun <reified T> Activity.extraOrDefault(key: String, default: T): T {
+inline fun <reified T> Activity.extraOrDefault(
+    key: String,
+    default: T,
+): T {
     return extraOrNull(key) ?: default
 }
 
 /**
  * 获取 Fragment Arguments 中的值，不存在时返回默认值。
  */
-inline fun <reified T> Fragment.argumentOrDefault(key: String, default: T): T {
+inline fun <reified T> Fragment.argumentOrDefault(
+    key: String,
+    default: T,
+): T {
     return argumentOrNull(key) ?: default
 }
 
@@ -116,11 +125,12 @@ inline fun <reified T> Fragment.argumentOrDefault(key: String, default: T): T {
  * 避免在 Activity 销毁后执行 UI 操作导致崩溃。
  */
 val Activity.isDestroyedCompat: Boolean
-    get() = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        isDestroyed
-    } else {
-        false
-    }
+    get() =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            isDestroyed
+        } else {
+            false
+        }
 
 /**
  * 判断 Activity 是否仍然存活（未销毁且未 finishing）。

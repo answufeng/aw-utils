@@ -1,4 +1,4 @@
-# CollectionExt — 集合空判断 / 安全连接 / 默认值
+# CollectionExt — 集合空判断 / 安全连接
 
 > 源码：[CollectionExt.kt](../src/main/java/com/answufeng/utils/CollectionExt.kt)
 
@@ -29,23 +29,3 @@ listOf("a", "b").safeJoinToString("|") { it.uppercase() }  // "A|B"
 ```
 
 > null 或空集合返回空字符串，避免 NPE。
-
-## 默认值
-
-```kotlin
-val items: List<String>? = null
-items.orEmptyList { listOf("default") }  // ["default"]
-
-val arr: Array<String>? = null
-arr.orEmptyArray { arrayOf("fallback") } // ["fallback"]
-
-emptyList<String>().orEmptyList { listOf("default") }  // ["default"]
-listOf("a").orEmptyList { listOf("default") }          // ["a"]
-```
-
-## 数组空判断
-
-```kotlin
-val arr: Array<String>? = null
-arr.isNullOrEmpty()  // true
-```

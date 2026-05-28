@@ -7,12 +7,12 @@ package com.answufeng.utils
  *
  * ```kotlin
  * @OptIn(AwExperimentalApi::class)
- * val px = 100.dp
+ * val friendly = timestamp.toFriendlyTime()
  * ```
  */
 @RequiresOptIn(
     message = "This API is experimental and may change in future versions.",
-    level = RequiresOptIn.Level.WARNING
+    level = RequiresOptIn.Level.WARNING,
 )
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY)

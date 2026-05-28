@@ -34,8 +34,9 @@ class DateFragment : BaseDemoFragment() {
         addLog("随机字符串(8): ${randomString(8)}")
         addLog("随机数字(6): ${randomNumericString(6)}")
         addLog("随机字母(10): ${randomLetterString(10)}")
-        addLog("随机整数(1-100): ${randomInt(1, 100)}")
-        addLog("随机颜色: #${Integer.toHexString(randomColor()).uppercase()}")
+        addLog("随机整数(1-100): ${(1..100).random()}")
+        val randomArgb = android.graphics.Color.argb(255, (0..255).random(), (0..255).random(), (0..255).random())
+        addLog("随机颜色: #${Integer.toHexString(randomArgb).uppercase()}")
         addLog("列表随机: ${listOf("Apple", "Banana", "Orange", "Grape").randomElement()}")
     }
 }

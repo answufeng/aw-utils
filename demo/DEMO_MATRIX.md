@@ -11,9 +11,7 @@
 | 网络 | `NetworkFragment` | 状态、类型（无网请手测） |
 | 视图 | `ViewFragment` | 可见性、防抖、`expandTouchArea` 等 |
 | 富文本 | `SpanFragment` | Span DSL |
-| 更多 | `MoreFragment` | meta-data、剪贴板、存储路径、assets/raw/拷贝、通知、手电筒、无线网络设置、`clearInternalCacheChildren`、zip、状态栏/导航栏、其它扩展 |
-
-**弃用 API**（`AwLog`、`SpDelegate`）见 README「弃用 API 迁移」；新工程优先 **aw-log** / **aw-store**。工具栏 **「演示清单」** 可列出各 Tab。
+| 更多 | `MoreFragment` | meta-data、剪贴板、存储路径、assets/raw/拷贝、通知、手电筒、系统设置、zip、状态栏/导航栏、其它扩展 |
 
 ## 推荐手测（边界与极端场景）
 
@@ -21,5 +19,4 @@
 |------|----------|
 | 无网 | 关数据网络走网络相关扩展，确认不崩溃 |
 | 权限 | 需权限的 API 在未授权时的行为 |
-| 线程 | 日期/格式化在多线程下压测（ThreadLocal 路径） |
-| 弃用 | 确认 `@Deprecated` 提示与迁移文档一致 |
+| 线程 | 日期格式化在多线程下压测（ThreadLocal 缓存路径） |

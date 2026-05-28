@@ -1,7 +1,6 @@
 package com.answufeng.utils
 
 import android.content.res.ColorStateList
-import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -19,7 +18,9 @@ fun ImageView.setTint(color: Int) {
 /**
  * 设置 ImageView 的 tint 颜色（资源 ID）。
  */
-fun ImageView.setTintRes(@ColorRes colorRes: Int) {
+fun ImageView.setTintRes(
+    @ColorRes colorRes: Int,
+) {
     setTint(context.getColor(colorRes))
 }
 
@@ -33,7 +34,10 @@ fun ImageView.clearTint() {
 /**
  * 设置 ImageView 图片资源并应用 tint。
  */
-fun ImageView.setImageWithTint(@DrawableRes resId: Int, tintColor: Int) {
+fun ImageView.setImageWithTint(
+    @DrawableRes resId: Int,
+    tintColor: Int,
+) {
     setImageResource(resId)
     setTint(tintColor)
 }

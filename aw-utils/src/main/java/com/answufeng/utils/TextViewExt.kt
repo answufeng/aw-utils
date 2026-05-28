@@ -1,6 +1,5 @@
 package com.answufeng.utils
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.TextView
 import androidx.annotation.ColorInt
@@ -18,7 +17,7 @@ import androidx.core.widget.TextViewCompat
 fun TextView.setDrawableStart(
     drawable: Drawable?,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawables(start = drawable, boundsWidth = boundsWidth, boundsHeight = boundsHeight)
 }
@@ -29,7 +28,7 @@ fun TextView.setDrawableStart(
 fun TextView.setDrawableEnd(
     drawable: Drawable?,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawables(end = drawable, boundsWidth = boundsWidth, boundsHeight = boundsHeight)
 }
@@ -40,7 +39,7 @@ fun TextView.setDrawableEnd(
 fun TextView.setDrawableTop(
     drawable: Drawable?,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawables(top = drawable, boundsWidth = boundsWidth, boundsHeight = boundsHeight)
 }
@@ -51,7 +50,7 @@ fun TextView.setDrawableTop(
 fun TextView.setDrawableBottom(
     drawable: Drawable?,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawables(bottom = drawable, boundsWidth = boundsWidth, boundsHeight = boundsHeight)
 }
@@ -62,7 +61,7 @@ fun TextView.setDrawableBottom(
 fun TextView.setDrawableStartRes(
     @DrawableRes resId: Int,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawableStart(context.getDrawableCompat(resId), boundsWidth, boundsHeight)
 }
@@ -73,7 +72,7 @@ fun TextView.setDrawableStartRes(
 fun TextView.setDrawableEndRes(
     @DrawableRes resId: Int,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawableEnd(context.getDrawableCompat(resId), boundsWidth, boundsHeight)
 }
@@ -84,7 +83,7 @@ fun TextView.setDrawableEndRes(
 fun TextView.setDrawableTopRes(
     @DrawableRes resId: Int,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawableTop(context.getDrawableCompat(resId), boundsWidth, boundsHeight)
 }
@@ -95,7 +94,7 @@ fun TextView.setDrawableTopRes(
 fun TextView.setDrawableBottomRes(
     @DrawableRes resId: Int,
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     setDrawableBottom(context.getDrawableCompat(resId), boundsWidth, boundsHeight)
 }
@@ -110,17 +109,24 @@ fun TextView.clearDrawables() {
 /**
  * 为 TextView 的 compound drawable 设置 tint 颜色（相对方向，适配 RTL）。
  */
-fun TextView.setDrawableTint(@ColorInt color: Int) {
+fun TextView.setDrawableTint(
+    @ColorInt color: Int,
+) {
     val drawables = compoundDrawablesRelative
-    val tinted = drawables.map { drawable ->
-        drawable?.let {
-            val wrapped = DrawableCompat.wrap(it.mutate())
-            DrawableCompat.setTint(wrapped, color)
-            wrapped
+    val tinted =
+        drawables.map { drawable ->
+            drawable?.let {
+                val wrapped = DrawableCompat.wrap(it.mutate())
+                DrawableCompat.setTint(wrapped, color)
+                wrapped
+            }
         }
-    }
     TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-        this, tinted[0], tinted[1], tinted[2], tinted[3]
+        this,
+        tinted[0],
+        tinted[1],
+        tinted[2],
+        tinted[3],
     )
 }
 
@@ -130,7 +136,7 @@ private fun TextView.setDrawables(
     end: Drawable? = compoundDrawablesRelative[2],
     bottom: Drawable? = compoundDrawablesRelative[3],
     boundsWidth: Int = 0,
-    boundsHeight: Int = 0
+    boundsHeight: Int = 0,
 ) {
     listOfNotNull(start, top, end, bottom).forEach { drawable ->
         val w = if (boundsWidth > 0) boundsWidth else drawable.intrinsicWidth
@@ -138,8 +144,4 @@ private fun TextView.setDrawables(
         drawable.setBounds(0, 0, w, h)
     }
     setCompoundDrawablesRelative(start, top, end, bottom)
-}
-
-private fun Context.getDrawableCompat(@DrawableRes resId: Int): Drawable? {
-    return androidx.core.content.ContextCompat.getDrawable(this, resId)
 }

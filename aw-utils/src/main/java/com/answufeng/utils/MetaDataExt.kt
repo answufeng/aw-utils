@@ -22,7 +22,10 @@ fun Context.getApplicationMetaDataString(key: String): String? {
 /**
  * 读取 Application `meta-data` 的整型（`android:value` 为 `@integer/...` 或整型资源时）。
  */
-fun Context.getApplicationMetaDataInt(key: String, defaultValue: Int = 0): Int {
+fun Context.getApplicationMetaDataInt(
+    key: String,
+    defaultValue: Int = 0,
+): Int {
     return try {
         val ai = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
         ai.metaData?.getInt(key, defaultValue) ?: defaultValue
@@ -34,7 +37,10 @@ fun Context.getApplicationMetaDataInt(key: String, defaultValue: Int = 0): Int {
 /**
  * 读取 Application `meta-data` 的布尔（`android:value` 为 `true`/`false`）。
  */
-fun Context.getApplicationMetaDataBoolean(key: String, defaultValue: Boolean = false): Boolean {
+fun Context.getApplicationMetaDataBoolean(
+    key: String,
+    defaultValue: Boolean = false,
+): Boolean {
     return try {
         val ai = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
         ai.metaData?.getBoolean(key, defaultValue) ?: defaultValue
@@ -58,7 +64,10 @@ fun Activity.getActivityMetaDataString(key: String): String? {
 /**
  * 读取已声明的 [Service] 的 `meta-data` 字符串。
  */
-fun <S : Service> Context.getServiceMetaDataString(serviceClass: Class<S>, key: String): String? {
+fun <S : Service> Context.getServiceMetaDataString(
+    serviceClass: Class<S>,
+    key: String,
+): String? {
     return try {
         val cn = ComponentName(this, serviceClass)
         val info = packageManager.getServiceInfo(cn, PackageManager.GET_META_DATA)
@@ -71,7 +80,10 @@ fun <S : Service> Context.getServiceMetaDataString(serviceClass: Class<S>, key: 
 /**
  * 读取已声明的 [BroadcastReceiver] 的 `meta-data` 字符串。
  */
-fun <R : BroadcastReceiver> Context.getReceiverMetaDataString(receiverClass: Class<R>, key: String): String? {
+fun <R : BroadcastReceiver> Context.getReceiverMetaDataString(
+    receiverClass: Class<R>,
+    key: String,
+): String? {
     return try {
         val cn = ComponentName(this, receiverClass)
         val info = packageManager.getReceiverInfo(cn, PackageManager.GET_META_DATA)
@@ -82,8 +94,7 @@ fun <R : BroadcastReceiver> Context.getReceiverMetaDataString(receiverClass: Cla
 }
 
 /** @see getServiceMetaDataString */
-inline fun <reified S : Service> Context.getServiceMetaDataString(key: String): String? =
-    getServiceMetaDataString(S::class.java, key)
+inline fun <reified S : Service> Context.getServiceMetaDataString(key: String): String? = getServiceMetaDataString(S::class.java, key)
 
 /** @see getReceiverMetaDataString */
 inline fun <reified R : BroadcastReceiver> Context.getReceiverMetaDataString(key: String): String? =

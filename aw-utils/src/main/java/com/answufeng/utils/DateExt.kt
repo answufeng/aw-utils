@@ -7,18 +7,20 @@ import java.util.Locale
 
 private const val FORMATTER_CACHE_MAX_SIZE = 8
 
-private val threadLocalFormatters = object : ThreadLocal<LinkedHashMap<String, SimpleDateFormat>>() {
-    override fun initialValue(): LinkedHashMap<String, SimpleDateFormat> =
-        object : LinkedHashMap<String, SimpleDateFormat>(8, 0.75f, true) {
-            override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, SimpleDateFormat>): Boolean {
-                return size > FORMATTER_CACHE_MAX_SIZE
+private val threadLocalFormatters =
+    object : ThreadLocal<LinkedHashMap<String, SimpleDateFormat>>() {
+        override fun initialValue(): LinkedHashMap<String, SimpleDateFormat> =
+            object : LinkedHashMap<String, SimpleDateFormat>(8, 0.75f, true) {
+                override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, SimpleDateFormat>): Boolean {
+                    return size > FORMATTER_CACHE_MAX_SIZE
+                }
             }
-        }
-}
+    }
 
-private fun calendarOf(timeInMillis: Long): Calendar = Calendar.getInstance().apply {
-    this.timeInMillis = timeInMillis
-}
+private fun calendarOf(timeInMillis: Long): Calendar =
+    Calendar.getInstance().apply {
+        this.timeInMillis = timeInMillis
+    }
 
 private fun calendarNow(): Calendar = Calendar.getInstance()
 
@@ -60,22 +62,13 @@ fun String.parseDate(pattern: String = "yyyy-MM-dd HH:mm:ss"): Date? {
 }
 
 /**
- * 获取当前时间戳（毫秒）。
- */
-@Deprecated(
-    message = "Use System.currentTimeMillis() directly — this wrapper adds no value",
-    level = DeprecationLevel.WARNING
-)
-fun currentTimeMillis(): Long = System.currentTimeMillis()
-
-/**
  * 判断时间戳是否为今天。
  */
 fun Long.isToday(): Boolean {
     val cal1 = calendarOf(this)
     val cal2 = calendarNow()
     return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
 
 /**
@@ -85,7 +78,7 @@ fun Long.isYesterday(): Boolean {
     val cal1 = calendarOf(this)
     val cal2 = calendarNow().apply { add(Calendar.DAY_OF_YEAR, -1) }
     return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
 
 /**
@@ -95,7 +88,7 @@ fun Long.isSameDay(other: Long): Boolean {
     val cal1 = calendarOf(this)
     val cal2 = calendarOf(other)
     return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
 }
 
 /**
@@ -107,7 +100,7 @@ fun Long.isSameDay(other: Long): Boolean {
  * - < 1分钟 → "刚刚"
  * - < 1小时 → "X分钟前"
  * - < 24小时 → "X小时前"
- * - 昨天 → "昨天 HH:mm"
+ * - 日历昨天 → "昨天 HH:mm"
  * - 今年 → "MM-dd HH:mm"
  * - 更早 → "yyyy-MM-dd"
  */
@@ -120,8 +113,8 @@ fun Long.toFriendlyTime(): String {
         diff < 60_000L -> "刚刚"
         diff < 3_600_000L -> "${diff / 60_000L}分钟前"
         diff < 86_400_000L -> "${diff / 3_600_000L}小时前"
-        diff < 172_800_000L -> "昨天 ${formatDate("HH:mm")}"
-        this.isThisYear() -> formatDate("MM-dd HH:mm")
+        isYesterday() -> "昨天 ${formatDate("HH:mm")}"
+        isThisYear() -> formatDate("MM-dd HH:mm")
         else -> formatDate("yyyy-MM-dd")
     }
 }

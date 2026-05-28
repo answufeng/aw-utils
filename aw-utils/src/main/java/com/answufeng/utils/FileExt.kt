@@ -51,7 +51,9 @@ fun File.isAudio(): Boolean = extensionName in AUDIO_EXTENSIONS
  */
 fun File.safeDeleteRecursively(): Boolean {
     return if (isDirectory) {
-        if (isSymlink()) delete() else {
+        if (isSymlink()) {
+            delete()
+        } else {
             val children = listFiles()
             if (children == null) {
                 false
@@ -254,7 +256,7 @@ fun File.lineCount(): Int {
  */
 fun File.listDirFiles(
     recursive: Boolean = false,
-    filter: ((File) -> Boolean)? = null
+    filter: ((File) -> Boolean)? = null,
 ): List<File> {
     if (!isDirectory) return emptyList()
     val result = mutableListOf<File>()

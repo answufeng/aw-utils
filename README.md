@@ -22,11 +22,11 @@ dependencyResolutionManagement {
 
 // app/build.gradle.kts（版本与 Git tag / JitPack 一致）
 dependencies {
-    implementation("com.github.answufeng:aw-utils:1.0.2")
+    implementation("com.github.answufeng:aw-utils:1.1.0")
 }
 ```
 
-`implementation` 中的 **版本号与 Git / JitPack 的 tag 一致**（上例为 `1.0.2`）。
+`implementation` 中的 **版本号与 Git / JitPack 的 tag 一致**（上例为 `1.1.0`）。
 
 ### 2) 直接使用（Kotlin 扩展函数）
 
@@ -78,7 +78,7 @@ button.debounceClick { /* ... */ }
 | JDK | 17 |
 | AGP | 8.x（建议） |
 
-**依赖说明**：AndroidX（AppCompat、Core KTX、Fragment KTX、Annotation）+ `kotlinx-coroutines-core`（`api` 传递，供 `observeNetworkState()` 等使用）；不绑定 Gson / Retrofit 等第三方框架。
+**依赖说明**：AndroidX（AppCompat、Core KTX、Fragment KTX、RecyclerView、Material、Annotation）+ `kotlinx-coroutines-core`（`api` 传递，供 `observeNetworkState()` 等使用）；不绑定 Gson / Retrofit 等第三方框架。
 
 ---
 
@@ -107,7 +107,7 @@ button.debounceClick { /* ... */ }
 | 文件 | `FileExt` | 大小/哈希、复制移动、安全删除 | [file.md](aw-utils/doc/file.md) |
 | Zip | `ZipExt` | 压缩、解压（Zip Slip 校验） | [zip.md](aw-utils/doc/zip.md) |
 | 编解码 | `EncodeExt` | Base64、Hex、URL、HTML | [encode.md](aw-utils/doc/encode.md) |
-| 网络 | `NetworkExt` | 连通性、类型、Wi-Fi SSID、Flow 监听 | [network.md](aw-utils/doc/network.md) |
+| 网络 | `NetworkExt` | 连通性、类型、Flow 监听 | [network.md](aw-utils/doc/network.md) |
 | 设备 | `DeviceExt` | 品牌/型号/系统版本/摘要 | [device.md](aw-utils/doc/device.md) |
 | 厂商 | `RomExt`（`Rom`） | 国内/国际厂商启发式判断 | [rom.md](aw-utils/doc/rom.md) |
 | 存储路径 | `StoragePathExt` | cache/files/external/obb、存储容量 | [storage-path.md](aw-utils/doc/storage-path.md) |
@@ -122,12 +122,17 @@ button.debounceClick { /* ... */ }
 | 意图 | `IntentExt` | 邮件/短信/地图/市场/系统设置/安装 APK | [intent.md](aw-utils/doc/intent.md) |
 | Activity | `ActivityExt` | 泛型启动、Extra/Arguments、生命周期 | [activity.md](aw-utils/doc/activity.md) |
 | 颜色 | `ColorExt` | 十六进制转换、透明度、混合 | [color.md](aw-utils/doc/color.md) |
-| Uri | `UriExt` | 文件路径/文件名/MIME/本地判断 | [uri.md](aw-utils/doc/uri.md) |
+| Uri | `UriExt` | 文件路径/文件名/MIME/复制到文件 | [uri.md](aw-utils/doc/uri.md) |
 | Bitmap | `BitmapExt` | 缩放/圆形/圆角/旋转/压缩/采样解码 | [bitmap.md](aw-utils/doc/bitmap.md) |
 | 应用 | `AppExt` | 安装/Debug/启动/图标/签名/版本信息 | [app.md](aw-utils/doc/app.md) |
 | 集合 | `CollectionExt` | 空判断、安全 joinToString、默认值 | [collection.md](aw-utils/doc/collection.md) |
 | 尺寸转换 | `ContextExt` | dp/sp/px 转换、屏幕尺寸、深色模式、屏幕密度 | [context.md](aw-utils/doc/context.md) |
 | EditText | `EditTextExt` | 文本监听、长度限制、小数过滤 | [edittext.md](aw-utils/doc/edittext.md) |
+| Fragment | `FragmentExt` | 生命周期 `isAlive` | [fragment.md](aw-utils/doc/fragment.md) |
+| Insets | `InsetsExt` | 系统栏/IME Insets、padding | [insets.md](aw-utils/doc/insets.md) |
+| Snackbar | `SnackbarExt` | Snackbar 薄封装 | [snackbar.md](aw-utils/doc/snackbar.md) |
+| RecyclerView | `RecyclerViewExt` | 滚顶、垂直间距 | [recyclerview.md](aw-utils/doc/recyclerview.md) |
+| 资源 | `ResourceExt` | Color/Drawable 兼容读取 | [resource.md](aw-utils/doc/resource.md) |
 | 手电筒 | `FlashlightExt` | 闪光灯开关 | [flashlight.md](aw-utils/doc/flashlight.md) |
 | ImageView | `ImageViewExt` | tint 着色 | [imageview.md](aw-utils/doc/imageview.md) |
 | Meta-data | `MetaDataExt` | Manifest meta-data 读取 | [metadata.md](aw-utils/doc/metadata.md) |
@@ -140,10 +145,7 @@ button.debounceClick { /* ... */ }
 | 清理 | `CleanExt` | 缓存目录清理 | [clean.md](aw-utils/doc/clean.md) |
 | 资源关闭 | `CloseExt` | 静默关闭 Closeable | [close.md](aw-utils/doc/close.md) |
 | 注解 | `Annotations` | `@AwExperimentalApi` | [annotations.md](aw-utils/doc/annotations.md) |
-| 协程 | `CoroutineExt` | 重试退避/固定间隔、Flow 超时、asyncSafe | — |
-| 兼容 | `PackageManagerExt` | 内部兼容封装 | [packagemanager.md](aw-utils/doc/packagemanager.md) |
-| ~~日志~~ | `AwLog` | ~~轻量日志~~ → 迁移至 aw-log | [aw-log.md](aw-utils/doc/aw-log.md) |
-| ~~SP 委托~~ | `SpDelegate` | ~~SP 属性委托~~ → 迁移至 aw-store | [sp-delegate.md](aw-utils/doc/sp-delegate.md) |
+| 协程 | `CoroutineExt` | 重试退避/固定间隔、Flow 超时、asyncSafe | [coroutine.md](aw-utils/doc/coroutine.md) |
 
 ---
 
@@ -160,12 +162,11 @@ button.debounceClick { /* ... */ }
 | **文件** | [文件](aw-utils/doc/file.md) · [Zip](aw-utils/doc/zip.md) · [清理](aw-utils/doc/clean.md) · [存储路径](aw-utils/doc/storage-path.md) · [Assets/Raw](aw-utils/doc/assets-raw.md) · [资源关闭](aw-utils/doc/close.md) |
 | **设备** | [设备](aw-utils/doc/device.md) · [厂商](aw-utils/doc/rom.md) · [屏幕](aw-utils/doc/screen.md) · [尺寸转换](aw-utils/doc/context.md) |
 | **网络** | [网络](aw-utils/doc/network.md) |
-| **UI** | [View](aw-utils/doc/view.md) · [EditText](aw-utils/doc/edittext.md) · [TextView](aw-utils/doc/textview.md) · [ImageView](aw-utils/doc/imageview.md) · [Span](aw-utils/doc/span.md) · [颜色](aw-utils/doc/color.md) · [Bitmap](aw-utils/doc/bitmap.md) |
-| **系统** | [系统](aw-utils/doc/system.md) · [键盘](aw-utils/doc/keyboard.md) · [进程](aw-utils/doc/process.md) · [振动](aw-utils/doc/vibrate.md) · [音量](aw-utils/doc/volume.md) · [手电筒](aw-utils/doc/flashlight.md) · [通知](aw-utils/doc/notification.md) · [系统栏](aw-utils/doc/bar.md) |
-| **意图/跳转** | [Intent](aw-utils/doc/intent.md) · [Activity](aw-utils/doc/activity.md) · [Service](aw-utils/doc/service.md) |
-| **应用** | [应用](aw-utils/doc/app.md) · [Meta-data](aw-utils/doc/metadata.md) · [Uri](aw-utils/doc/uri.md) · [集合](aw-utils/doc/collection.md) |
-| **注解/内部** | [注解](aw-utils/doc/annotations.md) · [PackageManager](aw-utils/doc/packagemanager.md) |
-| **已弃用** | [AwLog → aw-log](aw-utils/doc/aw-log.md) · [SpDelegate → aw-store](aw-utils/doc/sp-delegate.md) |
+| **UI** | [View](aw-utils/doc/view.md) · [EditText](aw-utils/doc/edittext.md) · [TextView](aw-utils/doc/textview.md) · [ImageView](aw-utils/doc/imageview.md) · [Span](aw-utils/doc/span.md) · [颜色](aw-utils/doc/color.md) · [Bitmap](aw-utils/doc/bitmap.md) · [Insets](aw-utils/doc/insets.md) · [RecyclerView](aw-utils/doc/recyclerview.md) · [Snackbar](aw-utils/doc/snackbar.md) |
+| **系统** | [系统](aw-utils/doc/system.md) · [键盘](aw-utils/doc/keyboard.md) · [进程](aw-utils/doc/process.md) · [振动](aw-utils/doc/vibrate.md) · [音量](aw-utils/doc/volume.md) · [手电筒](aw-utils/doc/flashlight.md) · [通知](aw-utils/doc/notification.md) · [系统栏](aw-utils/doc/bar.md) · [协程](aw-utils/doc/coroutine.md) |
+| **意图/跳转** | [Intent](aw-utils/doc/intent.md) · [Activity](aw-utils/doc/activity.md) · [Fragment](aw-utils/doc/fragment.md) · [Service](aw-utils/doc/service.md) |
+| **应用** | [应用](aw-utils/doc/app.md) · [Meta-data](aw-utils/doc/metadata.md) · [Uri](aw-utils/doc/uri.md) · [集合](aw-utils/doc/collection.md) · [资源](aw-utils/doc/resource.md) |
+| **注解** | [注解](aw-utils/doc/annotations.md) |
 
 ---
 
@@ -242,7 +243,7 @@ context.startForegroundServiceCompat<MyFgService>()
 
 ```kotlin
 context.launchApp("com.tencent.mm")
-context.openWirelessSettings()
+context.openSystemSettings(SystemSettings.Wireless)
 context.installApk(uri)
 
 activity.setWindowBrightness(200)
@@ -307,7 +308,6 @@ runOnUiThread { }
 | CI | [`.github/workflows/ci.yml`](.github/workflows/ci.yml)：assemble、ktlint、R8 冒烟、Lint |
 | 贡献 | [CONTRIBUTING.md](CONTRIBUTING.md) |
 | 版本号 | 与 [gradle.properties](gradle.properties) 中 `VERSION_NAME`、Git **tag**、JitPack 保持一致 |
-| 迁移建议 | `AwLog` → [aw-log](https://github.com/answufeng/aw-log)；`SpDelegate` → [aw-store](https://github.com/answufeng/aw-store) |
 
 ---
 
